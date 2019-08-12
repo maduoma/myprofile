@@ -5,8 +5,8 @@ A project with HTML, CSS and JavaScript.
 2. <a href="http://github.com/meanjs/mean" target="_blank" title="MEAN Stack">GitHub - MEAN Stack</a> 
 # Freebies
 1. <a href = "https://www.appbrewery.co/p/web-development-course-resources" target="_blank">Angela Yu - Resources</a>
-# My Favorites Editor
-1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>
 2. <a href = "http://colorhunt.co" target="_blank">Web Color Pallet</a>
 3. <a href = "http://emojipedia.org" target="_blank">Emoji</a>
 4. <a href = "https://unicode-table.com/en/" target="_blank">Unicode Characters</a> 
+# My Favorites Editor
+1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>

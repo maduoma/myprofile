@@ -8,5 +8,6 @@ A project with HTML, CSS and JavaScript.
 2. <a href = "https://colorhunt.co/" target="_blank">Web Color Pallet</a>
 3. <a href = "http://emojipedia.org" target="_blank">Emoji</a>
 4. <a href = "https://unicode-table.com/en/" target="_blank">Unicode Characters</a> 
+5. <a href = "https://devdocs.io/" target="_blank">DevDocs API Documentation</a> 
 # My Favorites Editor
 1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>

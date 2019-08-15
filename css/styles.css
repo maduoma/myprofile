@@ -49,8 +49,10 @@ a:hover {
 
 .top-container {
     background-color: #E4F9F5;
+    display: inline-block;
     position: relative;
     padding-top: 100px;
+    width: 100%;
 }
 
 .middle-container {

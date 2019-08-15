@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #  My profile with HTML and CSS ONLY
+=======
+A project with HTML and CSS ONLY
+>>>>>>> f64114dca588b6382eda2998d80339c64ee20287
 # Frameworks and Libraries
 1. <a href="http://meanjs.org/" target="_blank" title=" MongoDB, Express, AngularJS, and Node.js">MEAN Stack</a> 
 2. <a href="http://github.com/meanjs/mean" target="_blank" title="MEAN Stack">GitHub - MEAN Stack</a> 

@@ -23,4 +23,3 @@ CSS Box Model Demo</a>
 2. <a href = "https://pesticide.io" target="_blank">Pesticide</a>
 # My Profile
 <a href = "https://maduoma.github.io/myprofile/" target="_blank">Visit My Profile Page</a>
-

@@ -1,4 +1,4 @@
-# HTML-CSS-JavaScript
+# My profile with HTML and CSS ONLY
 A project with HTML and CSS ONLY
 # Frameworks and Libraries
 1. <a href="http://meanjs.org/" target="_blank" title=" MongoDB, Express, AngularJS, and Node.js">MEAN Stack</a> 

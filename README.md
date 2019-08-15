@@ -1,5 +1,5 @@
 #  My profile with HTML and CSS ONLY
-This is my profile developed with HTML and CSS.
+This is my profile developed with HTML and CSS ONLY.
 # Frameworks and Libraries
 1. <a href="http://meanjs.org/" target="_blank" title=" MongoDB, Express, AngularJS, and Node.js">MEAN Stack</a> 
 2. <a href="http://github.com/meanjs/mean" target="_blank" title="MEAN Stack">GitHub - MEAN Stack</a> 

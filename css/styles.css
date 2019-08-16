@@ -146,9 +146,3 @@ a:hover {
     background-image: linear-gradient(to bottom, #30e3cb, #2bc4ad);
     text-decoration: none;
 }
-
-@media screen and (min-width: 760px) {
-    main {
-        width: 70%;
-    }
-}

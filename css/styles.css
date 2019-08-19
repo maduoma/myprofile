@@ -116,11 +116,11 @@ a:hover {
     display: inline-block;
 }
 
-.code-img {
+.code-gif-img {
     width: 25%;
     float: left;
     margin-right: 30px;
-
+    padding: 10px; 
 }
 
 .codes-img {

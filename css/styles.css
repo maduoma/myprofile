@@ -7,17 +7,18 @@ body {
 
 h1 {
     color: #66BFBF;
-    font-size: 5.625rem;
+    /* font-size: 5.625rem; */
+    font-size: 3.3rem;
     margin: 50px auto 0 auto;
     font-family: 'Sacramento', cursive;
 }
-
 h2 {
     color: #66BFBF;
     font-family: 'Montserrat', sans-serif;
     font-size: 2.5rem;
     font-weight: normal;
     padding-bottom: 10px;
+    
 }
 
 h3 {
@@ -95,12 +96,24 @@ a:hover {
     position: absolute;
     right: 300px;
     top: 40px;
+
+    transform: translateX(100%);
 }
 
 .bottom-cloud {
     position: absolute;
     left: 250px;
     bottom: 300px;
+
+    display: inline-block;
+    transform: translateX(-100%);
+}
+
+
+.bottom-mountain {
+    width: 50%;
+    height: auto;
+    display: inline-block;
 }
 
 .code-img {

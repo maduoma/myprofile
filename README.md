@@ -19,10 +19,9 @@ CSS Box Model Demo</a>
 12. <a href = "https://giphy.com/" target="_blank">Image Animations</a> 
 13. <a href = "https://www.css3buttongenerator.com/" target="_blank">CSS Button Generator</a>
 14. <a href = "https://nodejs.org/" target="_blank">NodeJS</a>
-# My Favorites Editor, IDEs & Tools
+# My Favorite Web Development Editors & Tools
 1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>
 2. <a href = "https://pesticide.io" target="_blank">Pesticide</a>
-3. <a href = "https://developer.android.com/studio" target="_blank">Android Studio</a>
 # My Profile
 <a href = "https://maduoma.github.io/myprofile/" target="_blank">Visit My Profile Page</a>
 # NOTE

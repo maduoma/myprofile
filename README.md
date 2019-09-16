@@ -1,4 +1,4 @@
-# My profile with HTML and CSS ONLY
+# My RESPONSIVE profile with HTML and CSS ONLY.
 This is my profile developed with HTML and CSS ONLY.
 # Frameworks and Libraries
 1. <a href="http://meanjs.org/" target="_blank" title=" MongoDB, Express, AngularJS, and Node.js">MEAN Stack</a> 
@@ -18,8 +18,11 @@ CSS Box Model Demo</a>
 11. <a href = "https://www.flaticon.com/" target="_blank">Free Icons</a> 
 12. <a href = "https://giphy.com/" target="_blank">Image Animations</a> 
 13. <a href = "https://www.css3buttongenerator.com/" target="_blank">CSS Button Generator</a>
-# My Favorites Editor & Tools
+14. <a href = "https://nodejs.org/" target="_blank">NodeJS</a>
+# My Favorite Web Development Editors & Tools
 1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>
 2. <a href = "https://pesticide.io" target="_blank">Pesticide</a>
 # My Profile
 <a href = "https://maduoma.github.io/myprofile/" target="_blank">Visit My Profile Page</a>
+# NOTE
+If you want to open any links here on a new tab, do a CTRL+click on the link to achieve that. 

@@ -25,4 +25,4 @@ CSS Box Model Demo</a>
 # My Profile
 <a href = "https://maduoma.github.io/myprofile/" target="_blank">Visit My Profile Page</a>
 # NOTE
-If you want to open any links here on a new tab, do a CTRL+click on the link to achieve that. 
+If you want to open any links above on a new tab, do a CTRL+click on the link to achieve that. 

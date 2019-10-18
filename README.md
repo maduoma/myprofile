@@ -25,7 +25,7 @@ This is my profile developed with HTML and CSS ONLY.
 13. <a href = "https://www.css3buttongenerator.com/" target="_blank">CSS Button Generator</a>
 14. <a href = "https://nodejs.org/" target="_blank">NodeJS</a>
 15. <a href ="https://imagecolorpicker.com/">Image Color Picker</a>
-16. <a href = "https://www.picpng.com/">PNG Pictures</a>
+16. <a href = "https://www.picpng.com/">PNG Pictures/Images</a>
 
 # My Favorite Web Development Editors & Tools
 

@@ -1,6 +1,11 @@
-# My RESPONSIVE profile with HTML and CSS ONLY
+## My RESPONSIVE Profile with HTML and CSS ONLY
 
-This is my profile developed with HTML and CSS ONLY.
+---
+
+> This is my profile developed with HTML and CSS ONLY.
+>
+> > My Profile:
+> > <a href = "https://maduoma.github.io/myprofile/" target="_blank">Visit My Profile Page</a>
 
 # Frameworks and Libraries
 
@@ -32,10 +37,5 @@ This is my profile developed with HTML and CSS ONLY.
 1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>
 2. <a href = "https://pesticide.io" target="_blank">Pesticide</a>
 
-# My Profile
-
-<a href = "https://maduoma.github.io/myprofile/" target="_blank">Visit My Profile Page</a>
-
-# NOTE
-
-If you want to open any links above on a new tab, do a CTRL+click on the link to achieve that.
+> NOTE
+> If you want to open any links above on a new tab, do a CTRL+click on the link to achieve that.

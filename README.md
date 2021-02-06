@@ -32,10 +32,8 @@
 
 ### My Favorite Web Development Editors & Tools
 
-```
 1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>
 2. <a href = "https://pesticide.io" target="_blank">Pesticide</a>
-```
 
 > Note:
 > If you want to open any links above on a new tab, do a (CTRL + Click) or (Command + Click) on the link to achieve that.

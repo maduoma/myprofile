@@ -1,4 +1,4 @@
-#### My RESPONSIVE Profile with HTML and CSS ONLY
+##### My RESPONSIVE Profile with HTML and CSS ONLY
 
 > This is my profile developed with HTML and CSS ONLY.
 >

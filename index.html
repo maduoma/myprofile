@@ -15,9 +15,38 @@
     <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat|Sacramento&display=swap"
         rel="stylesheet">
     <title>Maduabughichi Achilefu</title>
+    <style>
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        body {
+            padding-top: 50px; /* Add a top padding to show content below navbar */
+        }
+    </style>
 </head>
 
 <body>
+    <div class="navbar">
+        <!-- <a href="#profile">Profile</a> -->
+        <a href="privacy-policy.html">Privacy Policy</a>
+    </div>
     <div class="top-container">
         <img class="top-cloud" src="img/cloud.png" alt="cloud-img">
         <h1>I am Maduabughichi,</h1>

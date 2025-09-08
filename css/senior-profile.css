@@ -98,6 +98,7 @@ header.site-header {
     letter-spacing: .5px;
     background: var(--gradient-accent);
     -webkit-background-clip: text;
+    background-clip: text;
     color: transparent;
     display: flex;
     align-items: center;
@@ -198,6 +199,7 @@ main {
     margin: 0;
     background: linear-gradient(90deg, #eef6f8, var(--color-text-soft));
     -webkit-background-clip: text;
+    background-clip: text;
     color: transparent;
 }
 
@@ -225,6 +227,7 @@ main {
 .hero-intro h1 span.gradient {
     background: var(--gradient-accent);
     -webkit-background-clip: text;
+    background-clip: text;
     color: transparent;
 }
 
@@ -334,6 +337,7 @@ main {
     font-weight: 600;
     background: var(--gradient-accent);
     -webkit-background-clip: text;
+    background-clip: text;
     color: transparent;
     letter-spacing: -1px;
 }

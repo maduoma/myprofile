@@ -1,16 +1,16 @@
-##### My RESPONSIVE Profile with HTML and CSS ONLY
+# My RESPONSIVE Profile with HTML and CSS ONLY
 
 > This is my profile developed with HTML and CSS ONLY.
 >
 > > My Profile:
 > > <a href = "https://maduoma.github.io/myprofile/" target="_blank">Visit My Profile Page</a>
 
-### Frameworks and Libraries
+## Frameworks and Libraries
 
 1. <a href="http://meanjs.org/" target="_blank" title=" MongoDB, Express, AngularJS, and Node.js">MEAN Stack</a>
 2. <a href="http://github.com/meanjs/mean" target="_blank" title="MEAN Stack">GitHub - MEAN Stack</a>
 
-### Freebies
+## Freebies
 
 1. <a href = "https://www.appbrewery.co/p/web-development-course-resources" target="_blank">Angela Yu - Resources</a>
 2. <a href = "https://colorhunt.co/" target="_blank">Web Color Pallet</a>
@@ -30,10 +30,66 @@
 15. <a href ="https://imagecolorpicker.com/">Image Color Picker</a>
 16. <a href = "https://www.picpng.com/">PNG Pictures/Images</a>
 
-### My Favorite Web Development Editors & Tools
+## My Favorite Web Development Editors & Tools
 
 1. <a href = "https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>
 2. <a href = "https://pesticide.io" target="_blank">Pesticide</a>
 
 > Note:
 > If you want to open any links above on a new tab, do a (CTRL + Click) or (Command + Click) on the link to achieve that.
+
+---
+
+## Senior Engineer / AI Profile Upgrade
+
+This repository now includes a modern, production-ready senior software & AI/ML engineering profile with multiple formats:
+
+| Asset | Purpose |
+|-------|---------|
+| `senior-profile.html` | Fully responsive interactive profile (dark/light theme, filters, timeline). |
+| `css/senior-profile.css` | Design system (tokens, layout, animations, accessibility focused). |
+| `PROFILE.md` | Comprehensive markdown profile (full detail). |
+| `PROFILE_SHORT.md` | Condensed recruiter snapshot version. |
+| `cv.tex` | LaTeX resume (compile with `xelatex cv.tex`). |
+| `index.html` | Original landing page (now links to the senior profile). |
+
+## Features
+
+- Theme toggle (persisted in localStorage)
+- Progressive section reveal (IntersectionObserver)
+- Scroll spy navigation highlighting
+- Project category filtering (data-attribute driven)
+- Accessibility considerations (aria labels, reduced motion fallback)
+- Responsive grid + timeline layout
+
+## Quick Run (local)
+
+Just open `senior-profile.html` in a browser. For a quick static server (Python 3):
+
+```bash
+python -m http.server 8080
+```
+
+Then navigate to: <http://localhost:8080/senior-profile.html>
+
+## Customize
+
+1. Replace placeholder company names (Company A–D) in `PROFILE.md`, `PROFILE_SHORT.md`, and `cv.tex`.
+2. Update MSc institution details.
+3. Add/rename real project titles and concrete metrics.
+4. Extend project cards in `senior-profile.html` (duplicate an `<article class="card">`).
+5. Adjust color palette or typography via CSS custom properties in `css/senior-profile.css`.
+
+## Export to PDF
+
+- Use browser print (Chrome/Edge) on `senior-profile.html` with background graphics enabled.
+- Or compile `cv.tex` using XeLaTeX for a print-optimized resume.
+
+## Future Ideas (Optional)
+
+- Add skills radar chart (Canvas or SVG)
+- Integrate project detail modal dialogs
+- Hook contact form to EmailJS or Formspree
+- Add Lighthouse CI workflow for performance budgets
+
+---

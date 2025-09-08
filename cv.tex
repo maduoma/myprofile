@@ -1,0 +1,110 @@
+% LaTeX Resume for Maduabughichi Achilefu
+% Compile with: xelatex cv.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1.3cm]{geometry}
+\usepackage{fontawesome5}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{fontspec}
+
+% Fonts (requires XeLaTeX)
+\setmainfont{Inter}
+\newfontfamily\monofont{JetBrains Mono}
+
+% Colors
+\definecolor{accent}{HTML}{37D6C9}
+\definecolor{text}{HTML}{222A33}
+\definecolor{sub}{HTML}{5A6A7A}
+\definecolor{border}{HTML}{D8E0E7}
+\definecolor{light}{HTML}{F5F7FA}
+\definecolor{heading}{HTML}{0E1114}
+
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent}
+
+% Section format
+\titleformat{\section}{\large\bfseries\color{heading}}{}{0pt}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{heading}}{}{0pt}{}
+
+\setlist[itemize]{noitemsep,topsep=2pt,leftmargin=12pt}
+\pagestyle{empty}
+
+\begin{document}
+\begin{center}
+    \textbf{\Large Maduabughichi Achilefu}\\[4pt]
+    Senior Software \& AI/ML Engineer (Distributed Systems, LLMOps, Platform Architecture)\\[2pt]
+    \href{mailto:dodemyinc@gmail.com}{dodemyinc@gmail.com} $|$ \href{https://github.com/maduoma}{github.com/maduoma} $|$ \href{https://www.linkedin.com/in/maduabughichiachilefu/}{LinkedIn} $|$ @DodemyInc
+\end{center}
+
+\section*{Summary}
+Senior engineer (14 yrs) delivering scalable distributed systems, multi-region platforms, and applied AI/ML (6 yrs LLMOps). Architected RAG systems, evaluation/guardrail frameworks, inference optimization (10--50× latency improvements), and developer enablement tooling improving reliability (four nines targets), cost efficiency, and engineering velocity.
+
+\section*{Core Competencies}
+\begin{multicols}{2}
+\begin{itemize}
+  \item Architecture: Microservices, Event-Driven, CQRS, API Lifecycle, Multi-Region
+  \item LLM/AI: RAG, Embeddings, Fine-Tuning (LoRA/PEFT), Guardrails, Drift/Eval
+  \item MLOps: Model Registry, Feature Pipelines, Shadow/Canary Deployments
+  \item Infra/Cloud: Kubernetes, Terraform, AWS, Azure, GCP, Helm
+  \item Data/Streaming: Kafka, Kinesis, Airflow, dbt, Elastic, pgVector, Faiss
+  \item Languages: Python, TypeScript, Go, Java, SQL, Rust (selective), C# (legacy)
+  \item Reliability: Observability, OpenTelemetry, SLOs, Chaos, Blue/Green, Canary
+  \item Security: IAM, Policy-as-Code, Encryption, PII Handling, Secrets Mgmt
+\end{itemize}
+\end{multicols}
+
+\section*{Selected Projects}
+\textbf{LLMOps Enterprise Search Platform} -- Modular RAG (hybrid retrieval, semantic re-rank), compliance guardrails, lineage + eval dashboards; latency 950ms $\rightarrow$ 180ms; relevance +18%.\\
+\textbf{Streaming Inference Mesh} -- Adaptive batching, concurrency shaping, hybrid GPU/CPU scheduling; p95 <220ms at 10× load; serving cost -32%.\\
+\textbf{Retrieval Evaluation Harness} -- Benchmark suite (BM25 vs dense vs hybrid), drift detection pipeline; stale results -40%.\\
+\textbf{Multi-Region Refactor} -- Monolith $\rightarrow$ 19 services (contract versioned); blue/green + canary cutover <0.02% errors; defects -55%.
+
+\section*{Experience}
+\textbf{Senior / Principal Software \& AI/ML Engineer -- Company A}\hfill 2022--Present\\
+\begin{itemize}
+  \item Multi-domain retrieval + LLM augmentation platform (adopted by 6 business units).
+  \item Inference efficiency: cost -28%; latency 4.3× improvement.
+  \item Safety + evaluation gates (toxicity, hallucination) integrated in CI.
+  \item Mentored 8 engineers; design narrative standardization.
+\end{itemize}
+
+\textbf{Lead Platform / ML Systems Engineer -- Company B}\hfill 2018--2022\\
+\begin{itemize}
+  \item MLOps foundation (model registry, retraining automation: weeks $\rightarrow$ days).
+  \item Streaming enrichment pipeline with sub-second feature injection.
+  \item Standardized observability + SLOs: incidents -35%.
+  \item Latency budget alignment improved personalization conversion +9%.
+\end{itemize}
+
+\textbf{Senior Full-Stack Engineer -- Company C}\hfill 2014--2018\\
+\begin{itemize}
+  \item Modularization accelerated release cadence 3×.
+  \item API governance reduced partner integration friction.
+  \item Performance + caching: infra cost -20%; TTI -45%.
+\end{itemize}
+
+\textbf{Software Engineer -- Company D}\hfill 2011--2014\\
+\begin{itemize}
+  \item Transactional services emphasizing correctness \& idempotency.
+  \item Performance harness identified concurrency defects pre-production.
+  \item Authored coding/review standards adopted org-wide.
+\end{itemize}
+
+\section*{Leadership \& Differentiators}
+Hybrid retrieval optimization; LLM safety \& hallucination mitigation; latency engineering (adaptive batching, speculative execution); active/active strategies; artifact lineage \& governance; developer platform standardization (CLI + templates, preview envs).
+
+\section*{Education}
+\textbf{MSc -- Analytics & Applied Machine Learning} (Institution TBD)\\
+Capstone: Predictive pipeline with drift-triggered retraining automation.\\[2pt]
+\textbf{BSc -- Computer Science} (Assumed; replace if needed)
+
+\section*{Contact}
+Email: \href{mailto:dodemyinc@gmail.com}{dodemyinc@gmail.com} $|$ GitHub: \href{https://github.com/maduoma}{maduoma} $|$ LinkedIn: /in/maduabughichiachilefu $|$ X: @DodemyInc
+
+\vfill
+\centerline{\scriptsize Generated profile. Replace placeholders (Company A–D, institution) with real data.}
+\end{document}

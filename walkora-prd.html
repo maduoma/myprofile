@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Walkora — Product Requirements Document. A privacy-conscious social walking app: reliable tracking, flexible goals, fair challenges, and user-controlled privacy.">
+<title>Walkora — Product Requirements Document</title>
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   Doc chrome uses the Walkora brand (teal). Chart data colors
+   use a CVD-validated ordinal blue ramp + reserved status hues
+   (validated with the palette validator in light AND dark).
+   ============================================================ */
+:root{
+  --brand:#0f766e;          /* Walkora teal — 4.9:1 on white */
+  --brand-strong:#0b5d57;
+  --brand-soft:#e6f4f2;
+  --brand-ink:#ffffff;
+
+  --page:#f9f9f7;
+  --surface:#fcfcfb;
+  --surface-2:#f3f2ee;
+  --ink:#0b0b0b;
+  --ink-2:#52514e;
+  --ink-3:#898781;
+  --grid:#e1e0d9;
+  --baseline:#c3c2b7;
+  --hairline:rgba(11,11,11,.10);
+
+  /* ordinal blue ramp (validated, light + dark) */
+  --ord-1:#86b6ef; --ord-2:#5598e7; --ord-3:#2a78d6; --ord-4:#184f95;
+
+  /* status (fixed, reserved — always paired with icon + label) */
+  --st-good:#0ca30c; --st-warn:#fab219; --st-serious:#ec835a; --st-critical:#d03b3b;
+  --st-good-bg:#e8f6e8; --st-warn-bg:#fdf3dc; --st-serious-bg:#fdeae2; --st-critical-bg:#fae4e4;
+  --st-good-ink:#0a5d0a; --st-warn-ink:#6e4a00; --st-serious-ink:#8a3416; --st-critical-ink:#8f2020;
+
+  --pill-p0:#fae4e4; --pill-p0-ink:#8f2020;
+  --pill-p1:#fdf3dc; --pill-p1-ink:#6e4a00;
+  --pill-p2:#e9edf6; --pill-p2-ink:#2c4a77;
+
+  --radius:14px;
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 6px 22px rgba(11,11,11,.06);
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --brand:#45d0c0;
+  --brand-strong:#7fe3d6;
+  --brand-soft:#123b37;
+  --brand-ink:#04211e;
+
+  --page:#0d0d0d;
+  --surface:#1a1a19;
+  --surface-2:#232322;
+  --ink:#ffffff;
+  --ink-2:#c3c2b7;
+  --ink-3:#898781;
+  --grid:#2c2c2a;
+  --baseline:#383835;
+  --hairline:rgba(255,255,255,.10);
+
+  --st-good-bg:#12300f; --st-warn-bg:#3a2c07; --st-serious-bg:#3c1f12; --st-critical-bg:#3b1414;
+  --st-good-ink:#7bd97b; --st-warn-ink:#fac95e; --st-serious-ink:#f2a789; --st-critical-ink:#ea8a8a;
+
+  --pill-p0:#3b1414; --pill-p0-ink:#ea8a8a;
+  --pill-p1:#3a2c07; --pill-p1-ink:#fac95e;
+  --pill-p2:#1d2b40; --pill-p2-ink:#9dbdea;
+
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 26px rgba(0,0,0,.35);
+}
+
+/* ============================================================ BASE */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+body{
+  margin:0;background:var(--page);color:var(--ink);
+  font:16px/1.65 var(--sans);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:1.7rem;margin-top:0}
+h3{font-size:1.18rem}
+h4{font-size:1rem}
+p{margin:.4em 0 1em}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+ul{padding-left:1.25em}
+li{margin:.25em 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);border:1px solid var(--hairline);border-radius:6px;padding:.08em .35em}
+blockquote{
+  margin:1em 0;padding:.9em 1.2em;border-left:4px solid var(--brand);
+  background:var(--brand-soft);border-radius:0 var(--radius) var(--radius) 0;
+  font-size:1.06rem;color:var(--ink);
+}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:4px}
+
+/* ============================================================ TOP BAR */
+#progressbar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--brand);z-index:60}
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+  padding:10px 20px;background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);
+}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;white-space:nowrap}
+.logo svg{flex:none}
+.logo .sub{font-weight:500;color:var(--ink-3);font-size:.85rem}
+.topbar .spacer{flex:1}
+.chip{
+  display:inline-flex;align-items:center;gap:.35em;padding:.18em .7em;border-radius:999px;
+  font-size:.76rem;font-weight:600;background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink-2);
+  white-space:nowrap;
+}
+.chip.brand{background:var(--brand-soft);color:var(--brand);border-color:transparent}
+.btn{
+  display:inline-flex;align-items:center;gap:.45em;border:1px solid var(--hairline);
+  background:var(--surface);color:var(--ink);border-radius:10px;padding:.45em .85em;
+  font:600 .86rem var(--sans);cursor:pointer;
+}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+#navToggle{display:none}
+
+/* ============================================================ LAYOUT */
+.layout{display:grid;grid-template-columns:264px minmax(0,1fr);max-width:1360px;margin:0 auto;gap:0 36px;padding:0 20px}
+.sidebar{
+  position:sticky;top:64px;align-self:start;height:calc(100vh - 64px);
+  overflow-y:auto;padding:22px 4px 40px 0;font-size:.86rem;
+  scrollbar-width:thin;
+}
+.sidebar .grp{margin:14px 0 4px;font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);padding-left:12px}
+.sidebar a{
+  display:block;padding:.34em 12px;border-radius:8px;color:var(--ink-2);
+  border-left:2px solid transparent;
+}
+.sidebar a:hover{background:var(--surface-2);text-decoration:none}
+.sidebar a.active{color:var(--brand);font-weight:650;background:var(--brand-soft);border-left-color:var(--brand);border-radius:0 8px 8px 0}
+main{padding:26px 0 90px;min-width:0}
+
+/* ============================================================ SECTIONS / CARDS */
+section.doc{margin:0 0 34px;scroll-margin-top:84px}
+.card{
+  background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:26px 28px;
+}
+.kicker{font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);margin-bottom:.4em}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.mini{
+  background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);
+  padding:18px 20px;box-shadow:var(--shadow);
+}
+.mini h4{display:flex;align-items:center;gap:.5em;margin-bottom:.35em}
+.mini p{margin:.2em 0 0;color:var(--ink-2);font-size:.92rem}
+.num{
+  flex:none;display:inline-grid;place-items:center;width:1.7em;height:1.7em;border-radius:8px;
+  background:var(--brand-soft);color:var(--brand);font-size:.85rem;font-weight:800;
+}
+
+/* ============================================================ COVER */
+.cover{
+  border-radius:20px;overflow:hidden;border:1px solid var(--hairline);box-shadow:var(--shadow);
+  background:
+    radial-gradient(1100px 420px at 85% -20%, color-mix(in srgb,var(--brand) 16%,transparent), transparent 60%),
+    radial-gradient(700px 380px at -10% 110%, color-mix(in srgb,var(--brand) 10%,transparent), transparent 60%),
+    var(--surface);
+  padding:46px 44px 38px;margin-bottom:34px;
+}
+.cover h1{font-size:clamp(1.9rem,4vw,2.9rem);margin:.25em 0 .15em}
+.cover .tagline{font-size:1.15rem;color:var(--ink-2);max-width:56ch}
+.metaTable{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:26px;
+}
+.metaTable div{border-top:2px solid var(--hairline);padding-top:8px}
+.metaTable dt{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+.metaTable dd{margin:2px 0 0;font-weight:600;font-size:.94rem}
+.pillarRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+
+/* ============================================================ TABLES */
+.tblWrap{overflow-x:auto;border:1px solid var(--hairline);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{
+  text-align:left;font-size:.73rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);
+  padding:11px 14px;border-bottom:1px solid var(--grid);background:var(--surface-2);white-space:nowrap;
+}
+td{padding:10px 14px;border-bottom:1px solid var(--grid);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.numcol,th.numcol{text-align:right;font-variant-numeric:tabular-nums}
+.tick{color:var(--st-good);font-weight:700}
+.dash{color:var(--ink-3)}
+
+/* status + priority chips */
+.st{display:inline-flex;align-items:center;gap:.4em;padding:.14em .6em;border-radius:999px;font-size:.76rem;font-weight:700;white-space:nowrap}
+.st .dot{width:.6em;height:.6em;border-radius:50%;flex:none}
+.st.good{background:var(--st-good-bg);color:var(--st-good-ink)}     .st.good .dot{background:var(--st-good)}
+.st.warn{background:var(--st-warn-bg);color:var(--st-warn-ink)}     .st.warn .dot{background:var(--st-warn)}
+.st.serious{background:var(--st-serious-bg);color:var(--st-serious-ink)} .st.serious .dot{background:var(--st-serious)}
+.st.critical{background:var(--st-critical-bg);color:var(--st-critical-ink)} .st.critical .dot{background:var(--st-critical)}
+.pr{display:inline-block;padding:.1em .55em;border-radius:6px;font-size:.74rem;font-weight:800}
+.pr.P0{background:var(--pill-p0);color:var(--pill-p0-ink)}
+.pr.P1{background:var(--pill-p1);color:var(--pill-p1-ink)}
+.pr.P2{background:var(--pill-p2);color:var(--pill-p2-ink)}
+.rel{display:inline-block;padding:.1em .55em;border-radius:6px;font-size:.74rem;font-weight:700;background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink-2);white-space:nowrap}
+
+/* ============================================================ STAT TILES */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:18px 0}
+.kpi{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.kpi .lbl{font-size:.78rem;font-weight:600;color:var(--ink-2)}
+.kpi .val{font-size:2rem;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.kpi .sub{font-size:.78rem;color:var(--ink-3)}
+
+/* ============================================================ CHARTS */
+.chartCard{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px}
+.chartHead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.chartHead h3{margin:0}
+.chartHead .sub{color:var(--ink-3);font-size:.84rem}
+.chartHead .tools{margin-left:auto}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem;color:var(--ink-2);margin:6px 0 2px}
+.legend .key{display:inline-flex;align-items:center;gap:.45em}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:none}
+svg text{font-family:var(--sans)}
+.bar{cursor:pointer}
+.bar:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+#tooltip{
+  position:fixed;z-index:70;pointer-events:none;display:none;max-width:260px;
+  background:var(--surface);border:1px solid var(--hairline);border-radius:10px;box-shadow:var(--shadow);
+  padding:8px 12px;font-size:.82rem;line-height:1.45;
+}
+#tooltip .tv{font-weight:800;font-size:1rem}
+#tooltip .tl{color:var(--ink-2)}
+.tableView{display:none;margin-top:12px}
+.tableView.show{display:block}
+.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ============================================================ REQUIREMENTS EXPLORER */
+.filters{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);
+  padding:12px 14px;margin-bottom:16px;box-shadow:var(--shadow);
+}
+.filters input[type=search]{
+  flex:1 1 220px;min-width:180px;border:1px solid var(--hairline);border-radius:10px;
+  background:var(--page);color:var(--ink);padding:.5em .9em;font:inherit;font-size:.9rem;
+}
+.seg{display:inline-flex;border:1px solid var(--hairline);border-radius:10px;overflow:hidden}
+.seg button{
+  border:0;background:var(--surface);color:var(--ink-2);font:600 .8rem var(--sans);
+  padding:.5em .8em;cursor:pointer;border-right:1px solid var(--hairline);
+}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink)}
+#reqCount{font-size:.82rem;color:var(--ink-3);margin-left:auto}
+details.epic{
+  background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);
+  box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;
+}
+details.epic>summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:15px 20px;font-weight:650;
+}
+details.epic>summary::-webkit-details-marker{display:none}
+details.epic>summary .code{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--brand);background:var(--brand-soft);border-radius:6px;padding:.15em .5em}
+details.epic>summary .cnt{margin-left:auto;color:var(--ink-3);font-size:.8rem;font-weight:500}
+details.epic>summary .tw{transition:transform .15s;color:var(--ink-3)}
+details.epic[open]>summary .tw{transform:rotate(90deg)}
+details.epic .epicDesc{padding:0 20px 6px;color:var(--ink-2);font-size:.9rem;margin-top:-6px}
+details.epic table{font-size:.88rem}
+details.epic td:first-child{font-family:var(--mono);font-size:.78rem;white-space:nowrap;color:var(--ink-2)}
+mark{background:color-mix(in srgb,var(--st-warn) 40%,transparent);color:inherit;border-radius:3px;padding:0 .1em}
+
+/* ============================================================ PHONE MOCKUPS */
+.mockRow{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:18px}
+.mockCol{display:flex;flex-direction:column;gap:10px;min-width:0}
+.phone{
+  width:100%;max-width:270px;margin:0 auto;background:var(--surface);
+  border:1px solid var(--hairline);border-radius:30px;box-shadow:var(--shadow);
+  padding:10px;
+}
+.screen{
+  border-radius:22px;overflow:hidden;background:var(--page);border:1px solid var(--hairline);
+  display:flex;flex-direction:column;min-height:480px;font-size:12.5px;line-height:1.45;
+}
+.appbar{display:flex;align-items:center;gap:8px;padding:11px 14px 7px;font-weight:700;font-size:14px}
+.appbar .sync{margin-left:auto;font-size:10px;color:var(--ink-3);font-weight:500;text-align:right;line-height:1.3}
+.screenBody{flex:1;padding:4px 12px 12px;display:flex;flex-direction:column;gap:9px}
+.mcard{background:var(--surface);border:1px solid var(--hairline);border-radius:14px;padding:11px 12px}
+.mcard .h{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.ringWrap{display:flex;align-items:center;gap:12px}
+.ringTxt .big{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.ringTxt .sm{font-size:10.5px;color:var(--ink-2)}
+.statRow{display:flex;gap:6px}
+.statRow .s{flex:1;background:var(--surface-2);border-radius:10px;padding:6px 8px;text-align:center}
+.statRow .s b{display:block;font-size:12.5px}
+.statRow .s span{font-size:9.5px;color:var(--ink-3)}
+.mnav{display:flex;border-top:1px solid var(--hairline);background:var(--surface)}
+.mnav a{
+  flex:1;text-align:center;font-size:9px;font-weight:600;color:var(--ink-3);
+  padding:7px 0 8px;display:flex;flex-direction:column;gap:2px;align-items:center;
+}
+.mnav a svg{width:17px;height:17px}
+.mnav a.on{color:var(--brand)}
+.mnav a.on::before{content:"";display:block;width:26px;height:3px;border-radius:3px;background:var(--brand);margin-bottom:1px}
+.mnav a::before{content:"";display:block;width:26px;height:3px;border-radius:3px;background:transparent;margin-bottom:1px}
+.lb{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid var(--grid)}
+.lb:last-child{border-bottom:0}
+.lb .rk{width:14px;text-align:center;font-weight:700;font-size:11px;color:var(--ink-2)}
+.lb .av{width:22px;height:22px;border-radius:50%;background:var(--brand-soft);display:grid;place-items:center;font-size:10px;font-weight:800;color:var(--brand);flex:none}
+.lb .nm{flex:1;min-width:0;font-weight:600;font-size:11.5px}
+.lb .nm small{display:block;font-weight:400;color:var(--ink-3);font-size:9px}
+.lb .pc{font-weight:700;font-size:11.5px;font-variant-numeric:tabular-nums}
+.lb.me{background:var(--brand-soft);border-radius:10px;padding-left:8px;padding-right:8px;border-bottom:0}
+.gbar{height:4px;border-radius:4px;background:var(--surface-2);margin-top:3px;overflow:hidden}
+.gbar i{display:block;height:100%;border-radius:4px;background:var(--brand)}
+.mseg{display:flex;background:var(--surface-2);border-radius:9px;padding:2px;gap:2px}
+.mseg span{flex:1;text-align:center;font-size:9.5px;font-weight:600;color:var(--ink-2);padding:4px 2px;border-radius:7px}
+.mseg .on{background:var(--surface);color:var(--brand);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.mbtn{display:block;text-align:center;background:var(--brand);color:var(--brand-ink);font-weight:700;border-radius:11px;padding:9px;font-size:12px}
+.mbtn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--hairline)}
+.callouts{font-size:.85rem;color:var(--ink-2);padding-left:0;list-style:none}
+.callouts li{position:relative;padding-left:2.1em;margin:.45em 0}
+.callouts .num{position:absolute;left:0;top:.18em;width:1.5em;height:1.5em;font-size:.75rem}
+.mockCap{text-align:center;font-size:.82rem;color:var(--ink-3);font-weight:600}
+
+/* ============================================================ JOURNEYS / STEPPERS */
+.journey{counter-reset:step;margin:0;padding:0;list-style:none}
+.journey li{
+  counter-increment:step;position:relative;padding:0 0 14px 44px;
+}
+.journey li::before{
+  content:counter(step);position:absolute;left:0;top:0;
+  width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+  background:var(--brand-soft);color:var(--brand);font-weight:800;font-size:.82rem;
+}
+.journey li:not(:last-child)::after{
+  content:"";position:absolute;left:13.5px;top:30px;bottom:2px;width:1px;background:var(--grid);
+}
+.journey b{display:block}
+.journey span{color:var(--ink-2);font-size:.92rem}
+
+/* ============================================================ ROADMAP */
+.roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:16px}
+.phase{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.phase .ph{padding:12px 16px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:space-between;font-size:.95rem}
+.phase .ph small{font-weight:600;opacity:.85;font-size:.74rem}
+.phase ul{margin:0;padding:14px 16px 16px 30px;font-size:.88rem;color:var(--ink-2);flex:1}
+.phase .theme{padding:10px 16px 0;font-size:.8rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+
+/* ============================================================ CHECKLISTS */
+.checks{list-style:none;padding:0;margin:0;columns:2;column-gap:28px}
+.checks li{break-inside:avoid;display:flex;gap:.55em;margin:.35em 0;font-size:.92rem;color:var(--ink-2)}
+.checks li::before{content:"✓";color:var(--st-good);font-weight:800;flex:none}
+@media (max-width:760px){.checks{columns:1}}
+.decisions{list-style:none;padding:0;margin:0}
+.decisions li{display:flex;align-items:flex-start;gap:.7em;padding:.5em 0;border-bottom:1px solid var(--grid)}
+.decisions li:last-child{border-bottom:0}
+.decisions input{width:1.1em;height:1.1em;margin-top:.25em;accent-color:var(--brand)}
+.decisions label{cursor:pointer}
+.decisions label small{display:block;color:var(--ink-3)}
+.decisions li.done label{color:var(--ink-3);text-decoration:line-through}
+
+/* ============================================================ MISC */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+#toTop{
+  position:fixed;right:22px;bottom:22px;z-index:40;display:none;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--hairline);
+  background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:var(--shadow);font-size:1.1rem;
+}
+footer.doc{color:var(--ink-3);font-size:.82rem;padding:26px 0;border-top:1px solid var(--hairline);margin-top:20px}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width:1020px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed;inset:57px auto 0 0;width:280px;background:var(--surface);
+    border-right:1px solid var(--hairline);transform:translateX(-105%);
+    transition:transform .2s;z-index:55;padding:18px 14px 40px;height:auto;
+  }
+  .sidebar.open{transform:none}
+  #navToggle{display:inline-flex}
+  .cover{padding:32px 26px}
+  #searchTop{display:none}
+}
+
+/* ============================================================ PRINT */
+@media print{
+  .topbar,.sidebar,#toTop,#progressbar,.filters,.tools,#navToggle{display:none !important}
+  body{background:#fff;font-size:12px}
+  .layout{display:block;padding:0}
+  .card,.mini,.chartCard,details.epic,.phase,.kpi{box-shadow:none;break-inside:avoid}
+  details.epic{border:1px solid #ccc}
+  a{color:inherit}
+  .cover{break-after:page}
+  section.doc{break-inside:avoid-page}
+}
+</style>
+</head>
+<body>
+
+<div id="progressbar" aria-hidden="true"></div>
+
+<header class="topbar">
+  <button class="btn" id="navToggle" aria-label="Toggle table of contents" aria-expanded="false">☰</button>
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect width="32" height="32" rx="9" fill="var(--brand)"/>
+      <path d="M11 23c-1.8-2.2-2.4-5.8-.9-7.6 1.3-1.5 3.3-1 4 .8.8 2.1.4 5.2-.8 6.8-.7.9-1.7.8-2.3 0Z" fill="var(--brand-ink)"/>
+      <path d="M20.5 17.5c-1.5-1.9-1.9-5-.6-6.5 1.1-1.3 2.9-.9 3.5.7.7 1.8.3 4.4-.7 5.8-.6.8-1.6.7-2.2 0Z" fill="var(--brand-ink)" opacity=".75"/>
+    </svg>
+    Walkora <span class="sub">Product Requirements Document</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="chip" id="searchTop">Press <code>/</code> to filter requirements</span>
+  <span class="chip brand">v1.0 · Draft for review</span>
+  <button class="btn" id="themeBtn" aria-live="polite">◐ Theme: System</button>
+  <button class="btn" onclick="window.print()">Print / PDF</button>
+</header>
+
+<div class="layout">
+
+<!-- ================= SIDEBAR ================= -->
+<nav class="sidebar" id="sidebar" aria-label="Document sections">
+  <div class="grp">Product</div>
+  <a href="#overview">1 · Overview</a>
+  <a href="#problem">2 · Problem statement</a>
+  <a href="#goals">3 · Goals &amp; non-goals</a>
+  <a href="#users">4 · Users &amp; personas</a>
+  <a href="#roles">5 · Roles &amp; permissions</a>
+  <div class="grp">Requirements</div>
+  <a href="#scope">6 · Scope at a glance</a>
+  <a href="#requirements">7 · Functional requirements</a>
+  <a href="#ia">8 · Information architecture</a>
+  <a href="#ux">9 · UX blueprint &amp; mockups</a>
+  <a href="#journeys">10 · User journeys</a>
+  <div class="grp">Quality</div>
+  <a href="#flowhealth">11 · Flow-health audit</a>
+  <a href="#a11y">12 · Accessibility</a>
+  <a href="#privacy">13 · Privacy &amp; security</a>
+  <a href="#dataquality">14 · Data quality &amp; fairness</a>
+  <a href="#engagement">15 · Notification principles</a>
+  <div class="grp">Delivery</div>
+  <a href="#roadmap">16 · Release roadmap</a>
+  <a href="#metrics">17 · Success metrics</a>
+  <a href="#risks">18 · Risks</a>
+  <a href="#decisions">19 · Open decisions</a>
+  <a href="#assumptions">20 · Assumptions</a>
+  <a href="#statement">21 · Final scope statement</a>
+</nav>
+
+<!-- ================= MAIN ================= -->
+<main>
+
+<!-- ============ COVER ============ -->
+<div class="cover" id="top">
+  <div class="kicker">Product Requirements Document</div>
+  <h1>Walkora</h1>
+  <p class="tagline"><strong>Walk more. Progress together.</strong> A privacy-conscious social walking app that transforms everyday steps into achievable goals, visible progress, and supportive shared experiences.</p>
+  <dl class="metaTable">
+    <div><dt>Document status</dt><dd>Draft for review</dd></div>
+    <div><dt>Version</dt><dd>1.0</dd></div>
+    <div><dt>Platform</dt><dd>Android (Android-first)</dd></div>
+    <div><dt>Source</dt><dd>project-scope.md</dd></div>
+    <div><dt>Last updated</dt><dd>July 12, 2026</dd></div>
+    <div><dt>Owners</dt><dd>Product · Engineering · Design</dd></div>
+  </dl>
+  <div class="pillarRow" aria-label="Product pillars">
+    <span class="chip brand">① Reliable tracking</span>
+    <span class="chip brand">② Flexible goals &amp; streaks</span>
+    <span class="chip brand">③ Progress insights</span>
+    <span class="chip brand">④ Fair social challenges</span>
+    <span class="chip brand">⑤ Positive achievements</span>
+    <span class="chip brand">⑥ Privacy &amp; user control</span>
+  </div>
+</div>
+
+<!-- ============ 1 OVERVIEW ============ -->
+<section class="doc" id="overview">
+  <div class="card">
+    <div class="kicker">Section 1</div>
+    <h2>Overview</h2>
+    <p>Walkora is a privacy-conscious social walking and activity-tracking application that helps people build sustainable walking habits through automatic step tracking, flexible goals, meaningful progress insights, supportive friendships, group challenges, and positive achievement recognition. It is <strong>not just a pedometer</strong>: its core value is the combination of reliable tracking, personal motivation, social accountability, accessible progress reporting, and user-controlled privacy.</p>
+    <blockquote>Walkora helps people build sustainable walking habits by combining accurate activity tracking, flexible personal goals, meaningful progress insights, friendly challenges, and privacy-controlled social accountability.</blockquote>
+    <div class="grid3">
+      <div class="mini"><h4>Vision</h4><p>Make everyday walking easier to sustain by transforming activity data into achievable goals, visible progress, and supportive shared experiences.</p></div>
+      <div class="mini"><h4>Mission</h4><p>Help people move more consistently — without shame, unhealthy pressure, or unnecessary complexity.</p></div>
+      <div class="mini"><h4>Promise</h4><p>Encouraging rather than demanding. Social rather than intrusive. Competitive without becoming unhealthy. Useful before registration.</p></div>
+    </div>
+    <h3 style="margin-top:26px">Defensible value</h3>
+    <p>Android and wearable platforms already show basic step totals. Walkora wins on what they don't do:</p>
+    <ul class="checks">
+      <li>Flexible goals with rest days and recovery modes</li>
+      <li>Positive, opt-in social accountability</li>
+      <li>Fair challenge models beyond absolute step totals</li>
+      <li>Cross-device activity consolidation via Health Connect</li>
+      <li>Excellent progress storytelling and recaps</li>
+      <li>Strong privacy and social-safety controls from day one</li>
+      <li>A polished, fully accessible experience</li>
+      <li>Genuinely useful guest mode — value before sign-in</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 2 PROBLEM ============ -->
+<section class="doc" id="problem">
+  <div class="card">
+    <div class="kicker">Section 2</div>
+    <h2>Problem statement</h2>
+    <p>Eight validated problems drive the product. Every requirement in §7 traces back to at least one of them.</p>
+    <div class="grid2">
+      <div class="mini"><h4><span class="num">P1</span>Motivation fades</h4><p>Pedometers show totals without a reason to return. Users need encouragement, achievable goals, visible progress, and optional social accountability to build a habit loop.</p></div>
+      <div class="mini"><h4><span class="num">P2</span>Fragmented data</h4><p>Steps live across phone sensors, watches, Health Connect, Samsung Health, Garmin, Fitbit, Xiaomi, and Oura. Users need one reliable view with transparent sources, sync status, and dedup.</p></div>
+      <div class="mini"><h4><span class="num">P3</span>Rigid goals punish</h4><p>One fixed target ignores ability, routine, and recovery. Missing one day breaks streaks and feels punitive. Users need flexible goals, rest days, and pause options.</p></div>
+      <div class="mini"><h4><span class="num">P4</span>Walking feels isolated</h4><p>Solo tracking gives weak accountability. Friends, private groups, fair challenges, and mutual encouragement keep people engaged.</p></div>
+      <div class="mini"><h4><span class="num">P5</span>Raw totals lack context</h4><p>A number doesn't say whether the goal was reached, whether you're improving, or whether the data is even current. Users need trends, comparisons, records, and goal progress.</p></div>
+      <div class="mini"><h4><span class="num">P6</span>Leaderboards discourage</h4><p>Absolute step rankings favour already-active users and demoralize beginners. Fair modes — goal %, consistency, improvement, team average — are required.</p></div>
+      <div class="mini"><h4><span class="num">P7</span>Social needs safety</h4><p>Friends, groups, and chat invite unwanted contact, harassment, and spam without blocking, reporting, moderation, rate limits, and age-appropriate protections from the first social release.</p></div>
+      <div class="mini"><h4><span class="num">P8</span>Privacy is expected</h4><p>Activity history and social graphs are personal. Users need precise control over discovery, visibility, leaderboard presence, connected devices, notifications, export, and deletion.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 GOALS ============ -->
+<section class="doc" id="goals">
+  <div class="card">
+    <div class="kicker">Section 3</div>
+    <h2>Goals &amp; non-goals</h2>
+    <div class="two">
+      <div>
+        <h3>User objectives</h3>
+        <ul>
+          <li>Make daily walking progress easy to understand</li>
+          <li>Help users develop consistent routines</li>
+          <li>Reduce friction during setup and synchronization</li>
+          <li>Provide useful guest functionality before registration</li>
+          <li>Support both private tracking and social participation</li>
+          <li>Make competition inclusive and configurable</li>
+          <li>Give users clear ownership of their data and privacy</li>
+        </ul>
+        <h3>Business objectives</h3>
+        <ul>
+          <li>Strong daily/weekly retention through genuine user value</li>
+          <li>Organic growth through invitations and privacy-safe sharing</li>
+          <li>Differentiation through fair competition and flexible goals</li>
+          <li>Trust through transparent data practices</li>
+          <li>A path to group and organizational wellness programs</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Non-goals (initial release)</h3>
+        <p>The initial release will <strong>not</strong>:</p>
+        <ul>
+          <li>Provide medical diagnosis or treatment recommendations</li>
+          <li>Require an account for basic activity tracking</li>
+          <li>Promote extreme step targets or unsafe overexertion</li>
+          <li>Rank users only by absolute step totals</li>
+          <li>Depend on continuous GPS for basic step counting</li>
+          <li>Promise direct integrations before provider validation</li>
+          <li>Include location-based routes without explicit consent and a separate privacy review</li>
+        </ul>
+        <div class="mini" style="margin-top:14px"><h4>Inclusive product principle</h4><p>Walkora must support different routines and abilities without implying that higher step totals represent greater worth, effort, or health.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 USERS ============ -->
+<section class="doc" id="users">
+  <div class="card">
+    <div class="kicker">Section 4</div>
+    <h2>Target users &amp; personas</h2>
+    <div class="grid2">
+      <div class="mini">
+        <h4><span class="num">A</span>Amara, 34 — the restarter</h4>
+        <p>Beginning a daily movement routine after a long break. Wants realistic targets and zero shame. <strong>Needs:</strong> suggested starting goals, rest days, recovery mode, non-punitive streaks, private-by-default profile.</p>
+      </div>
+      <div class="mini">
+        <h4><span class="num">B</span>Dele &amp; friends — the accountability crew</h4>
+        <p>Mixed iPhone/Android friend group with very different fitness levels. <strong>Needs:</strong> cross-platform invites, fair ranking by goal % and consistency, encouragement chat, mute/hide controls.</p>
+      </div>
+      <div class="mini">
+        <h4><span class="num">C</span>The Okafor family — the private group</h4>
+        <p>Three generations in one private walking group. <strong>Needs:</strong> invite-only groups, simple group goals, safe moderated chat, age-appropriate protections, large-text support.</p>
+      </div>
+      <div class="mini">
+        <h4><span class="num">D</span>Priya, 41 — the wearable power user</h4>
+        <p>Garmin owner who wants one consolidated view plus a social layer her watch lacks. <strong>Needs:</strong> Health Connect sync, source priority, dedup, last-sync transparency, data export.</p>
+      </div>
+    </div>
+    <h3 style="margin-top:24px">Secondary audiences</h3>
+    <p>Organizations running voluntary wellness initiatives, schools and youth programs using privacy-safe group challenges, community coordinators, and accessibility-focused walking groups. These inform later-phase requirements (team challenges, organization groups) but do not gate the MVP.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ROLES ============ -->
+<section class="doc" id="roles">
+  <div class="card">
+    <div class="kicker">Section 5</div>
+    <h2>Roles &amp; permissions</h2>
+    <p>Five roles. Administrative access is audited and governed by least privilege; the platform must never rely on client-side authorization alone.</p>
+    <div class="tblWrap">
+      <table>
+        <caption class="srOnly">Capabilities by role</caption>
+        <thead><tr><th>Capability</th><th>Guest</th><th>Registered</th><th>Group admin</th><th>Group moderator</th><th>Platform admin</th></tr></thead>
+        <tbody>
+          <tr><td>Track steps, goals, rest days, local history &amp; notifications</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td class="dash">—</td></tr>
+          <tr><td>Register later without losing eligible local history</td><td><span class="tick">✓</span></td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td></tr>
+          <tr><td>Cross-device sync, profile, friends, groups, challenges, messaging, sharing</td><td class="dash">—</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td class="dash">—</td></tr>
+          <tr><td>Privacy, security, data export &amp; deletion self-service</td><td>Local only</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td class="dash">—</td></tr>
+          <tr><td>Create/configure group, invite/remove members, assign moderators, create challenges, announcements, transfer/archive</td><td class="dash">—</td><td class="dash">—</td><td><span class="tick">✓</span></td><td class="dash">—</td><td class="dash">—</td></tr>
+          <tr><td>Review reports, remove messages, mute/suspend per policy, escalate</td><td class="dash">—</td><td class="dash">—</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Abuse workflows, suspicious-data investigation, appeals, feature flags, integration config</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Operational health visibility without access to private user content</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td><span class="tick">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 SCOPE AT A GLANCE ============ -->
+<section class="doc" id="scope">
+  <div class="card">
+    <div class="kicker">Section 6</div>
+    <h2>Scope at a glance</h2>
+    <p>The functional catalog in §7 is the source of truth; the figures below are computed live from it.</p>
+    <div class="kpis" id="kpiRow"></div>
+    <div class="chartCard">
+      <div class="chartHead">
+        <h3>Requirements by release phase</h3>
+        <span class="sub">Count of catalog requirements targeted at each phase</span>
+        <span class="tools"><button class="btn" data-toggle-table="phaseTable" aria-expanded="false">Table view</button></span>
+      </div>
+      <div id="phaseChart"></div>
+      <div class="tableView" id="phaseTable"><div class="tblWrap"><table>
+        <caption class="srOnly">Requirements by release phase</caption>
+        <thead><tr><th>Phase</th><th class="numcol">Requirements</th><th class="numcol">Share</th></tr></thead>
+        <tbody id="phaseTableBody"></tbody>
+      </table></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 REQUIREMENTS ============ -->
+<section class="doc" id="requirements">
+  <div class="card">
+    <div class="kicker">Section 7</div>
+    <h2>Functional requirements</h2>
+    <p>Sixteen epics, each with numbered, prioritized requirements. <strong>P0</strong> = must ship in the target phase, <strong>P1</strong> = should ship, <strong>P2</strong> = could ship. The release tag is the phase where the requirement lands (§16).</p>
+  </div>
+  <div class="filters" role="search" aria-label="Filter requirements" style="margin-top:16px">
+    <input type="search" id="reqSearch" placeholder="Filter requirements… (press /)" aria-label="Filter requirements by text">
+    <div class="seg" role="group" aria-label="Filter by priority" id="prioSeg">
+      <button aria-pressed="true" data-v="">All</button>
+      <button aria-pressed="false" data-v="P0">P0</button>
+      <button aria-pressed="false" data-v="P1">P1</button>
+      <button aria-pressed="false" data-v="P2">P2</button>
+    </div>
+    <div class="seg" role="group" aria-label="Filter by release" id="relSeg">
+      <button aria-pressed="true" data-v="">All</button>
+      <button aria-pressed="false" data-v="MVP">MVP</button>
+      <button aria-pressed="false" data-v="1.1">v1.1</button>
+      <button aria-pressed="false" data-v="1.2">v1.2</button>
+      <button aria-pressed="false" data-v="Later">Later</button>
+    </div>
+    <span id="reqCount" aria-live="polite"></span>
+  </div>
+  <div id="epicList"></div>
+</section>
+
+<!-- ============ 8 IA ============ -->
+<section class="doc" id="ia">
+  <div class="card">
+    <div class="kicker">Section 8</div>
+    <h2>Information architecture &amp; navigation</h2>
+    <p>The reference product leans on small icon-only top controls. Walkora replaces this with a labelled Material 3 bottom navigation bar of five destinations. Notifications stay reachable from the top app bar.</p>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>Destination</th><th>Purpose</th><th>Available to guests</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Today</strong></td><td>Personal steps, goal progress ring, daily summary, sync status</td><td><span class="tick">✓</span></td></tr>
+          <tr><td><strong>Progress</strong></td><td>History, trends, records, streaks, goal-completion calendar</td><td><span class="tick">✓</span></td></tr>
+          <tr><td><strong>Community</strong></td><td>Friends, groups, leaderboards, challenges</td><td>Preview + contextual sign-in</td></tr>
+          <tr><td><strong>Messages</strong></td><td>Direct, group, and challenge conversations</td><td>Preview + contextual sign-in</td></tr>
+          <tr><td><strong>Profile</strong></td><td>Achievements, settings, devices, privacy, account</td><td>Partial (local settings)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 style="margin-top:22px">Navigation principles</h3>
+    <ul class="checks">
+      <li>Labels always accompany primary navigation icons</li>
+      <li>User state is preserved when switching destinations</li>
+      <li>Core actions reachable in one or two taps</li>
+      <li>The Today screen is never overloaded with social features</li>
+      <li>Contextual actions create groups, challenges, and invitations</li>
+      <li>Back navigation is predictable everywhere</li>
+      <li>Deep links for invitations, challenges, messages, achievements</li>
+      <li>Icon-only controls reserved for familiar secondary actions</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 9 UX BLUEPRINT ============ -->
+<section class="doc" id="ux">
+  <div class="card">
+    <div class="kicker">Section 9</div>
+    <h2>UX blueprint &amp; concept mockups</h2>
+    <p>The reference screens are treated as evidence only. The concepts below fix every high-impact risk from the UX audit: personal progress leads, states are explicit, navigation is labelled, ranking is fair, and sign-in pressure is contextual. Final visual design will use a distinct Walkora design system.</p>
+
+    <div class="mockRow">
+      <!-- MOCK 1: Onboarding -->
+      <div class="mockCol">
+        <div class="phone"><div class="screen">
+          <div class="screenBody" style="justify-content:center;text-align:center;padding-top:22px">
+            <div style="font-size:34px" aria-hidden="true">🚶</div>
+            <div style="font-weight:800;font-size:16px">Count your steps<br>automatically</div>
+            <p style="color:var(--ink-2);margin:.3em 0 0">Walkora uses your phone's motion sensor to count steps in the background. Nothing leaves your device unless you choose to sync or share.</p>
+            <div class="mcard" style="text-align:left">
+              <div class="h">If you decline</div>
+              You can still browse Walkora and set goals — step counting stays off until you allow the <b>Physical activity</b> permission. You can change this anytime in Settings.
+            </div>
+            <div style="flex:1"></div>
+            <a class="mbtn">Allow activity permission</a>
+            <a class="mbtn ghost">Not now</a>
+            <div style="color:var(--ink-3);font-size:9.5px;letter-spacing:.25em;margin-top:2px" aria-hidden="true">● ● ○ ○</div>
+          </div>
+        </div></div>
+        <div class="mockCap">Onboarding · permission education</div>
+        <ul class="callouts">
+          <li><span class="num">1</span>Rationale shown <em>before</em> the OS dialog, including what happens on decline (audit: permission education).</li>
+          <li><span class="num">2</span>“Not now” is a first-class path; recovery guidance lives in Settings.</li>
+        </ul>
+      </div>
+
+      <!-- MOCK 2: Today -->
+      <div class="mockCol">
+        <div class="phone"><div class="screen">
+          <div class="appbar">Today <span class="sync">Synced 2 min ago<br>Health Connect · Pixel</span></div>
+          <div class="screenBody">
+            <div class="mcard">
+              <div class="ringWrap">
+                <svg width="86" height="86" viewBox="0 0 86 86" role="img" aria-label="Goal progress: 7,432 of 8,000 steps, 93 percent">
+                  <circle cx="43" cy="43" r="36" fill="none" stroke="var(--surface-2)" stroke-width="9"/>
+                  <circle class="ringFill" cx="43" cy="43" r="36" fill="none" stroke="var(--brand)" stroke-width="9"
+                    stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2"
+                    transform="rotate(-90 43 43)" data-pct="93"/>
+                  <text x="43" y="41" text-anchor="middle" font-size="15" font-weight="800" fill="var(--ink)">93%</text>
+                  <text x="43" y="54" text-anchor="middle" font-size="8" fill="var(--ink-3)">of goal</text>
+                </svg>
+                <div class="ringTxt">
+                  <div class="big">7,432</div>
+                  <div class="sm">of 8,000 steps</div>
+                  <div class="sm" style="color:var(--brand);font-weight:700">568 to go · 🔥 12-day streak</div>
+                </div>
+              </div>
+              <div class="statRow" style="margin-top:9px">
+                <div class="s"><b>5.4 km</b><span>distance</span></div>
+                <div class="s"><b>52 min</b><span>active</span></div>
+                <div class="s"><b>Rest ✓</b><span>tomorrow</span></div>
+              </div>
+            </div>
+            <div class="mcard"><div class="h">Insight</div>You're 12% ahead of your usual Saturday. One short walk finishes today's goal.</div>
+            <div class="mcard">
+              <div class="h" style="display:flex;justify-content:space-between">Friends today <span style="text-transform:none;letter-spacing:0">Goal % ›</span></div>
+              <div class="lb"><span class="rk">1</span><span class="av">T</span><span class="nm">Tunde</span><span class="pc">104%</span></div>
+              <div class="lb me"><span class="rk">2</span><span class="av">Y</span><span class="nm">You</span><span class="pc">93%</span></div>
+            </div>
+          </div>
+          <nav class="mnav" aria-label="App navigation (mockup)">
+            <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3"/></svg>Progress</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.6-3 2.9-4.5 5.5-4.5s4.9 1.5 5.5 4.5M15 14.8c2.3.2 4 1.6 4.5 4.2"/></svg>Community</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-8 8H4l1.5-3A8 8 0 1 1 21 12Z"/></svg>Messages</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.6-5.2 7-5.2s6.2 1.7 7 5.2"/></svg>Profile</a>
+          </nav>
+        </div></div>
+        <div class="mockCap">Today · personal progress leads</div>
+        <ul class="callouts">
+          <li><span class="num">1</span>Goal ring is the dominant element; the friends module is one compact, dismissible card below it (audit: leaderboard dominance).</li>
+          <li><span class="num">2</span>Sync time + data source always visible — no ambiguous zero states.</li>
+          <li><span class="num">3</span>Labelled five-item bottom navigation replaces icon-only chrome.</li>
+        </ul>
+      </div>
+
+      <!-- MOCK 3: Community -->
+      <div class="mockCol">
+        <div class="phone"><div class="screen">
+          <div class="appbar">Community <span class="sync">Updated 6:27</span></div>
+          <div class="screenBody">
+            <div class="mseg" role="group" aria-label="Ranking mode (mockup)"><span class="on">Goal %</span><span>Steps</span><span>Consistency</span><span>Improved</span></div>
+            <div class="mcard">
+              <div class="h">This week · Morning Crew</div>
+              <div class="lb"><span class="rk">1</span><span class="av">N</span><span class="nm">Nkechi<small>goal 6,000 · 7/7 days</small><span class="gbar"><i style="width:100%"></i></span></span><span class="pc">112%</span></div>
+              <div class="lb me"><span class="rk">2</span><span class="av">Y</span><span class="nm">You<small>goal 8,000 · rest day used</small><span class="gbar"><i style="width:93%"></i></span></span><span class="pc">93%</span></div>
+              <div class="lb"><span class="rk">3</span><span class="av">T</span><span class="nm">Tunde<small>goal 12,000 · 5/7 days</small><span class="gbar"><i style="width:78%"></i></span></span><span class="pc">78%</span></div>
+              <div class="lb"><span class="rk">4</span><span class="av">P</span><span class="nm">Pace Pal · virtual<small>practice companion</small><span class="gbar"><i style="width:64%"></i></span></span><span class="pc">64%</span></div>
+            </div>
+            <div class="mcard" style="font-size:11px;color:var(--ink-2)">🔒 You control this: hide your activity, show approximate totals, or leave leaderboards entirely in <b>Privacy</b>.</div>
+            <a class="mbtn ghost" style="font-size:11px">＋ Invite a friend · link or QR</a>
+          </div>
+          <nav class="mnav" aria-label="App navigation (mockup)">
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3"/></svg>Progress</a>
+            <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.6-3 2.9-4.5 5.5-4.5s4.9 1.5 5.5 4.5M15 14.8c2.3.2 4 1.6 4.5 4.2"/></svg>Community</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-8 8H4l1.5-3A8 8 0 1 1 21 12Z"/></svg>Messages</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.6-5.2 7-5.2s6.2 1.7 7 5.2"/></svg>Profile</a>
+          </nav>
+        </div></div>
+        <div class="mockCap">Community · fair ranking modes</div>
+        <ul class="callouts">
+          <li><span class="num">1</span>Default ranking is <em>goal %</em>, not absolute steps — a 6,000-goal walker can beat a 12,000-goal walker (audit: discouraging competition).</li>
+          <li><span class="num">2</span>Virtual companions are explicitly labelled and disableable.</li>
+          <li><span class="num">3</span>Privacy controls advertised in place, not buried in settings.</li>
+        </ul>
+      </div>
+
+      <!-- MOCK 4: Progress -->
+      <div class="mockCol">
+        <div class="phone"><div class="screen">
+          <div class="appbar">Progress <span class="sync">Week of Jul 6–12</span></div>
+          <div class="screenBody">
+            <div class="mseg" role="group" aria-label="Period (mockup)"><span>Day</span><span class="on">Week</span><span>Month</span></div>
+            <div class="mcard">
+              <div class="h">Steps this week · goal 8,000/day</div>
+              <svg viewBox="0 0 232 110" width="100%" role="img" aria-label="Bar chart, steps per day this week. Mon 9,332. Tue 8,731. Wed 10,561. Thu 2,599. Fri rest day. Sat 7,432 so far. Sun upcoming. Goal line at 8,000.">
+                <line x1="8" y1="34" x2="224" y2="34" stroke="var(--baseline)" stroke-width="1" stroke-opacity=".9"/>
+                <text x="224" y="30" text-anchor="end" font-size="7.5" fill="var(--ink-3)">goal 8,000</text>
+                <!-- bars: max 12000 -> 88px plot height, baseline y=98 -->
+                <g>
+                  <rect x="12"  y="29.6" width="18" height="68.4" rx="3" fill="var(--brand)"/>
+                  <rect x="42"  y="34"   width="18" height="64"   rx="3" fill="var(--brand)"/>
+                  <rect x="72"  y="20.6" width="18" height="77.4" rx="3" fill="var(--brand)"/>
+                  <rect x="102" y="79"   width="18" height="19"   rx="3" fill="var(--brand)" opacity=".55"/>
+                  <text x="141" y="93" text-anchor="middle" font-size="8" fill="var(--ink-3)">rest</text>
+                  <rect x="162" y="43.5" width="18" height="54.5" rx="3" fill="var(--brand)" opacity=".8"/>
+                  <text x="201" y="93" text-anchor="middle" font-size="8" fill="var(--ink-3)">–</text>
+                </g>
+                <line x1="8" y1="98" x2="224" y2="98" stroke="var(--baseline)" stroke-width="1"/>
+                <g font-size="7.5" fill="var(--ink-3)" text-anchor="middle">
+                  <text x="21" y="107">Mon</text><text x="51" y="107">Tue</text><text x="81" y="107">Wed</text>
+                  <text x="111" y="107">Thu</text><text x="141" y="107">Fri</text><text x="171" y="107">Sat</text><text x="201" y="107">Sun</text>
+                </g>
+                <text x="81" y="16" text-anchor="middle" font-size="8" font-weight="700" fill="var(--ink)">10,561</text>
+              </svg>
+              <div style="font-size:10px;color:var(--ink-2);margin-top:4px">4 of 5 goal days met · rest day Friday didn't break your streak.</div>
+            </div>
+            <div class="statRow">
+              <div class="s"><b>8,731</b><span>daily avg</span></div>
+              <div class="s"><b>10,561</b><span>best day</span></div>
+              <div class="s"><b>80%</b><span>goal rate</span></div>
+            </div>
+            <div class="mcard"><div class="h">Records</div>🏆 Best day 14,208 · Best week 61,940 · Longest streak 23 days</div>
+          </div>
+          <nav class="mnav" aria-label="App navigation (mockup)">
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</a>
+            <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3"/></svg>Progress</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.6-3 2.9-4.5 5.5-4.5s4.9 1.5 5.5 4.5M15 14.8c2.3.2 4 1.6 4.5 4.2"/></svg>Community</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-8 8H4l1.5-3A8 8 0 1 1 21 12Z"/></svg>Messages</a>
+            <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.6-5.2 7-5.2s6.2 1.7 7 5.2"/></svg>Profile</a>
+          </nav>
+        </div></div>
+        <div class="mockCap">Progress · context, not just totals</div>
+        <ul class="callouts">
+          <li><span class="num">1</span>Every chart carries a plain-text summary; rest days and future days are labelled, never blank dots (audit: ambiguous states).</li>
+          <li><span class="num">2</span>Only the story point (best day) is direct-labelled; the goal line gives every bar meaning.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px">Audit-driven UX requirements</h3>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>Observed risk in reference</th><th>Walkora requirement</th></tr></thead>
+        <tbody>
+          <tr><td>Weak, icon-only navigation hierarchy</td><td>Labelled Material 3 navigation; icon-only reserved for familiar secondary actions</td></tr>
+          <tr><td>Leaderboard crowds out personal progress</td><td>Personal goal card first, insights second, social rankings third — always</td></tr>
+          <tr><td>Ambiguous dots / missing values</td><td>Explicit loading, empty, error, permission-denied, offline, and syncing states on every surface</td></tr>
+          <tr><td>Persistent sign-in pressure</td><td>Guest mode stays useful; authentication requested contextually when the user opens an account-dependent feature</td></tr>
+          <tr><td>Dense social onboarding text over content</td><td>Dismissible introductory card above lists</td></tr>
+          <tr><td>One long unstructured settings list</td><td>Settings grouped by purpose with plain-language descriptions of sensitive controls (§7 SET)</td></tr>
+          <tr><td>Absolute-total competition</td><td>Goal %, consistency, improvement, active-days, and team-average ranking modes</td></tr>
+          <tr><td>Invisible safety controls in chat</td><td>Mute, block, report, and community rules reachable from every social surface</td></tr>
+          <tr><td>Overly broad “we never share data” claims</td><td>Precise language on collection, storage, processing, sharing, retention, export, deletion</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 JOURNEYS ============ -->
+<section class="doc" id="journeys">
+  <div class="card">
+    <div class="kicker">Section 10</div>
+    <h2>Core user journeys</h2>
+    <div class="two">
+      <div>
+        <h3>J1 · First-time tracking</h3>
+        <ol class="journey">
+          <li><b>Open Walkora</b><span>Branded welcome states the value proposition.</span></li>
+          <li><b>Understand tracking</b><span>Plain-language explanation of what will be tracked and why.</span></li>
+          <li><b>Grant activity permission</b><span>Contextual rationale first; decline path explained (Mock 1).</span></li>
+          <li><b>Confirm data source</b><span>Phone sensor or Health Connect, with status confirmation.</span></li>
+          <li><b>Set goal &amp; rest days</b><span>Suggested ranges; direct numeric entry.</span></li>
+          <li><b>Optional notifications</b><span>Requested in context, never on first launch.</span></li>
+          <li><b>Tracking confirmed → Today</b><span>First sync confirmation lands the user on the dashboard.</span></li>
+        </ol>
+        <h3 style="margin-top:20px">J3 · Friend &amp; leaderboard</h3>
+        <ol class="journey">
+          <li><b>Open Community</b><span>Search username, scan QR, or open an invite link.</span></li>
+          <li><b>Review profile &amp; privacy</b><span>What the other person will and won't see.</span></li>
+          <li><b>Send request → accept</b><span>Both appear per their own visibility settings.</span></li>
+          <li><b>Pick period &amp; ranking mode</b><span>Goal %, steps, consistency, improvement.</span></li>
+          <li><b>Stay in control</b><span>Encourage, mute, hide, remove, block, or report at any point.</span></li>
+        </ol>
+        <h3 style="margin-top:20px">J5 · Wearable sync</h3>
+        <ol class="journey">
+          <li><b>Open Connected devices</b><span>Health Connect first; providers behind validation flags.</span></li>
+          <li><b>Review &amp; grant permissions</b><span>Per-data-type explanation.</span></li>
+          <li><b>Import &amp; dedupe</b><span>Chosen date range; conflicts explained.</span></li>
+          <li><b>Verify status</b><span>Connection state and last-sync time visible; change priority, refresh, disconnect, or delete imports anytime.</span></li>
+        </ol>
+      </div>
+      <div>
+        <h3>J2 · Guest-to-account conversion</h3>
+        <ol class="journey">
+          <li><b>Track as a guest</b><span>Full local tracking, goals, history — no account.</span></li>
+          <li><b>Touch a social/sync feature</b><span>Walkora explains the concrete benefit of registering.</span></li>
+          <li><b>Authenticate</b><span>Google or email; verification completes.</span></li>
+          <li><b>History migrates</b><span>Eligible local history is associated with the account — nothing lost.</span></li>
+          <li><b>Set social privacy</b><span>Private-by-default; user opts into visibility.</span></li>
+          <li><b>Continue</b><span>User lands back in the feature that prompted sign-in.</span></li>
+        </ol>
+        <h3 style="margin-top:20px">J4 · Group challenge</h3>
+        <ol class="journey">
+          <li><b>Create or join a group</b><span>Invite-only by default.</span></li>
+          <li><b>Admin creates a challenge</b><span>Target, duration, ranking mode, and rules visible before joining.</span></li>
+          <li><b>Members join or decline</b><span>Participation is always opt-in.</span></li>
+          <li><b>Track &amp; encourage</b><span>Live standings plus respectful group chat.</span></li>
+          <li><b>Fair-play checks</b><span>Suspicious records flagged before results are affected.</span></li>
+          <li><b>Recap &amp; celebrate</b><span>Completion summary, badges, share, or rematch.</span></li>
+        </ol>
+        <div class="mini" style="margin-top:18px">
+          <h4>Journey acceptance rule</h4>
+          <p>A journey ships only when every step has defined loading, empty, error, offline, and permission-denied states, TalkBack coverage, and analytics events approved under the consent model (§19).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 FLOW HEALTH ============ -->
+<section class="doc" id="flowhealth">
+  <div class="card">
+    <div class="kicker">Section 11</div>
+    <h2>Flow-health audit</h2>
+    <p>Twelve evidence-based journeys from the reference material, graded, with the Walkora response. Statuses always carry an icon + label, never colour alone.</p>
+    <div class="chartCard" style="margin-bottom:16px">
+      <div class="chartHead">
+        <h3>Audit summary</h3>
+        <span class="sub">12 reference journeys by grade</span>
+      </div>
+      <div id="healthBar"></div>
+      <div class="legend" id="healthLegend"></div>
+    </div>
+    <div class="tblWrap">
+      <table id="flowTable">
+        <thead><tr><th>#</th><th>User journey</th><th>Grade</th><th>Audit finding → Walkora response</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Welcome &amp; enable tracking</td><td><span class="st good"><span class="dot"></span>✓ Good foundation</span></td><td>Clear value; Walkora adds stronger permission education (Mock 1)</td></tr>
+          <tr><td>2</td><td>Set a daily goal</td><td><span class="st good"><span class="dot"></span>✓ Good foundation</span></td><td>Simple setup; Walkora adds direct entry and flexible schedules</td></tr>
+          <tr><td>3</td><td>Grant notifications</td><td><span class="st serious"><span class="dot"></span>▲ Needs improvement</span></td><td>Rationale and timing clarified — requested in context, never at launch</td></tr>
+          <tr><td>4</td><td>View today's steps</td><td><span class="st serious"><span class="dot"></span>▲ Needs improvement</span></td><td>Zero/sync states made explicit with 7-cause diagnostics (TRK-05)</td></tr>
+          <tr><td>5</td><td>Review history</td><td><span class="st good"><span class="dot"></span>✓ Good foundation</span></td><td>Strong day/week/month concept; Walkora adds records, comparison, export</td></tr>
+          <tr><td>6</td><td>Sign in &amp; add friends</td><td><span class="st warn"><span class="dot"></span>! Mixed</span></td><td>Progressive auth kept; repeated prompting replaced with contextual asks</td></tr>
+          <tr><td>7</td><td>Compare leaderboards</td><td><span class="st warn"><span class="dot"></span>! Mixed</span></td><td>Motivating, but absolute totals unfair → fair ranking modes default</td></tr>
+          <tr><td>8</td><td>Join groups &amp; chat</td><td><span class="st critical"><span class="dot"></span>✕ At risk</span></td><td>Engagement loop valuable, but safety invisible → moderation from first social release</td></tr>
+          <tr><td>9</td><td>Receive achievements</td><td><span class="st good"><span class="dot"></span>✓ Good foundation</span></td><td>Celebrations kept; personal improvement prioritized over rank</td></tr>
+          <tr><td>10</td><td>Share progress</td><td><span class="st good"><span class="dot"></span>✓ Good foundation</span></td><td>Attractive concept; Walkora adds a mandatory privacy preview</td></tr>
+          <tr><td>11</td><td>Sync wearables</td><td><span class="st serious"><span class="dot"></span>▲ Needs improvement</span></td><td>Source priority and duplicate handling made explicit (WBL epic)</td></tr>
+          <tr><td>12</td><td>Manage settings</td><td><span class="st serious"><span class="dot"></span>▲ Needs improvement</span></td><td>Grouped-by-purpose settings with described sensitive controls</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 ACCESSIBILITY ============ -->
+<section class="doc" id="a11y">
+  <div class="card">
+    <div class="kicker">Section 12</div>
+    <h2>Accessibility requirements</h2>
+    <p>Target: <strong>WCAG 2.2 AA</strong> where applicable, plus current Android accessibility guidance. The reference product showed teal-on-black contrast risks, tiny grey text, colour-only tab selection, and dense icon-only controls — all excluded by the requirements below.</p>
+    <ul class="checks">
+      <li>Descriptive TalkBack labels on every interactive element</li>
+      <li>Logical focus order across all screens and dialogs</li>
+      <li>Switch Access support</li>
+      <li>Minimum touch-target sizes met everywhere</li>
+      <li>Android font scaling without truncation; layouts reflow</li>
+      <li>Landscape and responsive reflow supported</li>
+      <li>Visible focus indicators where relevant</li>
+      <li>Reduced-motion preferences respected (incl. celebrations)</li>
+      <li>Important state changes announced accessibly</li>
+      <li>Text summaries accompany every chart</li>
+      <li>No colour-only meaning — icons, labels, patterns, values</li>
+      <li>Contrast validated in light, dark, and high-contrast modes</li>
+      <li>Accessible form labels, instructions, validation, recovery</li>
+      <li>Leaderboards and dense lists reflow with large text</li>
+    </ul>
+    <div class="mini" style="margin-top:16px">
+      <h4>Verification limitation</h4>
+      <p>Screenshots cannot confirm TalkBack behaviour, focus order, dynamic text scaling, keyboard access, motion behaviour, live-region announcements, chart semantics, or runtime contrast. These are verified in the implemented application — automated checks in CI plus assistive-technology test passes per release.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 PRIVACY ============ -->
+<section class="doc" id="privacy">
+  <div class="card">
+    <div class="kicker">Section 13</div>
+    <h2>Privacy, security &amp; trust</h2>
+    <p>Privacy by default and data minimization are architectural requirements, not settings. <strong>The application must never rely on client-side authorization alone.</strong></p>
+    <div class="grid3">
+      <div class="mini">
+        <h4>Data protection</h4>
+        <p>Explicit consent for health and contact data · purpose limitation · encrypted transport · secure local storage for sensitive values · retention policies · consent history · data export · account and associated-data deletion · clear privacy notices.</p>
+      </div>
+      <div class="mini">
+        <h4>Platform security</h4>
+        <p>Secure authentication · server-side authorization for every protected operation · session revocation · rate limiting · secret management · dependency and vulnerability monitoring · protection against account enumeration · input validation and output encoding · safe file-upload controls for profile and group images.</p>
+      </div>
+      <div class="mini">
+        <h4>Community safety</h4>
+        <p>Abuse prevention · message spam controls · blocking and reporting on every social surface · moderation and appeals workflow · least-privilege, audited administrative access · suspicious-activity detection for challenge fairness · age-appropriate protections.</p>
+      </div>
+    </div>
+    <h3 style="margin-top:22px">Privacy defaults</h3>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>Surface</th><th>Default</th><th>User can change to</th></tr></thead>
+        <tbody>
+          <tr><td>Profile discovery</td><td>Not discoverable</td><td>Username search · contacts (with explicit consent)</td></tr>
+          <tr><td>Activity visibility</td><td>Private</td><td>Friends · specific groups · approximate totals</td></tr>
+          <tr><td>Leaderboard participation</td><td>Opt-in</td><td>Per-board participation, approximate display, or full opt-out</td></tr>
+          <tr><td>Contact upload</td><td>Off</td><td>On, with purpose limitation, retention rules, and a deletion path</td></tr>
+          <tr><td>Share cards</td><td>Privacy preview required</td><td>Hide exact steps, hide photo, watermark control</td></tr>
+          <tr><td>Notification previews</td><td>Content hidden on lock screen</td><td>Full previews</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14 DATA QUALITY ============ -->
+<section class="doc" id="dataquality">
+  <div class="card">
+    <div class="kicker">Section 14</div>
+    <h2>Data quality &amp; fairness</h2>
+    <p>Trust in the number is the product. Users must always be able to see which source contributed to a total and when it was last updated.</p>
+    <div class="two">
+      <div>
+        <h3>The engine must handle</h3>
+        <ul class="checks">
+          <li>Multiple simultaneous activity sources</li>
+          <li>Duplicate records across phone + wearable</li>
+          <li>Delayed synchronization</li>
+          <li>Time-zone and daylight-saving changes</li>
+          <li>Device restarts and manual clock changes</li>
+          <li>Offline periods with later reconciliation</li>
+          <li>Sensor limitations and gaps</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Fairness controls</h3>
+        <ul class="checks">
+          <li>Suspicious or impossible values flagged for review</li>
+          <li>Challenge eligibility windows enforced</li>
+          <li>Corrections and dispute handling workflow</li>
+          <li>Source attribution on every displayed total</li>
+          <li>Flagged data excluded from boards until resolved</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15 ENGAGEMENT ============ -->
+<section class="doc" id="engagement">
+  <div class="card">
+    <div class="kicker">Section 15</div>
+    <h2>Notification &amp; engagement principles</h2>
+    <p>Engagement must prioritize user value over notification volume. Every notification Walkora sends is:</p>
+    <ul class="checks">
+      <li>Useful — tied to a real event or recoverable action</li>
+      <li>Configurable per category</li>
+      <li>Respectful of quiet hours</li>
+      <li>Rate limited</li>
+      <li>Privacy aware (lock-screen previews controllable)</li>
+      <li>Free from shame-based language</li>
+      <li>Clear about the triggering event</li>
+      <li>Actionable when recovery is possible</li>
+    </ul>
+    <p style="margin-top:12px">Users can disable all social notifications while retaining activity and security notifications — the categories are architecturally separate (NTF-01).</p>
+  </div>
+</section>
+
+<!-- ============ 16 ROADMAP ============ -->
+<section class="doc" id="roadmap">
+  <div class="card">
+    <div class="kicker">Section 16</div>
+    <h2>Release roadmap</h2>
+    <p>Sequencing protects quality: excellent tracking, goals, history, sync, guest access, and trust ship first, so every later social feature stands on accurate data, clear privacy controls, and a safe community foundation.</p>
+    <div class="roadmap">
+      <div class="phase">
+        <div class="ph" style="background:var(--ord-3)">MVP <small>Foundation</small></div>
+        <div class="theme">Track · Goal · Trust</div>
+        <ul>
+          <li>Branding, onboarding, permission education</li>
+          <li>Phone tracking + Health Connect</li>
+          <li>Today dashboard, goals, rest days, flexible streaks</li>
+          <li>Day/week/month history, records, export</li>
+          <li>Guest mode; Google + email auth; history migration</li>
+          <li>Profile &amp; privacy; offline sync</li>
+          <li>Accessible light/dark themes</li>
+          <li>Account deletion; help &amp; legal surfaces</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="ph" style="background:var(--ord-3)">v1.1 <small>Friends</small></div>
+        <div class="theme">Connect · Compare · Celebrate</div>
+        <ul>
+          <li>Friends, requests, discovery controls</li>
+          <li>Friend leaderboards + fair ranking modes</li>
+          <li>Virtual companions (labelled, optional)</li>
+          <li>Friend comparison</li>
+          <li>Achievements; weekly/monthly recaps</li>
+          <li>Progress sharing with privacy preview</li>
+          <li>Blocking &amp; reporting</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="ph" style="background:var(--ord-3)">v1.2 <small>Community</small></div>
+        <div class="theme">Groups · Challenges · Safety</div>
+        <ul>
+          <li>Groups, group leaderboards, administration</li>
+          <li>Challenges + fairness controls</li>
+          <li>Direct messaging &amp; group chat</li>
+          <li>Moderation tools &amp; escalation</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="ph" style="background:var(--ord-3)">Later <small>Expansion</small></div>
+        <div class="theme">Scale · Reach</div>
+        <ul>
+          <li>Direct wearable integrations (post-validation)</li>
+          <li>Organization &amp; team challenges</li>
+          <li>Advanced progress insights</li>
+          <li>Android widgets; Wear OS companion</li>
+          <li>Location-based routes — only with explicit consent + separate privacy review</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:16px;color:var(--ink-2);font-size:.9rem"><strong>Gate between phases:</strong> a phase ships only when its P0 requirements pass acceptance, accessibility verification (§12), and the privacy checklist (§13). Social phases additionally require moderation staffing and community guidelines to be live (§19).</p>
+  </div>
+</section>
+
+<!-- ============ 17 METRICS ============ -->
+<section class="doc" id="metrics">
+  <div class="card">
+    <div class="kicker">Section 17</div>
+    <h2>Success metrics</h2>
+    <p>Candidate measures pending analytics, privacy, and business review. Targets are directional starting points, not commitments. <strong>Metrics must never encourage decisions that pressure users into excessive activity.</strong></p>
+    <div class="grid2">
+      <div class="tblWrap"><table>
+        <caption style="text-align:left;padding:10px 14px;font-weight:700;caption-side:top">Activation</caption>
+        <thead><tr><th>Measure</th><th class="numcol">Candidate target</th></tr></thead>
+        <tbody>
+          <tr><td>Users who successfully enable activity tracking</td><td class="numcol">≥ 85%</td></tr>
+          <tr><td>Users recording first valid activity data</td><td class="numcol">≥ 80%</td></tr>
+          <tr><td>Users configuring a daily goal</td><td class="numcol">≥ 70%</td></tr>
+          <tr><td>Permission-denied recovery completion</td><td class="numcol">≥ 40%</td></tr>
+        </tbody>
+      </table></div>
+      <div class="tblWrap"><table>
+        <caption style="text-align:left;padding:10px 14px;font-weight:700;caption-side:top">Engagement</caption>
+        <thead><tr><th>Measure</th><th class="numcol">Candidate target</th></tr></thead>
+        <tbody>
+          <tr><td>Week-4 retention of activated users</td><td class="numcol">≥ 35%</td></tr>
+          <tr><td>Users reviewing progress at least weekly</td><td class="numcol">≥ 50%</td></tr>
+          <tr><td>Goal completion &amp; consistency trend</td><td class="numcol">Rising</td></tr>
+          <tr><td>Challenge participation → completion</td><td class="numcol">≥ 60%</td></tr>
+          <tr><td>Useful notification interaction rate</td><td class="numcol">≥ 12%</td></tr>
+        </tbody>
+      </table></div>
+      <div class="tblWrap"><table>
+        <caption style="text-align:left;padding:10px 14px;font-weight:700;caption-side:top">Reliability</caption>
+        <thead><tr><th>Measure</th><th class="numcol">Candidate target</th></tr></thead>
+        <tbody>
+          <tr><td>Successful synchronization rate</td><td class="numcol">≥ 99%</td></tr>
+          <tr><td>Duplicate-record rate after dedup</td><td class="numcol">&lt; 0.5%</td></tr>
+          <tr><td>Background tracking success rate</td><td class="numcol">≥ 97%</td></tr>
+          <tr><td>Crash-free sessions</td><td class="numcol">≥ 99.8%</td></tr>
+          <tr><td>Data-source connection failure rate</td><td class="numcol">&lt; 2%</td></tr>
+        </tbody>
+      </table></div>
+      <div class="tblWrap"><table>
+        <caption style="text-align:left;padding:10px 14px;font-weight:700;caption-side:top">Trust &amp; safety</caption>
+        <thead><tr><th>Measure</th><th class="numcol">Candidate target</th></tr></thead>
+        <tbody>
+          <tr><td>Block / report resolution time (median)</td><td class="numcol">&lt; 24 h</td></tr>
+          <tr><td>Spam prevention effectiveness</td><td class="numcol">≥ 99%</td></tr>
+          <tr><td>Account recovery success rate</td><td class="numcol">≥ 95%</td></tr>
+          <tr><td>Export &amp; deletion completion rate</td><td class="numcol">100%</td></tr>
+          <tr><td>Privacy-setting adoption (any non-default)</td><td class="numcol">Tracked</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18 RISKS ============ -->
+<section class="doc" id="risks">
+  <div class="card">
+    <div class="kicker">Section 18</div>
+    <h2>Major product risks</h2>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>Risk</th><th>Severity</th><th>Impact</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td>Inaccurate or duplicated steps</td><td><span class="st critical"><span class="dot"></span>✕ Severe</span></td><td>Loss of trust; unfair challenges</td><td>Source priority, deduplication, timestamps, diagnostics, correction workflows</td></tr>
+          <tr><td>Harassment or spam</td><td><span class="st critical"><span class="dot"></span>✕ Severe</span></td><td>User harm; community decline</td><td>Blocking, reporting, moderation, rate limits, community guidelines — live before social ships</td></tr>
+          <tr><td>Privacy confusion</td><td><span class="st critical"><span class="dot"></span>✕ Severe</span></td><td>Loss of trust; regulatory exposure</td><td>Precise consent, granular visibility, export, deletion, plain-language notices</td></tr>
+          <tr><td>Background restrictions kill tracking</td><td><span class="st serious"><span class="dot"></span>▲ High</span></td><td>Missing activity data</td><td>Battery guidance, resilient sync, clear status indicators</td></tr>
+          <tr><td>Unhealthy competition</td><td><span class="st serious"><span class="dot"></span>▲ High</span></td><td>Discouragement; unsafe behaviour</td><td>Flexible goals, fair ranking modes, rest days, non-shaming language</td></tr>
+          <tr><td>Inaccessible interface</td><td><span class="st serious"><span class="dot"></span>▲ High</span></td><td>Exclusion; failed tasks</td><td>§12 requirements, automated checks, assistive-technology testing</td></tr>
+          <tr><td>Wearable integration changes</td><td><span class="st warn"><span class="dot"></span>! Moderate</span></td><td>Synchronization failures</td><td>Health Connect first, provider validation, monitoring, feature flags</td></tr>
+          <tr><td>Excessive notifications</td><td><span class="st warn"><span class="dot"></span>! Moderate</span></td><td>Uninstalls; disengagement</td><td>Quiet hours, category controls, frequency limits, value-based messaging</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 19 DECISIONS ============ -->
+<section class="doc" id="decisions">
+  <div class="card">
+    <div class="kicker">Section 19</div>
+    <h2>Open decisions</h2>
+    <p>Required before implementation of the affected area. Checkbox state is saved locally in your browser so this doubles as a live tracker during review.</p>
+    <ul class="decisions" id="decisionList">
+      <li><input type="checkbox" id="d1"><label for="d1">Minimum supported Android version<small>Owner: Engineering · blocks: MVP build targets</small></label></li>
+      <li><input type="checkbox" id="d2"><label for="d2">Supported countries and languages at launch<small>Owner: Product · blocks: copy, legal review</small></label></li>
+      <li><input type="checkbox" id="d3"><label for="d3">Exact Health Connect data types and permissions<small>Owner: Engineering · blocks: WBL epic</small></label></li>
+      <li><input type="checkbox" id="d4"><label for="d4">Whether direct wearable integrations are required for first release<small>Owner: Product · blocks: Later-phase scope</small></label></li>
+      <li><input type="checkbox" id="d5"><label for="d5">Account age requirements and age-assurance approach<small>Owner: Legal · blocks: ACC epic, social phases</small></label></li>
+      <li><input type="checkbox" id="d6"><label for="d6">Public group availability at launch<small>Owner: Product + Trust &amp; Safety · blocks: GRP-01</small></label></li>
+      <li><input type="checkbox" id="d7"><label for="d7">Moderation staffing and escalation process<small>Owner: Operations · gates: v1.2 launch</small></label></li>
+      <li><input type="checkbox" id="d8"><label for="d8">Data retention periods<small>Owner: Legal + Engineering · blocks: privacy notices</small></label></li>
+      <li><input type="checkbox" id="d9"><label for="d9">Challenge fairness rules<small>Owner: Product · blocks: CHL epic</small></label></li>
+      <li><input type="checkbox" id="d10"><label for="d10">Organization-managed groups in the commercial roadmap<small>Owner: Business · blocks: Later phase</small></label></li>
+      <li><input type="checkbox" id="d11"><label for="d11">Monetization model, if any<small>Owner: Business</small></label></li>
+      <li><input type="checkbox" id="d12"><label for="d12">Final analytics events and consent model<small>Owner: Product + Legal · gates: §17 metrics</small></label></li>
+      <li><input type="checkbox" id="d13"><label for="d13">Final brand identity, colour palette, typography, iconography<small>Owner: Design · blocks: visual design system</small></label></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 20 ASSUMPTIONS ============ -->
+<section class="doc" id="assumptions">
+  <div class="card">
+    <div class="kicker">Section 20</div>
+    <h2>Assumptions &amp; dependencies</h2>
+    <ul class="checks">
+      <li>The initial product is Android-first</li>
+      <li>Health Connect is the preferred aggregation layer where supported</li>
+      <li>Basic tracking remains available without an account</li>
+      <li>Social features require a registered account</li>
+      <li>Messaging requires moderation and abuse controls before launch</li>
+      <li>Provider integrations require technical, policy, and commercial validation</li>
+      <li>Energy estimates are informational, never central to positioning</li>
+      <li>Location tracking is outside the initial scope</li>
+      <li>Final visuals use a distinct Walkora design system, not the reference product's</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 21 STATEMENT ============ -->
+<section class="doc" id="statement">
+  <div class="card">
+    <div class="kicker">Section 21</div>
+    <h2>Final scope statement</h2>
+    <blockquote>Walkora will deliver a reliable, accessible, and privacy-conscious Android walking experience that works for private users and grows naturally into optional social participation. The initial product must establish excellent tracking, goals, history, synchronization, guest access, and user trust before adding the operational complexity of friends, groups, challenges, and messaging.</blockquote>
+    <p>This sequencing protects product quality while ensuring that every later social feature is built on accurate activity data, clear privacy controls, and a safe community foundation.</p>
+    <footer class="doc">
+      Walkora PRD v1.0 · Draft for review · Generated from <code>project-scope.md</code> · July 12, 2026<br>
+      The reference application informing this document is treated only as product evidence; Walkora ships its own identity, design system, information architecture, copy, implementation, privacy controls, and user experience.
+    </footer>
+  </div>
+</section>
+
+</main>
+</div>
+
+<div id="tooltip" role="tooltip"></div>
+<button id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+"use strict";
+/* ============================================================
+   REQUIREMENTS CATALOG — single source of truth.
+   Charts, KPIs, and the explorer all render from this data.
+   ============================================================ */
+const EPICS = [
+{code:"ONB",name:"Onboarding & activation",desc:"Value-first onboarding: explain, then ask. Permission requests appear only after Walkora explains why they're needed and what happens when declined.",reqs:[
+ ["Branded welcome explains product value before any permission request","P0","MVP"],
+ ["Physical Activity permission requested only after in-context rationale, including the decline path","P0","MVP"],
+ ["Permission-denied recovery flow with guidance and a deep link to system settings","P0","MVP"],
+ ["Data-source selection/confirmation (phone sensor or Health Connect) with first-sync confirmation","P0","MVP"],
+ ["Starting-goal and rest-day setup with suggested ranges during onboarding","P0","MVP"],
+ ["Notification permission requested contextually, never on first launch","P1","MVP"],
+ ["Battery-optimization guidance shown when OEM background restrictions are detected","P1","MVP"],
+ ["Skip / continue-later on every optional step; accessible content and focus order throughout","P0","MVP"]]},
+{code:"TRK",name:"Step-tracking engine",desc:"Background counting that users can trust: battery-efficient, offline-capable, restart-safe, and honest about its own state.",reqs:[
+ ["Battery-efficient background step counting that survives device restarts","P0","MVP"],
+ ["Time-zone-aware daily totals with correct midnight rollover and clock-change handling","P0","MVP"],
+ ["Offline tracking with automatic synchronization when connectivity returns","P0","MVP"],
+ ["Duplicate-step detection and conflict resolution across sources","P0","MVP"],
+ ["Zero-step diagnostics distinguishing: no activity, missing permission, disconnected source, delayed sync, battery restriction, wearable delay, unsupported sensor","P0","MVP"],
+ ["Last-sync time and data-source indicator surfaced wherever a total is shown","P0","MVP"],
+ ["Manual refresh with resilient handling of missing or delayed sensor data","P1","MVP"]]},
+{code:"DSH",name:"Today dashboard",desc:"Personal progress is visually dominant; social modules support the goal, never overwhelm it.",reqs:[
+ ["Personal goal ring leads the screen; social modules never displace it above the fold","P0","MVP"],
+ ["Steps, goal %, remaining steps, distance, active time; optional energy estimate and floors when available","P0","MVP"],
+ ["Current streak and goal-completion state","P0","MVP"],
+ ["Explicit loading, empty, error, permission-denied, offline, and syncing states for every module","P0","MVP"],
+ ["Daily encouragement plus one personal insight or trend","P1","MVP"],
+ ["Dismissible social preview card (selected friends or group) below personal progress","P1","1.1"],
+ ["Shortcuts to history, sharing, notifications, and messages","P1","MVP"]]},
+{code:"GOL",name:"Goals & streaks",desc:"Flexible targets that reward consistency. A planned rest day never breaks a streak; suggestions are wellness guidance, never medical advice.",reqs:[
+ ["Custom daily goal via steppers and direct numeric entry, with validation and save confirmation","P0","MVP"],
+ ["Different goals per day, weekday/weekend goals, and scheduled rest days","P0","MVP"],
+ ["Rest-day-aware streaks — a planned rest day never breaks a streak","P0","MVP"],
+ ["Flexible streak mode, vacation/pause mode, and recovery mode with transparent, explained rules","P0","MVP"],
+ ["Gradual goal-progression suggestions based on consistency, framed as wellness guidance","P1","MVP"],
+ ["Goal-reached notification and streak milestones","P1","MVP"],
+ ["Goal-change history","P2","MVP"]]},
+{code:"HIS",name:"History & insights",desc:"Trends, records, and comparisons that give raw totals meaning — always readable without colour.",reqs:[
+ ["Today, yesterday, week, month, and custom-range views with previous-period comparison","P0","MVP"],
+ ["Daily, weekly, and monthly charts with values, labels, patterns, and text summaries — never colour-only","P0","MVP"],
+ ["Personal records: best day, best week, longest streak, most consistent weekday","P1","MVP"],
+ ["Goal-completion calendar view","P1","MVP"],
+ ["Filter by device or data source","P1","MVP"],
+ ["Data-correction workflow for inaccurate records","P2","1.1"],
+ ["Data export (CSV/JSON) from history","P0","MVP"]]},
+{code:"ACC",name:"Accounts & authentication",desc:"Guest-first: tracking never requires an account. Registration is contextual and keeps eligible local history.",reqs:[
+ ["Guest mode: full local tracking, goals, history, and notifications without an account","P0","MVP"],
+ ["Sign in with Google and with email: registration, verification, secure recovery","P0","MVP"],
+ ["Guest-to-account migration of eligible local history without loss","P0","MVP"],
+ ["Multi-device sync, session management, and sign-out-from-all-devices","P1","MVP"],
+ ["Self-serve account deletion and full data export","P0","MVP"],
+ ["Age-appropriate account protections and consent history","P0","MVP"],
+ ["Optional passwordless sign-in and biometric application lock","P2","1.1"]]},
+{code:"PRO",name:"Profile & privacy controls",desc:"Sensitive fields optional; everything private by default; visibility granular.",reqs:[
+ ["Display name, unique username, optional photo, bio, and region; preferred units","P0","MVP"],
+ ["Privacy-first defaults: profile not discoverable, activity private, leaderboards opt-in","P0","MVP"],
+ ["Granular visibility controls: profile discovery, activity, friend list, group membership","P0","MVP"],
+ ["Blocked, hidden, and muted user management in one place","P0","1.1"],
+ ["Connected-devices and account-security overview on the profile","P1","MVP"]]},
+{code:"FRD",name:"Friends & discovery",desc:"Every connection is consensual, and every social surface carries safety controls.",reqs:[
+ ["Search by username; invite links and QR-code invitations","P0","1.1"],
+ ["Contact-based discovery only with explicit consent, purpose limitation, retention rules, and a deletion path — never silent contact upload","P0","1.1"],
+ ["Friend requests: send, accept, decline, pending list, suggestions","P0","1.1"],
+ ["Remove, hide, mute, block, and report available from every social surface","P0","1.1"],
+ ["Cross-platform invitations via the Android system share sheet","P1","1.1"]]},
+{code:"LDB",name:"Leaderboards & fair ranking",desc:"Ranking that motivates beginners instead of crowning the already-active.",reqs:[
+ ["Today, yesterday, weekly, and monthly friend leaderboards with rank, totals, and last-updated time","P0","1.1"],
+ ["Fair ranking modes: personal-goal %, consistency score, most improved, active days, team average","P0","1.1"],
+ ["Leaderboard opt-out and approximate-visibility options honoured on every board","P0","1.1"],
+ ["Tie handling, personal position, and rank movement indicators","P1","1.1"],
+ ["Virtual walking companions: clearly labelled, adjustable pace, private practice board, fully disableable — never presented as real people","P1","1.1"],
+ ["Friend comparison view with non-shaming comparative language","P1","1.1"],
+ ["Suspicious-data detection before rankings or challenges are affected","P0","1.2"]]},
+{code:"ACH",name:"Achievements & sharing",desc:"Celebrate personal progress and consistency — not only global rank.",reqs:[
+ ["Achievement engine: first walk, first goal, consistency runs, personal bests, improvement and distance milestones","P0","1.1"],
+ ["Weekly and monthly recaps","P1","1.1"],
+ ["Shareable cards (daily, achievement, streak, challenge, group) with mandatory privacy preview; hide exact steps and photo","P0","1.1"],
+ ["Export as image, save locally, and share via the Android system share sheet — no hardcoded platform list","P0","1.1"],
+ ["Private celebration option and achievement timeline; accessible text alternative on every card","P1","1.1"]]},
+{code:"GRP",name:"Walking groups",desc:"Private-first groups with real administration, not just a shared list.",reqs:[
+ ["Create and join invite-only groups; public/discoverable groups behind a flag pending the §19 decision","P0","1.2"],
+ ["Roles: administrator and moderator; transfer ownership; archive group","P0","1.2"],
+ ["Member management: invite, remove, suspend, leave","P0","1.2"],
+ ["Group leaderboard, group goal, announcements, activity feed, and statistics","P1","1.2"],
+ ["Group privacy controls and per-group notification preferences","P0","1.2"]]},
+{code:"CHL",name:"Challenges",desc:"Opt-in, fair, and safe. Reward mechanics must never pressure unsafe overexertion.",reqs:[
+ ["Individual, friend-to-friend, group, and team challenges with daily/weekly/monthly durations","P0","1.2"],
+ ["Challenge types: target steps, consistency, personal-goal completion, most improved","P0","1.2"],
+ ["Invitations with join/decline, live standings, reminders, completion recap, digital badges, rematch, and history","P1","1.2"],
+ ["Fair play: eligibility windows, suspicious-activity review, participation limits, cancellation rules","P0","1.2"],
+ ["No reward mechanics that pressure users toward unsafe overexertion","P0","1.2"]]},
+{code:"MSG",name:"Messaging & community safety",desc:"Encouragement-framed chat with moderation built in from day one — taunting is never a promoted interaction.",reqs:[
+ ["One-to-one, group, and challenge chat with reactions, mentions, encouragement templates, and goal celebrations","P0","1.2"],
+ ["Mute conversation, delete own message, report message, and block sender available inside every conversation","P0","1.2"],
+ ["Server-side rate limits and spam controls","P0","1.2"],
+ ["Moderation tools: remove content, mute/suspend per policy, escalate to platform moderation; all actions audited","P0","1.2"],
+ ["Community guidelines and safety reminders surfaced in-product","P1","1.2"]]},
+{code:"NTF",name:"Notifications",desc:"Value over volume. Social notifications are separable from activity and security notifications.",reqs:[
+ ["Per-category controls; social categories fully separable from activity and security","P0","MVP"],
+ ["Quiet hours and frequency limits","P0","MVP"],
+ ["Goal progress, goal reached, streak milestone, streak-at-risk, and recap notifications","P0","MVP"],
+ ["Friend, challenge, group, and message notifications as those features ship","P0","1.1"],
+ ["Sync-failure, wearable-disconnected, and security alerts","P1","MVP"],
+ ["Notification preview privacy on the lock screen","P1","MVP"],
+ ["No shame-based language; every notification states its trigger and is actionable when recovery is possible","P0","MVP"]]},
+{code:"WBL",name:"Wearables & Health Connect",desc:"Health Connect is the preferred aggregation layer; direct integrations only after provider validation.",reqs:[
+ ["Health Connect integration as the preferred Android aggregation layer","P0","MVP"],
+ ["Connected-source list with connection status, last sync time, and priority ordering","P0","MVP"],
+ ["Manual sync, import date range, disconnect source, delete imported data","P0","MVP"],
+ ["Duplicate prevention with per-total source attribution and conflict explanation","P0","MVP"],
+ ["Wearable troubleshooting and unsupported-device guidance","P1","MVP"],
+ ["Direct provider integrations (Garmin, Fitbit, Samsung, WHOOP, Xiaomi, Oura) only after technical, policy, and commercial validation","P2","Later"]]},
+{code:"SET",name:"Settings",desc:"Grouped by purpose so privacy, security, account, activity, and appearance controls are scannable.",reqs:[
+ ["Settings grouped by purpose: Activity · Appearance & accessibility · Notifications · Social & privacy · Account & security · Help & legal","P0","MVP"],
+ ["Appearance: system/light/dark theme, high contrast, text-size support, reduce motion, haptics, colour-independent charts","P0","MVP"],
+ ["Sensitive controls carry plain-language descriptions of what they do","P0","MVP"],
+ ["Help centre, contact support, feedback, report a problem, community guidelines, privacy policy, terms, licences, version info","P0","MVP"],
+ ["Activity settings: data source, connected devices, goal, rest days, streak mode, distance unit, energy estimate, sync","P0","MVP"]]}
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=t=>{const d=document.createElement("span");d.textContent=t;return d.innerHTML};
+const PHASES=["MVP","1.1","1.2","Later"];
+const ORD=["var(--ord-1)","var(--ord-2)","var(--ord-3)","var(--ord-4)"];
+const allReqs=EPICS.flatMap(e=>e.reqs.map((r,i)=>({epic:e.code,id:e.code+"-"+String(i+1).padStart(2,"0"),text:r[0],p:r[1],rel:r[2]})));
+
+/* ============================================================ THEME */
+(function(){
+  const btn=$("#themeBtn"), order=["system","light","dark"], icons={system:"◐",light:"☀",dark:"☾"};
+  let mode=localStorage.getItem("wlk-theme")||"system";
+  const mq=matchMedia("(prefers-color-scheme: dark)");
+  function apply(){
+    const dark=mode==="dark"||(mode==="system"&&mq.matches);
+    document.documentElement.dataset.theme=dark?"dark":"light";
+    btn.textContent=icons[mode]+" Theme: "+mode[0].toUpperCase()+mode.slice(1);
+  }
+  btn.addEventListener("click",()=>{mode=order[(order.indexOf(mode)+1)%3];localStorage.setItem("wlk-theme",mode);apply();});
+  mq.addEventListener("change",apply);
+  apply();
+})();
+
+/* ============================================================ KPIs */
+(function(){
+  const total=allReqs.length, p0=allReqs.filter(r=>r.p==="P0").length,
+        mvp=allReqs.filter(r=>r.rel==="MVP").length;
+  $("#kpiRow").innerHTML=[
+    ["Epics",EPICS.length,"functional areas"],
+    ["Requirements",total,"in the catalog"],
+    ["P0 must-haves",p0,Math.round(p0/total*100)+"% of catalog"],
+    ["MVP scope",mvp,Math.round(mvp/total*100)+"% lands in MVP"],
+    ["Release phases",4,"MVP → v1.1 → v1.2 → Later"]
+  ].map(([l,v,s])=>`<div class="kpi"><div class="lbl">${l}</div><div class="val">${v}</div><div class="sub">${s}</div></div>`).join("");
+})();
+
+/* ============================================================ TOOLTIP */
+const tip=$("#tooltip");
+function showTip(html,x,y){
+  tip.innerHTML=html;tip.style.display="block";
+  const r=tip.getBoundingClientRect();
+  tip.style.left=Math.min(x+14,innerWidth-r.width-10)+"px";
+  tip.style.top=Math.max(8,y-r.height-12)+"px";
+}
+function hideTip(){tip.style.display="none"}
+
+/* ============================================================ PHASE CHART (column, ordinal ramp) */
+(function(){
+  const counts=PHASES.map(p=>allReqs.filter(r=>r.rel===p).length);
+  const total=counts.reduce((a,b)=>a+b,0), max=Math.max(...counts);
+  const W=560,H=240,padL=14,padB=30,padT=26,bw=24,slot=(W-padL*2)/4;
+  const yMax=Math.ceil(max/10)*10;
+  const yy=v=>padT+(H-padT-padB)*(1-v/yMax);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:640px" role="img" aria-label="Column chart: requirements per release phase. ${PHASES.map((p,i)=>p+": "+counts[i]).join(". ")}.">`;
+  for(let g=0;g<=yMax;g+=10){
+    s+=`<line x1="${padL}" y1="${yy(g)}" x2="${W-padL}" y2="${yy(g)}" stroke="var(--grid)" stroke-width="1"/>`;
+    if(g>0)s+=`<text x="${padL}" y="${yy(g)-4}" font-size="10" fill="var(--ink-3)" font-variant-numeric="tabular-nums">${g}</text>`;
+  }
+  PHASES.forEach((p,i)=>{
+    const cx=padL+slot*i+slot/2, h=(H-padT-padB)*counts[i]/yMax, y=yy(counts[i]);
+    const lbl=p==="MVP"?"MVP":p==="Later"?"Later":"v"+p;
+    s+=`<path class="bar" tabindex="0" data-p="${p}" data-c="${counts[i]}"
+        d="M${cx-bw/2} ${H-padB} V${y+4} Q${cx-bw/2} ${y} ${cx-bw/2+4} ${y} H${cx+bw/2-4} Q${cx+bw/2} ${y} ${cx+bw/2} ${y+4} V${H-padB} Z"
+        fill="${ORD[i]}" aria-label="${lbl}: ${counts[i]} requirements"/>`;
+    s+=`<text x="${cx}" y="${y-7}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">${counts[i]}</text>`;
+    s+=`<text x="${cx}" y="${H-padB+18}" text-anchor="middle" font-size="12" fill="var(--ink-2)">${lbl}</text>`;
+  });
+  s+=`<line x1="${padL}" y1="${H-padB}" x2="${W-padL}" y2="${H-padB}" stroke="var(--baseline)" stroke-width="1"/></svg>`;
+  $("#phaseChart").innerHTML=s;
+  $("#phaseTableBody").innerHTML=PHASES.map((p,i)=>
+    `<tr><td>${p==="MVP"?"MVP":p==="Later"?"Later":"v"+p}</td><td class="numcol">${counts[i]}</td><td class="numcol">${Math.round(counts[i]/total*100)}%</td></tr>`).join("");
+  $("#phaseChart").querySelectorAll(".bar").forEach(b=>{
+    const html=()=>`<div class="tv">${b.dataset.c} requirements</div><div class="tl">${b.dataset.p==="MVP"?"MVP":b.dataset.p==="Later"?"Later expansion":"Version "+b.dataset.p} · ${Math.round(b.dataset.c/total*100)}% of catalog</div>`;
+    b.addEventListener("pointermove",e=>showTip(html(),e.clientX,e.clientY));
+    b.addEventListener("pointerleave",hideTip);
+    b.addEventListener("focus",()=>{const r=b.getBoundingClientRect();showTip(html(),r.x+r.width/2,r.y);});
+    b.addEventListener("blur",hideTip);
+  });
+})();
+
+/* ============================================================ FLOW-HEALTH STACKED BAR (status colors) */
+(function(){
+  const data=[
+    {k:"Good foundation",n:5,c:"var(--st-good)",icon:"✓"},
+    {k:"Mixed",n:2,c:"var(--st-warn)",icon:"!"},
+    {k:"Needs improvement",n:4,c:"var(--st-serious)",icon:"▲"},
+    {k:"At risk",n:1,c:"var(--st-critical)",icon:"✕"}
+  ];
+  const total=data.reduce((a,d)=>a+d.n,0),W=560,H=46,gap=2;
+  let x=0,s=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:640px" role="img" aria-label="Stacked bar: ${data.map(d=>d.k+" "+d.n).join(", ")} of ${total} journeys.">`;
+  data.forEach(d=>{
+    const w=(W-gap*(data.length-1))*d.n/total;
+    s+=`<rect class="bar" tabindex="0" x="${x}" y="8" width="${w}" height="26" rx="5" fill="${d.c}" data-k="${d.k}" data-n="${d.n}" data-i="${d.icon}" aria-label="${d.k}: ${d.n} of ${total}"/>`;
+    s+=`<text x="${x+w/2}" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${d.n}</text>`;
+    x+=w+gap;
+  });
+  s+=`</svg>`;
+  $("#healthBar").innerHTML=s;
+  $("#healthLegend").innerHTML=data.map(d=>`<span class="key"><span class="sw" style="background:${d.c}"></span>${d.icon} ${d.k} (${d.n})</span>`).join("");
+  $("#healthBar").querySelectorAll(".bar").forEach(b=>{
+    const html=()=>`<div class="tv">${b.dataset.i} ${esc(b.dataset.k)}</div><div class="tl">${b.dataset.n} of ${total} audited journeys</div>`;
+    b.addEventListener("pointermove",e=>showTip(html(),e.clientX,e.clientY));
+    b.addEventListener("pointerleave",hideTip);
+    b.addEventListener("focus",()=>{const r=b.getBoundingClientRect();showTip(html(),r.x+r.width/2,r.y);});
+    b.addEventListener("blur",hideTip);
+  });
+})();
+
+/* ============================================================ TABLE-VIEW TOGGLES */
+$$("[data-toggle-table]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const t=document.getElementById(btn.dataset.toggleTable);
+    const open=t.classList.toggle("show");
+    btn.setAttribute("aria-expanded",open);
+    btn.textContent=open?"Hide table":"Table view";
+  });
+});
+
+/* ============================================================ REQUIREMENTS EXPLORER */
+(function(){
+  const list=$("#epicList");
+  list.innerHTML=EPICS.map(e=>`
+    <details class="epic" open data-code="${e.code}">
+      <summary><span class="tw" aria-hidden="true">▸</span><span class="code">${e.code}</span>${esc(e.name)}<span class="cnt"></span></summary>
+      <p class="epicDesc">${esc(e.desc)}</p>
+      <div class="tblWrap" style="border-left:0;border-right:0;border-radius:0">
+      <table><thead><tr><th style="width:82px">ID</th><th>Requirement</th><th style="width:60px">Priority</th><th style="width:76px">Release</th></tr></thead>
+      <tbody>${e.reqs.map((r,i)=>{
+        const id=e.code+"-"+String(i+1).padStart(2,"0");
+        return `<tr data-p="${r[1]}" data-rel="${r[2]}" data-txt="${esc((id+" "+r[0]).toLowerCase())}">
+          <td>${id}</td><td class="rtext">${esc(r[0])}</td>
+          <td><span class="pr ${r[1]}">${r[1]}</span></td>
+          <td><span class="rel">${r[2]==="MVP"?"MVP":r[2]==="Later"?"Later":"v"+r[2]}</span></td></tr>`;}).join("")}
+      </tbody></table></div>
+    </details>`).join("");
+
+  const state={q:"",p:"",rel:""};
+  const rows=$$("#epicList tbody tr");
+  function applyFilters(){
+    let visible=0;
+    rows.forEach(r=>{
+      const ok=(!state.p||r.dataset.p===state.p)&&(!state.rel||r.dataset.rel===state.rel)&&(!state.q||r.dataset.txt.includes(state.q));
+      r.style.display=ok?"":"none";
+      const cell=r.querySelector(".rtext");
+      cell.innerHTML=esc(cell.textContent);
+      if(ok&&state.q){
+        const rx=new RegExp("("+state.q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig");
+        cell.innerHTML=cell.innerHTML.replace(rx,"<mark>$1</mark>");
+      }
+      if(ok)visible++;
+    });
+    $$("#epicList details.epic").forEach(d=>{
+      const vis=Array.from(d.querySelectorAll("tbody tr")).filter(r=>r.style.display!=="none").length;
+      d.style.display=vis?"":"none";
+      d.querySelector(".cnt").textContent=vis+" requirement"+(vis===1?"":"s");
+      if(state.q||state.p||state.rel)d.open=true;
+    });
+    $("#reqCount").textContent=visible+" of "+rows.length+" shown";
+  }
+  $("#reqSearch").addEventListener("input",e=>{state.q=e.target.value.trim().toLowerCase();applyFilters();});
+  [["#prioSeg","p"],["#relSeg","rel"]].forEach(([sel,key])=>{
+    $(sel).addEventListener("click",e=>{
+      const b=e.target.closest("button");if(!b)return;
+      $(sel).querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");state[key]=b.dataset.v;applyFilters();
+    });
+  });
+  document.addEventListener("keydown",e=>{
+    if(e.key==="/"&&!/input|textarea|select/i.test(document.activeElement.tagName)){
+      e.preventDefault();$("#reqSearch").focus();$("#requirements").scrollIntoView();
+    }
+  });
+  applyFilters();
+})();
+
+/* ============================================================ SCROLLSPY + PROGRESS + TOTOP + NAV */
+(function(){
+  const links=$$(".sidebar a"),map={};
+  links.forEach(a=>map[a.getAttribute("href").slice(1)]=a);
+  const obs=new IntersectionObserver(en=>{
+    en.forEach(x=>{if(x.isIntersecting){links.forEach(a=>a.classList.remove("active"));(map[x.target.id]||{}).classList?.add("active");}});
+  },{rootMargin:"-15% 0px -75% 0px"});
+  $$("section.doc").forEach(s=>obs.observe(s));
+  const bar=$("#progressbar"),top=$("#toTop");
+  addEventListener("scroll",()=>{
+    const h=document.documentElement;
+    bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+"%";
+    top.style.display=h.scrollTop>800?"block":"none";
+  },{passive:true});
+  top.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));
+  const sb=$("#sidebar"),tg=$("#navToggle");
+  tg.addEventListener("click",()=>{const o=sb.classList.toggle("open");tg.setAttribute("aria-expanded",o);});
+  sb.addEventListener("click",e=>{if(e.target.tagName==="A")sb.classList.remove("open");});
+})();
+
+/* ============================================================ MOCKUP RING ANIMATION */
+(function(){
+  const ring=$(".ringFill");if(!ring)return;
+  const C=226.2,pct=+ring.dataset.pct/100;
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const target=C*(1-pct);
+  if(reduce){ring.style.strokeDashoffset=target;return;}
+  ring.style.transition="stroke-dashoffset 1.2s cubic-bezier(.22,.8,.3,1)";
+  new IntersectionObserver((en,o)=>{
+    if(en[0].isIntersecting){requestAnimationFrame(()=>ring.style.strokeDashoffset=target);o.disconnect();}
+  },{threshold:.4}).observe(ring);
+})();
+
+/* ============================================================ DECISION TRACKER (localStorage) */
+(function(){
+  const saved=JSON.parse(localStorage.getItem("wlk-decisions")||"{}");
+  $$("#decisionList input").forEach(cb=>{
+    cb.checked=!!saved[cb.id];
+    cb.closest("li").classList.toggle("done",cb.checked);
+    cb.addEventListener("change",()=>{
+      saved[cb.id]=cb.checked;
+      localStorage.setItem("wlk-decisions",JSON.stringify(saved));
+      cb.closest("li").classList.toggle("done",cb.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>

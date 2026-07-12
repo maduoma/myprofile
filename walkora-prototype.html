@@ -338,8 +338,10 @@ a{color:var(--brand)}
       <ul>
         <li><b>Onboarding:</b> tap “Not now” on the permission dialog to see the denial-recovery path (ONB-03).</li>
         <li><b>Guest → account:</b> open Community as a guest, sign in contextually, watch history migrate (J2). Then accept Dele's friend request from the 🔔 bell.</li>
+        <li><b>Practice board:</b> as a guest, race the labelled virtual pacers on Today — medals, live updates, adjustable pace (LDB-05).</li>
         <li><b>Fair ranking:</b> switch the leaderboard between Goal % / Steps / Consistency / Improved — ranks re-sort (LDB-02).</li>
-        <li><b>Compare:</b> tap any friend on the board.</li>
+        <li><b>Compare:</b> tap anyone on a board — days won, win streaks, and the daily-winner strip. Cheer 🎉 or Nudge 👉; no Taunt, by design.</li>
+        <li><b>Groups:</b> Community → Groups → create “Morning Crew”, watch a member join, then open the group chat (GRP/MSG).</li>
         <li><b>Celebrate:</b> complete the goal — confetti respects reduced-motion.</li>
         <li><b>Share:</b> Today → Share — privacy preview with redaction toggles (ACH-03).</li>
         <li><b>Chat safety:</b> ⋮ in a conversation → mute, report, block (MSG-02).</li>
@@ -415,24 +417,31 @@ const DEF={
     {ic:"🔥",t:"12-day streak!",s:"Your longest yet. Tomorrow is a rest day — it won't break it.",when:"2 h ago"},
     {ic:"📊",t:"Weekly recap ready",s:"You walked 52,406 steps last week — 4 of 5 goal days met.",when:"Yesterday"}
   ],
-  convos:{}, goalDoneToday:false
+  convos:{}, goalDoneToday:false,
+  companions:true, botPace:"moderate", botSteps:{brisk:4758,steady:2076},
+  communityTab:"friends", group:null
 };
 let S=load();
-function load(){try{const v=JSON.parse(localStorage.getItem("wlk-proto"));if(v&&v.v===3)return v.s}catch(e){}return structuredClone(DEF)}
-function save(){localStorage.setItem("wlk-proto",JSON.stringify({v:3,s:S}))}
+function load(){try{const v=JSON.parse(localStorage.getItem("wlk-proto"));if(v&&v.v===4)return v.s}catch(e){}return structuredClone(DEF)}
+function save(){localStorage.setItem("wlk-proto",JSON.stringify({v:4,s:S}))}
 
 /* ---------------- friends dataset ---------------- */
+/* week arrays = the 6 days BEFORE today (oldest → yesterday); today is live */
 const FRIENDS=[
- {id:"tunde", name:"Tunde", goal:12000, today:9360, week:[11200,12400,9100,13800,10200,9360,0], prevWeek:64800, streak:8},
- {id:"nkechi",name:"Nkechi",goal:6000,  today:6710, week:[6300,7100,6050,6800,6400,6710,0],   prevWeek:36200, streak:21},
- {id:"amara", name:"Amara", goal:5000,  today:3480, week:[5200,2100,5600,4900,5100,3480,0],   prevWeek:19800, streak:3},
- {id:"dele",  name:"Dele",  goal:9000,  today:7150, week:[8800,9400,7600,9900,6200,7150,0],   prevWeek:41000, streak:5},
- {id:"pace",  name:"Pace Pal", virtual:true, goal:8000, today:5120, week:[5600,5600,5600,5600,5600,5120,0], prevWeek:39200, streak:0}
+ {id:"tunde", name:"Tunde", goal:12000, today:9360, week:[11200,12400,9100,13800,10200,7702], prevWeek:64800, streak:8},
+ {id:"nkechi",name:"Nkechi",goal:6000,  today:6710, week:[6300,7100,6050,6800,6400,5423],   prevWeek:36200, streak:21},
+ {id:"amara", name:"Amara", goal:5000,  today:3480, week:[5200,2100,5600,4900,5100,4100],   prevWeek:19800, streak:3},
+ {id:"dele",  name:"Dele",  goal:9000,  today:7150, week:[8800,9400,7600,9900,6200,6900],   prevWeek:41000, streak:5},
+ {id:"brisk", name:"Brisk Bot", virtual:true, goal:10000, week:[8900,9400,10800,9100,11275,7702], prevWeek:56800, streak:0},
+ {id:"steady",name:"Steady Bot",virtual:true, goal:6000,  week:[5100,5600,4900,6050,5400,5423],   prevWeek:31900, streak:0}
 ];
 const friendById=id=>FRIENDS.find(f=>f.id===id);
+const friendToday=f=>f.virtual?(S.botSteps[f.id]||0):f.today;
+const friendDays=f=>[...f.week,friendToday(f)];
 function visibleFriends(){
   let list=FRIENDS.filter(f=>!S.blocked[f.id]);
   if(!S.friendsAdded)list=list.filter(f=>f.id!=="dele");
+  if(!S.companions)list=list.filter(f=>!f.virtual);
   return list;
 }
 
@@ -464,8 +473,7 @@ function myScores(){
           improved:(weekTotal(w)-46200)/46200, streak:streak()};
 }
 function friendScores(f){
-  const wk=f.week.reduce((a,b)=>a+b,0);
-  const days=f.week.filter(x=>x>0);
+  const all=friendDays(f),days=all.filter(x=>x>0),wk=all.reduce((a,b)=>a+b,0);
   return {goalPct:days.reduce((a,x)=>a+Math.min(x/f.goal,2),0)/Math.max(1,days.length),
           steps:wk, consistency:days.filter(x=>x>=f.goal).length/Math.max(1,days.length),
           improved:(wk-f.prevWeek)/f.prevWeek};
@@ -474,6 +482,41 @@ const MODES={goalPct:{lab:"Goal %",fmt:v=>Math.round(v*100)+"%"},
              steps:{lab:"Steps",fmt:v=>fmt(v)},
              consistency:{lab:"Consistency",fmt:v=>Math.round(v*100)+"%"},
              improved:{lab:"Improved",fmt:v=>(v>=0?"+":"")+Math.round(v*100)+"%"}};
+const medal=r=>r===1?"🥇":r===2?"🥈":r===3?"🥉":r;
+function boardRows(list,mode){
+  const rows=list.map(f=>({f,sc:friendScores(f)}));
+  rows.push({me:true,sc:myScores()});
+  rows.sort((a,b)=>b.sc[mode]-a.sc[mode]);
+  const maxSteps=Math.max(...rows.map(x=>x.sc.steps));
+  return rows.map((r,i)=>{
+    const v=MODES[mode].fmt(r.sc[mode]);
+    const barPct=mode==="steps"?r.sc.steps/maxSteps:mode==="improved"?clamp(r.sc[mode]+0.5,0.05,1):clamp(r.sc[mode],0.03,mode==="goalPct"?1.4:1)/(mode==="goalPct"?1.4:1);
+    const rk=`<span class="rk" role="img" aria-label="rank ${i+1}">${medal(i+1)}</span>`;
+    if(r.me)return `<div class="lb me" style="cursor:default">${rk}<span class="av sm me">${S.name[0]}</span>
+      <span class="nm">You<small>goal ${fmt(S.goal)}${S.privacy.approx?" · showing approximate totals":""}</small>
+      <span class="gbar"><i style="width:${barPct*100}%"></i></span></span><span class="pc">${v}</span></div>`;
+    const f=r.f;
+    return `<button class="lb" data-act="compare" data-v="${f.id}">
+      ${rk}<span class="av sm">${f.virtual?"🤖":f.name[0]}</span>
+      <span class="nm">${esc(f.name)}${f.virtual?`<span class="vtag">VIRTUAL</span>`:""}<small>${f.virtual?"practice pacer · updates live":`goal ${fmt(f.goal)} · ${Math.round(r.sc.consistency*100)}% consistent`}</small>
+      <span class="gbar"><i style="width:${barPct*100}%"></i></span></span><span class="pc">${v}</span></button>`;
+  }).join("");
+}
+function practiceRows(){
+  const rows=FRIENDS.filter(f=>f.virtual&&!S.blocked[f.id]).map(f=>({id:f.id,name:f.name,steps:friendToday(f)}));
+  rows.push({me:true,name:"You",steps:S.stepsToday});
+  rows.sort((a,b)=>b.steps-a.steps);
+  const max=Math.max(...rows.map(r=>r.steps),1);
+  return rows.map((r,i)=>{
+    const rk=`<span class="rk" role="img" aria-label="rank ${i+1}">${medal(i+1)}</span>`;
+    const bar=clamp(r.steps/max,0.03,1)*100;
+    if(r.me)return `<div class="lb me" style="cursor:default">${rk}<span class="av sm me">${S.name[0]}</span>
+      <span class="nm">You<span class="gbar"><i style="width:${bar}%"></i></span></span><span class="pc" id="pb-you">${fmt(r.steps)}</span></div>`;
+    return `<button class="lb" data-act="compare" data-v="${r.id}">${rk}<span class="av sm">🤖</span>
+      <span class="nm">${esc(r.name)}<span class="vtag">VIRTUAL</span><small>updated just now</small><span class="gbar"><i style="width:${bar}%"></i></span></span>
+      <span class="pc" id="pb-${r.id}">${fmt(r.steps)}</span></button>`;
+  }).join("");
+}
 
 /* ---------------- conversations ---------------- */
 function seedConvos(){
@@ -659,9 +702,19 @@ SCREENS.today=()=>{
         <span class="pc">${Math.round(pct*100)}%</span></div>
       <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:650;font-size:11px;padding:6px 0 0;cursor:pointer" data-act="tab" data-to="community">Open Community ›</button>
     </div>`:!S.account?`
+    ${S.companions?`<div class="c"><div class="h">Practice board · updated just now <button class="sp" data-act="hidebots">Hide</button></div>
+      ${practiceRows()}
+      <div style="display:flex;gap:8px;align-items:center;margin-top:9px">
+        <span class="note" style="flex:none">Pace</span>
+        <div class="seg" style="flex:1" role="group" aria-label="Companion pace">
+          ${["relaxed","moderate","energetic"].map(p=>`<button aria-pressed="${S.botPace===p}" data-act="botpace" data-v="${p}">${p[0].toUpperCase()+p.slice(1)}</button>`).join("")}
+        </div>
+      </div>
+      <div class="note" style="margin-top:6px">🤖 Labelled practice pacers — never real people. Race them without an account; turn them off anytime.</div>
+    </div>`:""}
     <div class="c"><div class="h">Walking with friends</div>
       <div style="font-size:12.5px;color:var(--a-ink2);margin-bottom:8px">Fair leaderboards, groups, and encouragement — when you want them. Guest tracking always stays free of sign-in walls.</div>
-      <button class="gbtn" style="padding:9px;font-size:12.5px" data-act="tab" data-to="community">Explore Community</button></div>`:""}
+      <button class="gbtn" style="padding:9px;font-size:12.5px" data-act="signin">Sign in to add friends</button></div>`:""}
   </div>${nav()}`;
 };
 
@@ -767,28 +820,19 @@ SCREENS.community=()=>{
     <div class="note" style="text-align:center">Keep tracking as a guest anytime — this is optional.</div>
   </div>${nav()}`;
 
-  const mode=S.lbMode,me=myScores();
-  const rows=visibleFriends().map(f=>({f,sc:friendScores(f)}));
-  rows.push({me:true,sc:me});
-  rows.sort((a,b)=>b.sc[mode]-a.sc[mode]);
-  return `${appbar("Community",{extra:`<button class="iconbtn" data-act="invite" aria-label="Invite a friend">${icon("plus")}</button>`})}
+  const mode=S.lbMode,ctab=S.communityTab;
+  return `${appbar("Community",{extra:`<button class="iconbtn" data-act="${ctab==="groups"?"creategroupsheet":"invite"}" aria-label="${ctab==="groups"?"Create a group":"Invite a friend"}">${icon("plus")}</button>`})}
   <div class="body">
+    <div class="seg" role="group" aria-label="Community section">
+      <button aria-pressed="${ctab==="friends"}" data-act="ctab" data-v="friends">Friends</button>
+      <button aria-pressed="${ctab==="groups"}" data-act="ctab" data-v="groups">Groups${S.group?" · 1":""}</button>
+    </div>
+    ${ctab==="friends"?`
     <div class="seg" role="group" aria-label="Ranking mode">
       ${Object.entries(MODES).map(([k,m])=>`<button aria-pressed="${mode===k}" data-act="lbmode" data-v="${k}">${m.lab}</button>`).join("")}
     </div>
-    <div class="c"><div class="h">This week · Friends <span class="sp">${MODES[mode].lab} ranking</span></div>
-      ${rows.map((r,i)=>{
-        const v=MODES[mode].fmt(r.sc[mode]);
-        const barPct=mode==="steps"?r.sc.steps/Math.max(...rows.map(x=>x.sc.steps)):mode==="improved"?clamp(r.sc[mode]+0.5,0.05,1):clamp(r.sc[mode],0.03,mode==="goalPct"?1.4:1)/(mode==="goalPct"?1.4:1);
-        if(r.me)return `<div class="lb me" style="cursor:default"><span class="rk">${i+1}</span><span class="av sm me">${S.name[0]}</span>
-          <span class="nm">You<small>goal ${fmt(S.goal)}${S.privacy.approx?" · showing approximate totals":""}</small>
-          <span class="gbar"><i style="width:${barPct*100}%"></i></span></span><span class="pc">${v}</span></div>`;
-        const f=r.f;
-        return `<button class="lb" data-act="compare" data-v="${f.id}">
-          <span class="rk">${i+1}</span><span class="av sm">${f.name[0]}</span>
-          <span class="nm">${esc(f.name)}${f.virtual?`<span class="vtag">VIRTUAL</span>`:""}<small>${f.virtual?"practice companion · can be turned off":`goal ${fmt(f.goal)} · ${Math.round(friendScores(f).consistency*100)}% consistent`}</small>
-          <span class="gbar"><i style="width:${barPct*100}%"></i></span></span><span class="pc">${v}</span></button>`;
-      }).join("")}
+    <div class="c"><div class="h">This week · Friends <span class="sp" style="cursor:default">${MODES[mode].lab} · updated just now</span></div>
+      ${boardRows(visibleFriends(),mode)}
     </div>
     <div class="c" style="font-size:11.5px;color:var(--a-ink2)">🔒 You control this: show approximate totals, hide your activity, or leave leaderboards in <button class="sp" style="background:none;border:0;padding:0;color:var(--a-brand);font-weight:700;cursor:pointer;font-size:11.5px" data-act="tab" data-to="profile">Privacy</button>. Rankings never use raw totals unless you pick “Steps”.</div>
     ${S.requests.length?`<div class="c"><div class="h">Friend requests</div>
@@ -796,39 +840,102 @@ SCREENS.community=()=>{
         <span class="tx"><b>${esc(r.name)}</b><small>${esc(r.note)}</small></span>
         <button class="sp" style="background:var(--a-brand);color:var(--a-brand-ink);border:0;border-radius:9px;padding:.5em .9em;font-weight:700;cursor:pointer" data-act="acceptreq" data-v="${r.id}">Accept</button>
         <button class="sp" style="background:none;border:0;color:var(--a-ink3);font-weight:650;cursor:pointer;padding:.5em .4em" data-act="declinereq" data-v="${r.id}">Decline</button></div>`).join("")}</div>`:""}
-    <button class="gbtn" data-act="invite">＋ Invite a friend · link or QR</button>
+    <button class="gbtn" data-act="invite">＋ Invite a friend · link or QR</button>`
+    :groupsTab()}
   </div>${nav()}`;
 };
+function groupsTab(){
+  if(!S.group)return `
+    <div class="c" style="text-align:center;padding:22px 16px">
+      <div style="font-size:30px">👥</div>
+      <b style="font-size:15px">Joining a group?</b>
+      <div class="note" style="margin-top:4px">Tap the group's invite link, or <button style="background:none;border:0;padding:0;color:var(--a-brand);font-weight:700;cursor:pointer;font-size:11px" data-act="pastelink">paste it here</button>.</div>
+    </div>
+    <div class="c"><div class="h">Groups are great for friends &amp; teams</div>
+      <div class="tog"><div class="tx"><b>🏅 Fair leaderboards &amp; chat</b><small>Rank by goal %, consistency, or team average — everyone can win</small></div></div>
+      <div class="tog"><div class="tx"><b>📆 Custom challenge dates</b><small>Weekend sprints, month-long consistency runs, rematches</small></div></div>
+      <div class="tog"><div class="tx"><b>🔒 Private &amp; invite-only by default</b><small>Admin &amp; moderator tools built in · public groups come later</small></div></div>
+    </div>
+    <button class="pbtn" data-act="creategroupsheet">Create new group</button>
+    <div class="note" style="text-align:center">You'll be the admin — invite people with a link or QR.</div>`;
+  const g=S.group;
+  const members=g.members.map(friendById).filter(f=>f&&!S.blocked[f.id]);
+  const teamAvg=(members.map(f=>friendScores(f).goalPct).concat([myScores().goalPct]).reduce((a,b)=>a+b,0))/(members.length+1);
+  return `
+    <div class="c" style="display:flex;align-items:center;gap:11px">
+      <span class="av" style="font-size:18px">👥</span>
+      <div style="flex:1"><b style="font-size:15px">${esc(g.name)}</b>
+        <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap"><span class="chipA on">invite-only</span><span class="chipA">${members.length+1} members</span><span class="chipA">you're admin</span></div>
+      </div>
+      <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:700;cursor:pointer" data-act="invite">Invite</button>
+    </div>
+    <div class="seg" role="group" aria-label="Group ranking mode">
+      ${Object.entries(MODES).map(([k,m])=>`<button aria-pressed="${S.lbMode===k}" data-act="lbmode" data-v="${k}">${m.lab}</button>`).join("")}
+    </div>
+    <div class="c"><div class="h">This week · ${esc(g.name)} <span class="sp" style="cursor:default">team avg ${Math.round(teamAvg*100)}%</span></div>
+      ${boardRows(members,S.lbMode)}
+    </div>
+    <div class="c"><div class="h">📣 Announcement · admin</div>
+      <div style="font-size:12.5px;color:var(--a-ink2)">Welcome to ${esc(g.name)}! First team goal: everyone hits 100% twice this week. Rest days count as planned — no guilt walks.</div></div>
+    <button class="pbtn" data-act="opengroupchat">💬 Open group chat</button>
+    <button class="gbtn" data-act="leavegroupask">Leave group…</button>`;
+}
 
 /* ---------- compare ---------- */
 let compareId=null;
 SCREENS.compare=()=>{
   const f=friendById(compareId);if(!f){S.screen="community";return SCREENS.community()}
   const me=myScores(),fs=friendScores(f),myW=myWeek();
+  const mine=myW.map(d=>d.steps),theirs=friendDays(f);
+  let won=0,lost=0,run=0,bestRun=0,tRun=0,tBest=0;
+  const chips=mine.map((v,i)=>{
+    const w=v>theirs[i],l=theirs[i]>v;
+    if(w){won++;run++;bestRun=Math.max(bestRun,run);tRun=0}
+    else{run=0;if(l){lost++;tRun++;tBest=Math.max(tBest,tRun)}else tRun=0}
+    return {lab:DAYNAMES[myW[i].dow],w:w?"me":l?"them":"tie"};
+  });
   const rows=[
-    ["steps today",fmt(S.stepsToday),fmt(f.today),S.stepsToday>=f.today],
-    ["yesterday",fmt(myW[5].steps),fmt(f.week[4]),myW[5].steps>=f.week[4]],
+    ["steps today",fmt(S.stepsToday),fmt(friendToday(f)),S.stepsToday>=friendToday(f)],
+    ["yesterday",fmt(myW[5].steps),fmt(f.week[5]),myW[5].steps>=f.week[5]],
     ["7-day avg",fmt(me.steps/7),fmt(fs.steps/7),me.steps>=fs.steps],
     ["goal %, this week",Math.round(me.goalPct*100)+"%",Math.round(fs.goalPct*100)+"%",me.goalPct>=fs.goalPct],
     ["consistency",Math.round(me.consistency*100)+"%",Math.round(fs.consistency*100)+"%",me.consistency>=fs.consistency],
-    ["current streak",streak()+" days",f.streak+" days",streak()>=f.streak]];
-  return `${appbar(f.name,{back:"community",bell:false,extra:f.virtual?"":`<button class="iconbtn" data-act="friendmenu" data-v="${f.id}" aria-label="More options">${icon("dots")}</button>`})}
+    ["days won (7d)",won,lost,won>=lost],
+    ["longest win streak",bestRun+"d",tBest+"d",bestRun>=tBest]];
+  return `${appbar(f.name,{back:S._cmpBack||"community",bell:false,extra:f.virtual?"":`<button class="iconbtn" data-act="friendmenu" data-v="${f.id}" aria-label="More options">${icon("dots")}</button>`})}
   <div class="body">
-    ${f.virtual?`<div class="offb" style="background:var(--a-warnbg);color:var(--a-warnink)">🤖 Virtual companion — a labelled practice pacer, never a real person. Turn off in Settings.</div>`:""}
+    ${f.virtual?`<div class="offb" style="background:var(--a-warnbg);color:var(--a-warnink)">🤖 Virtual companion — a labelled practice pacer, never a real person.</div>`:""}
     <div class="c">
       <div style="display:flex;justify-content:space-around;align-items:center;margin-bottom:10px">
         <div style="text-align:center"><span class="av me" style="margin:0 auto">${S.name[0]}</span><div style="font-weight:700;font-size:12px;margin-top:4px">You</div><div class="note">goal ${fmt(S.goal)}</div></div>
         <div style="color:var(--a-ink3);font-weight:800">vs</div>
-        <div style="text-align:center"><span class="av" style="margin:0 auto">${f.name[0]}</span><div style="font-weight:700;font-size:12px;margin-top:4px">${esc(f.name)}</div><div class="note">goal ${fmt(f.goal)}</div></div>
+        <div style="text-align:center"><span class="av" style="margin:0 auto">${f.virtual?"🤖":f.name[0]}</span><div style="font-weight:700;font-size:12px;margin-top:4px">${esc(f.name)}</div><div class="note">goal ${fmt(f.goal)}</div></div>
       </div>
       <div class="cmpGrid">
         ${rows.map(([lab,a,b,win])=>`
           <span class="v l ${win?"win":""}">${a}</span><span class="lab">${lab}</span><span class="v ${!win?"win":""}">${b}</span>`).join("")}
       </div>
     </div>
+    <div class="c"><div class="h">Daily winner · you ${won}/7</div>
+      <div style="display:flex;justify-content:space-between" role="img" aria-label="Daily winners this week: ${chips.map(c=>c.lab+" "+(c.w==="me"?"you":c.w==="them"?f.name:"tie")).join(", ")}">
+        ${chips.map(c=>`<div style="text-align:center"><div class="note" style="margin-bottom:3px">${c.lab}</div>
+          <span class="av sm ${c.w==="me"?"me":""}" style="margin:0 auto;${c.w==="tie"?"opacity:.35":""}${c.w==="them"&&f.virtual?"font-size:13px":""}">${c.w==="me"?S.name[0]:c.w==="them"?(f.virtual?"🤖":f.name[0]):"–"}</span></div>`).join("")}
+      </div>
+    </div>
     <div class="note" style="text-align:center">Different goals, different routines — the % rows are the fair comparison.</div>
-    ${f.virtual?"":`<button class="pbtn" data-act="openchat" data-v="${f.id}">💬 Message ${esc(f.name)}</button>
-    <button class="gbtn" data-act="encourage" data-v="${f.id}">👏 Send encouragement</button>`}
+    ${f.virtual?`
+    <div class="c"><div class="h">Companion pace</div>
+      <div class="seg" role="group" aria-label="Companion pace">
+        ${["relaxed","moderate","energetic"].map(p=>`<button aria-pressed="${S.botPace===p}" data-act="botpace" data-v="${p}">${p[0].toUpperCase()+p.slice(1)}</button>`).join("")}
+      </div>
+      <div class="note" style="margin-top:6px">Pace only changes how fast companions accrue steps — they never taunt, and they never win on purpose.</div></div>
+    <button class="gbtn" data-act="hidebots">Turn off virtual companions</button>`
+    :`<div style="display:flex;gap:8px">
+      <button class="gbtn" data-act="cheer" data-v="${f.id}">🎉 Cheer</button>
+      <button class="gbtn" data-act="nudge" data-v="${f.id}">👉 Nudge</button>
+    </div>
+    <button class="pbtn" data-act="openchat" data-v="${f.id}">💬 Message ${esc(f.name)}</button>
+    <div class="note" style="text-align:center">Cheer and nudge only — no taunts, by design.</div>`}
   </div>`;
 };
 
@@ -845,33 +952,36 @@ SCREENS.messages=()=>{
     <div class="note" style="text-align:center">Every conversation has mute, report, and block built in.</div>
   </div>${nav()}`;
   seedConvos();
-  const list=Object.entries(S.convos).filter(([id])=>!S.blocked[id]).map(([id,c])=>{
-    const f=friendById(id),last=c.msgs[c.msgs.length-1];
-    return {id,f,last,unread:c.unread||0,muted:S.muted[id]};
-  });
+  const list=Object.entries(S.convos).filter(([id])=>!S.blocked[id]&&(id!=="grp"||S.group)).map(([id,c])=>{
+    const last=c.msgs[c.msgs.length-1];
+    return {id,name:convoName(id),av:id==="grp"?"👥":convoName(id)[0],last,unread:c.unread||0,muted:S.muted[id],grp:id==="grp"};
+  }).filter(x=>x.last);
   return `${appbar("Messages")}<div class="body">
     ${list.length?`<div class="c" style="padding:4px 12px">
       ${list.map(x=>`<button class="lrow" data-act="openchat" data-v="${x.id}">
-        <span class="av">${x.f.name[0]}</span>
-        <span class="tx"><b>${esc(x.f.name)}${x.muted?" 🔕":""}</b><small>${x.last.who==="me"?"You: ":""}${esc(x.last.t)}</small></span>
+        <span class="av" ${x.grp?'style="font-size:16px"':""}>${x.av}</span>
+        <span class="tx"><b>${esc(x.name)}${x.muted?" 🔕":""}${x.grp?` <span class="chipA" style="font-size:9px;padding:.1em .5em">group</span>`:""}</b><small>${x.last.who==="me"?"You: ":""}${esc(x.last.t)}</small></span>
         <span class="end">${esc(x.last.when)}${x.unread?`<br><span class="badge" style="position:static;display:inline-block;margin-top:3px">${x.unread}</span>`:""}</span>
       </button>`).join("")}</div>`:
     `<div class="c" style="text-align:center;padding:26px 16px"><div style="font-size:30px">🌱</div>
      <b>No conversations yet</b><div class="note" style="margin-top:4px">Add a friend in Community and say hi — encouragement is the whole point.</div></div>`}
-    <div class="note" style="text-align:center">Group &amp; challenge chats appear here in v1.2.</div>
+    ${S.group?"":`<div class="note" style="text-align:center">Create a group in Community to unlock group chat.</div>`}
   </div>${nav()}`;
 };
+function convoName(id){return id==="grp"?(S.group?S.group.name:"Group"):(friendById(id)?.name||"Chat")}
 SCREENS.chat=()=>{
-  const f=friendById(chatId);seedConvos();
+  const isGrp=chatId==="grp";seedConvos();
+  if(!S.convos[chatId])S.convos[chatId]={msgs:[],unread:0};
   const c=S.convos[chatId];c.unread=0;
-  return `${appbar(f.name,{back:"messages",bell:false,extra:`<button class="iconbtn" data-act="friendmenu" data-v="${f.id}" aria-label="Conversation options">${icon("dots")}</button>`})}
+  const name=convoName(chatId);
+  return `${appbar(name,{back:"messages",bell:false,extra:`<button class="iconbtn" data-act="${isGrp?"groupmenu":"friendmenu"}" data-v="${chatId}" aria-label="Conversation options">${icon("dots")}</button>`})}
   <div class="chatBody" id="chatScroll">
-    <div class="msg sys">Conversations are private. Mute, report, or block anytime from ⋮</div>
-    ${c.msgs.map(m=>`<div class="msg ${m.who==="me"?"mine":"them"}">${esc(m.t)}<small>${esc(m.when)}</small></div>`).join("")}
+    <div class="msg sys">${isGrp?`${esc(name)} · ${(S.group?.members.length||0)+1} members · admins can moderate`:"Conversations are private."} Mute, report${isGrp?"":", or block"} anytime from ⋮</div>
+    ${c.msgs.map(m=>`<div class="msg ${m.who==="me"?"mine":m.who==="sys"?"sys":"them"}">${esc(m.t)}${m.who!=="sys"?`<small>${esc(m.when)}</small>`:""}</div>`).join("")}
   </div>
   <div class="tmplRow" role="group" aria-label="Quick encouragement">${TEMPLATES.map(t=>`<button data-act="tmpl" data-v="${esc(t)}">${esc(t)}</button>`).join("")}</div>
   <div class="composer">
-    <input id="chatInput" placeholder="Message ${esc(f.name)}…" aria-label="Message text" maxlength="300">
+    <input id="chatInput" placeholder="Message ${esc(name)}…" aria-label="Message text" maxlength="300">
     <button class="send" data-act="sendmsg" aria-label="Send">${icon("send")}</button>
   </div>`;
 };
@@ -924,6 +1034,8 @@ SCREENS.profile=()=>{
          ["approx","Approximate totals","Show ranges (~5–7.5k) instead of exact steps",S.privacy.approx]]
         .map(([k,t,s,v])=>`<div class="tog"><div class="tx"><b>${t}</b><small>${s}</small></div>
         <button class="sw" role="switch" aria-checked="${v}" aria-label="${t}" data-act="priv" data-v="${k}"></button></div>`).join("")}
+      <div class="tog"><div class="tx"><b>Virtual companions</b><small>Labelled practice pacers on your boards — never real people</small></div>
+        <button class="sw" role="switch" aria-checked="${S.companions}" aria-label="Virtual companions" data-act="togglecomp"></button></div>
       <div class="tog"><div class="tx"><b>Blocked &amp; hidden users</b><small>${Object.keys(S.blocked).length||"None"}</small></div></div>
     </div></div>
 
@@ -1024,6 +1136,38 @@ const MODALS={
       <button class="lrow" data-act="report" data-v="${f.id}"><span>🚩</span><span class="tx"><b>Report</b><small>Snapshot goes to moderation — they can't edit it away</small></span></button>
       <button class="lrow" data-act="block" data-v="${f.id}"><span>⛔</span><span class="tx"><b style="color:#d03b3b">Block ${esc(f.name)}</b><small>Removes them everywhere, immediately</small></span></button>
     </div></div></div>`},
+  groupmenu:()=>`<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="menu" aria-label="Group options" data-act="noop"><div class="grab"></div>
+    <h3>${esc(S.group?.name||"Group")}</h3>
+    <div class="c" style="padding:4px 14px;margin-top:8px">
+      <button class="lrow" data-act="mute" data-v="grp"><span>🔕</span><span class="tx"><b>${S.muted.grp?"Unmute":"Mute"} group</b><small>Members won't know</small></span></button>
+      <button class="lrow" data-act="report" data-v="grp"><span>🚩</span><span class="tx"><b>Report content</b><small>Snapshot goes to moderation — edits can't remove it</small></span></button>
+      <button class="lrow" data-act="leavegroupask"><span>🚪</span><span class="tx"><b style="color:#d03b3b">Leave group</b><small>You can be re-invited later</small></span></button>
+    </div></div></div>`,
+  creategroup:()=>{
+    const invitees=FRIENDS.filter(f=>!f.virtual&&!S.blocked[f.id]&&(f.id!=="dele"||S.friendsAdded));
+    return `<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="dialog" aria-label="Create a group" data-act="noop"><div class="grab"></div>
+    <h3>Create a group</h3>
+    <p class="note" style="margin:0 0 10px">Invite-only and private by default. You'll be the admin.</p>
+    <div class="c" style="padding:10px 14px">
+      <label class="note" for="grpName" style="display:block;margin-bottom:4px">Group name</label>
+      <input id="grpName" value="Morning Crew" maxlength="40" aria-label="Group name"
+        style="width:100%;border:1px solid var(--a-line);background:var(--a-bg);color:var(--a-ink);border-radius:10px;padding:.6em .9em;font:600 14px var(--sans)">
+    </div>
+    <div class="c" style="padding:4px 14px;margin-top:10px"><div class="h" style="margin-top:8px">Invite friends</div>
+      ${invitees.map(f=>`<div class="tog"><span class="av sm">${f.name[0]}</span><div class="tx"><b>${esc(f.name)}</b><small>goal ${fmt(f.goal)}</small></div>
+        <button class="sw grpInv" role="switch" aria-checked="true" data-id="${f.id}" aria-label="Invite ${esc(f.name)}" data-act="swtoggle"></button></div>`).join("")}
+    </div>
+    <button class="pbtn" style="margin-top:12px" data-act="creategroup">Create group</button>
+    <div class="note" style="text-align:center;margin-top:8px">Up to 1,500 members · admin &amp; moderator roles · challenges in v1.2</div>
+    </div></div>`},
+  leavegroup:()=>`<div class="scrim center" data-act="closemodal">
+    <div class="dlg" role="alertdialog" aria-label="Leave group" data-act="noop">
+      <h3>Leave ${esc(S.group?.name||"group")}?</h3>
+      <p>You'll stop seeing the group board and chat. Your own history is unaffected, and you can be re-invited anytime.</p>
+      <div class="acts"><button data-act="closemodal">Stay</button><button data-act="leavegroup" style="color:#d03b3b">Leave</button></div>
+    </div></div>`,
   demo:()=>`<div class="scrim" data-act="closemodal">
     <div class="sheet" role="dialog" aria-label="Demo controls" data-act="noop"><div class="grab"></div>
     <h3>⚡ Demo controls</h3>
@@ -1125,14 +1269,56 @@ const ACTIONS={
     seedConvos();S.convos[id]={msgs:[{who:"them",t:"Hey! Thanks for accepting 🙌 Weekend walk challenge?",when:"now"}],unread:1};
     closeModal();save();render();toast("Dele added — say hi in Messages 👋")},
   declinereq(el){S.requests=S.requests.filter(r=>r.id!==el.dataset.v);closeModal();save();render()},
-  compare(el){compareId=el.dataset.v;S.screen="compare";save();render()},
+  compare(el){compareId=el.dataset.v;S._cmpBack=S.tab;S.screen="compare";save();render()},
+  ctab(el){S.communityTab=el.dataset.v;save();render()},
+  botpace(el){S.botPace=el.dataset.v;save();render();toast("Companion pace: "+el.dataset.v)},
+  hidebots(){S.companions=false;save();render();toast("Companions off — re-enable in Profile → Social & privacy")},
+  swtoggle(el){el.setAttribute("aria-checked",el.getAttribute("aria-checked")!=="true")},
+  pastelink(){toast(S.account?"No pending invite found — ask a friend to share their link (simulated)":"Sign in first to join a group");if(!S.account){modal=MODALS.signin;renderOverlay()}},
+  creategroupsheet(){if(!S.account){modal=MODALS.signin;renderOverlay();return}modal=MODALS.creategroup;renderOverlay()},
+  creategroup(){
+    const name=($("#grpName")?.value||"Morning Crew").trim()||"Morning Crew";
+    const ids=Array.from(document.querySelectorAll(".grpInv")).filter(x=>x.getAttribute("aria-checked")==="true").map(x=>x.dataset.id);
+    S.group={name,members:ids};S.communityTab="groups";
+    seedConvos();
+    S.convos.grp={msgs:[{who:"sys",t:"You created "+name+" · "+ids.length+" invitation"+(ids.length===1?"":"s")+" sent",when:"now"}],unread:0};
+    closeModal();save();render();toast("👥 "+name+" created — invite-only");
+    if(ids.length)setTimeout(()=>{
+      const n=friendById(ids[0]).name;
+      S.convos.grp.msgs.push({who:"them",t:n+": Count me in! 🙌",when:"now"});
+      if(!(S.screen==="chat"&&chatId==="grp"))S.convos.grp.unread=(S.convos.grp.unread||0)+1;
+      S.notifs.unshift({ic:"👥",t:n+" joined "+name,s:"Your group is live — first team goal awaits.",when:"now"});
+      save();render();if(S.screen==="chat")scrollChat();toast(n+" joined "+name);
+    },2500);
+  },
+  opengroupchat(){chatId="grp";S.screen="chat";save();render();scrollChat()},
+  groupmenu(){modal=MODALS.groupmenu;renderOverlay()},
+  leavegroupask(){modal=MODALS.leavegroup;renderOverlay()},
+  leavegroup(){const n=S.group?.name||"group";S.group=null;delete S.convos.grp;delete S.muted.grp;
+    if(S.screen==="chat"&&chatId==="grp")S.screen="community";
+    closeModal();save();render();toast("You left "+n)},
+  cheer(el){const id=el.dataset.v;seedConvos();
+    if(!S.convos[id])S.convos[id]={msgs:[],unread:0};
+    S.convos[id].msgs.push({who:"me",t:"🎉 Huge cheer — that pace this week!",when:"now"});
+    save();render();toast(`🎉 Cheer sent to ${friendById(id).name}`)},
+  nudge(el){const id=el.dataset.v;seedConvos();
+    if(!S.convos[id])S.convos[id]={msgs:[],unread:0};
+    S.convos[id].msgs.push({who:"me",t:"👉 Friendly nudge — evening walk together?",when:"now"});
+    save();render();toast(`👉 Nudge sent to ${friendById(id).name} — friendly, never a taunt`)},
+  togglecomp(){S.companions=!S.companions;save();render();
+    toast(S.companions?"Virtual companions on":"Virtual companions off — everywhere")},
   openchat(el){chatId=el.dataset.v;seedConvos();
     if(!S.convos[chatId])S.convos[chatId]={msgs:[],unread:0};
     S.screen="chat";save();render();scrollChat()},
   sendmsg(){const inp=$("#chatInput");const t=(inp.value||"").trim();if(!t)return;
     S.convos[chatId].msgs.push({who:"me",t,when:"now"});inp.value="";save();render();scrollChat();
     setTimeout(()=>{if(S.screen==="chat"&&!S.blocked[chatId]){
-      S.convos[chatId].msgs.push({who:"them",t:["Love it 😄","Deal!","👏👏","Same time tomorrow?"][Math.floor(Math.random()*4)],when:"now"});
+      let reply=["Love it 😄","Deal!","👏👏","Same time tomorrow?"][Math.floor(Math.random()*4)];
+      if(chatId==="grp"&&S.group){
+        const ms=S.group.members;
+        if(ms.length)reply=friendById(ms[Math.floor(Math.random()*ms.length)]).name+": "+reply;
+      }
+      S.convos[chatId].msgs.push({who:"them",t:reply,when:"now"});
       save();render();scrollChat();}},1400)},
   tmpl(el){const t=el.dataset.v;S.convos[chatId].msgs.push({who:"me",t,when:"now"});save();render();scrollChat()},
   encourage(el){const id=el.dataset.v;seedConvos();
@@ -1192,13 +1378,23 @@ app.addEventListener("keydown",e=>{
 $("#demoFab").addEventListener("click",()=>{modal=MODALS.demo;renderOverlay()});
 document.querySelectorAll("#demoBtns button").forEach(b=>b.addEventListener("click",()=>demo(b.dataset.demo)));
 
-/* live step ticking while Today is visible */
+/* live step ticking while Today is visible; companions pace along too */
 setInterval(()=>{
+  if(S.onboarded&&!document.hidden&&S.companions){
+    const mul={relaxed:.5,moderate:1,energetic:1.8}[S.botPace]||1;
+    S.botSteps.brisk+=Math.round((4+Math.random()*10)*mul);
+    S.botSteps.steady+=Math.round((2+Math.random()*6)*mul);
+    const b1=$("#pb-brisk"),b2=$("#pb-steady");
+    if(b1)b1.textContent=fmt(S.botSteps.brisk);
+    if(b2)b2.textContent=fmt(S.botSteps.steady);
+    save();
+  }
   if(S.onboarded&&S.screen==="today"&&S.permission==="granted"&&!document.hidden){
     const inc=2+Math.floor(Math.random()*9);
     const before=S.stepsToday;S.stepsToday+=inc;
     if(before<S.goal&&S.stepsToday>=S.goal){S.stepsToday=before;addSteps(inc);return}
     const el=$("#stepNum");if(el)el.textContent=fmt(S.stepsToday);
+    const pb=$("#pb-you");if(pb)pb.textContent=fmt(S.stepsToday);
     save();
   }
 },4200);

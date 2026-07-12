@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Walkora — interactive prototype. A clickable, stateful simulation of the Walkora Android app: onboarding, tracking, goals, fair leaderboards, chat, achievements, and privacy controls.">
+<title>Walkora — Interactive Prototype</title>
+<style>
+/* ============================================================
+   SHELL TOKENS (document chrome around the phone)
+   ============================================================ */
+:root{
+  --brand:#0f766e; --brand-strong:#0b5d57; --brand-soft:#e6f4f2; --brand-ink:#fff;
+  --page:#f9f9f7; --surface:#fcfcfb; --surface-2:#f3f2ee;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --grid:#e1e0d9; --hairline:rgba(11,11,11,.10);
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 6px 22px rgba(11,11,11,.06);
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --brand:#45d0c0; --brand-strong:#7fe3d6; --brand-soft:#123b37; --brand-ink:#04211e;
+  --page:#0d0d0d; --surface:#1a1a19; --surface-2:#232322;
+  --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --grid:#2c2c2a; --hairline:rgba(255,255,255,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 26px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--brand)}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:10px 20px;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;white-space:nowrap}
+.logo .sub{font-weight:500;color:var(--ink-3);font-size:.85rem}
+.topbar .spacer{flex:1}
+.chip{display:inline-flex;align-items:center;gap:.35em;padding:.18em .7em;border-radius:999px;font-size:.76rem;font-weight:600;
+  background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink-2);white-space:nowrap}
+.chip.brand{background:var(--brand-soft);color:var(--brand);border-color:transparent}
+.btn{display:inline-flex;align-items:center;gap:.45em;border:1px solid var(--hairline);background:var(--surface);color:var(--ink);
+  border-radius:10px;padding:.45em .85em;font:600 .86rem var(--sans);cursor:pointer}
+.btn:hover{background:var(--surface-2)}
+
+.stage{display:grid;grid-template-columns:300px auto;gap:34px;max-width:1100px;margin:26px auto 60px;padding:0 20px;align-items:start;justify-content:center}
+.panel{position:sticky;top:76px;display:flex;flex-direction:column;gap:14px}
+.pcard{background:var(--surface);border:1px solid var(--hairline);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+.pcard h3{margin:0 0 .4em;font-size:.95rem}
+.pcard p{margin:.2em 0 .6em;color:var(--ink-2);font-size:.85rem}
+.pcard .row{display:flex;flex-wrap:wrap;gap:8px}
+.pcard button{border:1px solid var(--hairline);background:var(--surface-2);color:var(--ink);border-radius:9px;
+  padding:.42em .7em;font:600 .78rem var(--sans);cursor:pointer;text-align:left}
+.pcard button:hover{background:var(--brand-soft);color:var(--brand)}
+.pcard ul{margin:.2em 0 0;padding-left:1.15em;color:var(--ink-2);font-size:.82rem}
+.pcard li{margin:.3em 0}
+.kbd{font:600 .74rem var(--mono);background:var(--surface-2);border:1px solid var(--hairline);border-radius:5px;padding:.05em .4em}
+
+/* ============================================================
+   PHONE FRAME
+   ============================================================ */
+.phoneWrap{display:flex;justify-content:center}
+.phone{width:392px;max-width:100%;background:var(--surface);border:1px solid var(--hairline);border-radius:38px;
+  box-shadow:var(--shadow);padding:12px;position:relative}
+@media (max-width:1020px){
+  .stage{grid-template-columns:1fr;gap:18px}
+  .panel{position:static;flex-direction:row;flex-wrap:wrap}
+  .pcard{flex:1 1 260px}
+}
+@media (max-width:560px){
+  .topbar{padding:8px 12px}
+  .stage{margin-top:10px;padding:0 8px}
+  .phone{padding:6px;border-radius:26px}
+}
+
+/* ============================================================
+   APP TOKENS (independent of shell theme)
+   ============================================================ */
+.app{
+  --a-bg:#f7f8f7; --a-sur:#ffffff; --a-sur2:#eef0ee;
+  --a-ink:#141715; --a-ink2:#565d59; --a-ink3:#8a918d;
+  --a-line:rgba(15,25,20,.10); --a-grid:#e4e7e4;
+  --a-brand:#0f766e; --a-brand-ink:#ffffff; --a-soft:#e2f2ef;
+  --a-good:#0a7d2c; --a-goodbg:#e4f4e8;
+  --a-warnbg:#fdf3dc; --a-warnink:#6e4a00;
+  --a-shadow:0 1px 2px rgba(10,20,15,.06),0 4px 14px rgba(10,20,15,.07);
+}
+.app[data-t="dark"]{
+  --a-bg:#101312; --a-sur:#1a1e1c; --a-sur2:#242927;
+  --a-ink:#f2f4f2; --a-ink2:#b9c1bc; --a-ink3:#848b87;
+  --a-line:rgba(255,255,255,.10); --a-grid:#2b312e;
+  --a-brand:#4fd2c1; --a-brand-ink:#04211e; --a-soft:#143a35;
+  --a-good:#5ecf82; --a-goodbg:#12301c;
+  --a-warnbg:#3a2c07; --a-warnink:#fac95e;
+  --a-shadow:0 1px 2px rgba(0,0,0,.35),0 4px 16px rgba(0,0,0,.3);
+}
+.app{
+  position:relative;height:760px;max-height:82vh;min-height:560px;
+  border-radius:28px;overflow:hidden;background:var(--a-bg);color:var(--a-ink);
+  border:1px solid var(--a-line);display:flex;flex-direction:column;
+  font:13.5px/1.5 var(--sans);
+}
+.app *{box-sizing:border-box}
+.app :focus-visible{outline:3px solid var(--a-brand);outline-offset:2px;border-radius:6px}
+.app button{font-family:var(--sans)}
+
+/* status bar */
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:7px 18px 2px;font:600 11px var(--sans);color:var(--a-ink2)}
+.sbar .r{display:flex;gap:6px;align-items:center}
+
+/* app bar */
+.abar{display:flex;align-items:center;gap:10px;padding:8px 16px 6px;min-height:44px}
+.abar h1{font-size:19px;font-weight:800;margin:0;letter-spacing:-.01em}
+.abar .sync{margin-left:auto;text-align:right;font-size:10px;line-height:1.35;color:var(--a-ink3)}
+.abar .sync b{color:var(--a-ink2);font-weight:600}
+.iconbtn{position:relative;border:0;background:transparent;color:var(--a-ink2);width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn:hover{background:var(--a-sur2)}
+.iconbtn svg{width:21px;height:21px}
+.iconbtn .badge{position:absolute;top:5px;right:5px;min-width:15px;height:15px;border-radius:8px;background:#d03b3b;color:#fff;
+  font:700 9px/15px var(--sans);text-align:center;padding:0 3px}
+.backbtn{margin-left:-8px}
+
+/* screen body */
+.body{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 14px 16px;scrollbar-width:thin;display:flex;flex-direction:column;gap:10px}
+.body::-webkit-scrollbar{width:4px}
+
+/* cards & shared */
+.c{background:var(--a-sur);border:1px solid var(--a-line);border-radius:16px;padding:13px 14px;box-shadow:var(--a-shadow)}
+.c .h{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--a-ink3);margin-bottom:7px}
+.c .h .sp{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:600;color:var(--a-brand);cursor:pointer;background:none;border:0;font-size:11px;padding:0}
+.pbtn{display:flex;justify-content:center;align-items:center;gap:.5em;width:100%;background:var(--a-brand);color:var(--a-brand-ink);
+  font-weight:700;border:0;border-radius:14px;padding:13px;font-size:14.5px;cursor:pointer}
+.pbtn:active{transform:scale(.985)}
+.gbtn{display:flex;justify-content:center;align-items:center;gap:.5em;width:100%;background:transparent;color:var(--a-ink2);
+  font-weight:650;border:1px solid var(--a-line);border-radius:14px;padding:12px;font-size:14px;cursor:pointer}
+.gbtn:hover{background:var(--a-sur2)}
+.seg{display:flex;background:var(--a-sur2);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;color:var(--a-ink2);font:600 11.5px var(--sans);padding:7px 4px;border-radius:9px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--a-sur);color:var(--a-brand);box-shadow:0 1px 3px rgba(0,0,0,.15);font-weight:700}
+.statRow{display:flex;gap:8px}
+.statRow .s{flex:1;background:var(--a-sur2);border-radius:12px;padding:8px 6px;text-align:center}
+.statRow .s b{display:block;font-size:14.5px;letter-spacing:-.01em}
+.statRow .s span{font-size:10px;color:var(--a-ink3)}
+.note{font-size:11px;color:var(--a-ink3)}
+.chipA{display:inline-flex;align-items:center;gap:.4em;background:var(--a-sur2);border-radius:999px;padding:.25em .75em;font-size:11px;font-weight:600;color:var(--a-ink2)}
+.chipA.on{background:var(--a-soft);color:var(--a-brand)}
+.divider{height:1px;background:var(--a-grid);margin:2px 0}
+
+/* list rows */
+.lrow{display:flex;align-items:center;gap:11px;padding:10px 2px;border-bottom:1px solid var(--a-grid);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;color:var(--a-ink);font-size:13px}
+.lrow:last-child{border-bottom:0}
+.lrow .tx{flex:1;min-width:0}
+.lrow .tx b{display:block;font-size:13.5px}
+.lrow .tx small{color:var(--a-ink3);font-size:11px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow .end{text-align:right;font-size:11px;color:var(--a-ink3);flex:none}
+.av{width:38px;height:38px;border-radius:50%;background:var(--a-soft);color:var(--a-brand);display:grid;place-items:center;
+  font-weight:800;font-size:14px;flex:none}
+.av.sm{width:30px;height:30px;font-size:12px}
+.av.me{background:var(--a-brand);color:var(--a-brand-ink)}
+
+/* ring */
+.ringWrap{display:flex;align-items:center;gap:14px}
+.ringTxt .big{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:normal}
+.ringTxt .sm{font-size:11.5px;color:var(--a-ink2);margin-top:2px}
+.ringTxt .go{font-size:11.5px;font-weight:700;color:var(--a-brand);margin-top:3px}
+
+/* leaderboard */
+.lb{display:flex;align-items:center;gap:9px;padding:8px 4px;border-bottom:1px solid var(--a-grid);width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left;color:var(--a-ink);cursor:pointer}
+.lb:last-child{border-bottom:0}
+.lb .rk{width:16px;text-align:center;font-weight:800;font-size:12px;color:var(--a-ink2);flex:none}
+.lb .nm{flex:1;min-width:0;font-weight:650;font-size:12.5px}
+.lb .nm small{display:block;font-weight:500;color:var(--a-ink3);font-size:10px}
+.lb .pc{font-weight:800;font-size:13px;font-variant-numeric:tabular-nums;flex:none}
+.lb.me{background:var(--a-soft);border-radius:12px;padding-left:8px;padding-right:8px;border-bottom:0}
+.gbar{height:4px;border-radius:4px;background:var(--a-sur2);margin-top:4px;overflow:hidden}
+.gbar i{display:block;height:100%;border-radius:4px;background:var(--a-brand)}
+.vtag{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.05em;background:var(--a-warnbg);color:var(--a-warnink);border-radius:5px;padding:.1em .45em;vertical-align:1px;margin-left:4px}
+
+/* chat */
+.chatBody{flex:1;overflow-y:auto;padding:8px 14px;display:flex;flex-direction:column;gap:7px}
+.msg{max-width:78%;padding:8px 12px;border-radius:16px;font-size:13px;line-height:1.45;position:relative}
+.msg small{display:block;font-size:9.5px;color:var(--a-ink3);margin-top:2px}
+.msg.them{align-self:flex-start;background:var(--a-sur);border:1px solid var(--a-line);border-bottom-left-radius:6px}
+.msg.mine{align-self:flex-end;background:var(--a-brand);color:var(--a-brand-ink);border-bottom-right-radius:6px}
+.msg.mine small{color:color-mix(in srgb,var(--a-brand-ink) 70%,transparent)}
+.msg.sys{align-self:center;background:transparent;color:var(--a-ink3);font-size:10.5px;padding:2px}
+.tmplRow{display:flex;gap:6px;overflow-x:auto;padding:6px 14px 2px;scrollbar-width:none}
+.tmplRow button{flex:none;border:1px solid var(--a-line);background:var(--a-sur);color:var(--a-ink2);border-radius:999px;
+  padding:.35em .8em;font:600 11px var(--sans);cursor:pointer}
+.composer{display:flex;gap:8px;padding:8px 14px 12px;align-items:center}
+.composer input{flex:1;border:1px solid var(--a-line);background:var(--a-sur);color:var(--a-ink);border-radius:999px;
+  padding:.65em 1em;font:13px var(--sans)}
+.composer .send{width:40px;height:40px;border-radius:50%;border:0;background:var(--a-brand);color:var(--a-brand-ink);
+  display:grid;place-items:center;cursor:pointer;flex:none}
+
+/* bottom nav */
+.nav{display:flex;border-top:1px solid var(--a-line);background:var(--a-sur);padding-bottom:4px}
+.nav button{flex:1;border:0;background:none;text-align:center;font:600 9.5px var(--sans);color:var(--a-ink3);
+  padding:6px 0 5px;display:flex;flex-direction:column;gap:2px;align-items:center;cursor:pointer}
+.nav button svg{width:20px;height:20px}
+.nav button::before{content:"";display:block;width:30px;height:3px;border-radius:3px;background:transparent;margin-bottom:1px}
+.nav button[aria-current="true"]{color:var(--a-brand)}
+.nav button[aria-current="true"]::before{background:var(--a-brand)}
+
+/* onboarding */
+.ob{flex:1;display:flex;flex-direction:column;padding:22px 22px 18px;gap:12px;overflow-y:auto}
+.ob .art{font-size:44px;text-align:center;margin-top:12px}
+.ob h2{font-size:21px;font-weight:800;text-align:center;margin:0;letter-spacing:-.01em}
+.ob p.lead{text-align:center;color:var(--a-ink2);margin:0 0 4px;font-size:13.5px}
+.ob .grow{flex:1}
+.dots{display:flex;gap:6px;justify-content:center;padding:4px 0}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--a-sur2);border:1px solid var(--a-line)}
+.dots i.on{background:var(--a-brand);border-color:var(--a-brand)}
+.optRow{display:flex;align-items:center;gap:11px;border:1.5px solid var(--a-line);border-radius:14px;padding:11px 13px;cursor:pointer;background:var(--a-sur);width:100%;text-align:left;color:var(--a-ink)}
+.optRow.sel{border-color:var(--a-brand);background:var(--a-soft)}
+.optRow .tx{flex:1}
+.optRow .tx b{display:block;font-size:13.5px}
+.optRow .tx small{color:var(--a-ink3);font-size:11px}
+.optRow .tick{color:var(--a-brand);font-weight:800;visibility:hidden}
+.optRow.sel .tick{visibility:visible}
+.stepper{display:flex;align-items:center;justify-content:center;gap:14px}
+.stepper button{width:44px;height:44px;border-radius:50%;border:1px solid var(--a-line);background:var(--a-sur);color:var(--a-brand);font-size:20px;font-weight:800;cursor:pointer}
+.stepper input{width:120px;text-align:center;font:800 26px var(--sans);color:var(--a-ink);background:transparent;border:0;border-bottom:2px solid var(--a-grid);padding:4px}
+.dayRow{display:flex;gap:5px;justify-content:center}
+.dayRow button{width:38px;height:38px;border-radius:50%;border:1px solid var(--a-line);background:var(--a-sur);color:var(--a-ink2);font:700 11px var(--sans);cursor:pointer}
+.dayRow button.on{background:var(--a-brand);border-color:var(--a-brand);color:var(--a-brand-ink)}
+
+/* toggles */
+.tog{display:flex;align-items:center;gap:11px;padding:10px 2px;border-bottom:1px solid var(--a-grid)}
+.tog:last-child{border-bottom:0}
+.tog .tx{flex:1}
+.tog .tx b{display:block;font-size:13px;font-weight:650}
+.tog .tx small{color:var(--a-ink3);font-size:10.5px;display:block;line-height:1.35}
+.sw{position:relative;width:40px;height:24px;border-radius:14px;background:var(--a-sur2);border:1px solid var(--a-line);cursor:pointer;flex:none;transition:background .15s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--a-sur);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .15s}
+.sw[aria-checked="true"]{background:var(--a-brand);border-color:var(--a-brand)}
+.sw[aria-checked="true"]::after{left:18px}
+
+/* sheets & dialogs */
+.scrim{position:absolute;inset:0;background:rgba(8,12,10,.45);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.scrim.center{align-items:center;padding:22px}
+.sheet{background:var(--a-sur);width:100%;border-radius:22px 22px 0 0;padding:16px 18px 20px;max-height:82%;overflow-y:auto;box-shadow:0 -6px 30px rgba(0,0,0,.25)}
+.sheet .grab{width:36px;height:4px;border-radius:4px;background:var(--a-grid);margin:0 auto 12px}
+.sheet h3{margin:0 0 4px;font-size:16px;font-weight:800}
+.dlg{background:var(--a-sur);border-radius:20px;padding:18px;width:100%;max-width:300px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.dlg h3{margin:0 0 6px;font-size:15px}
+.dlg p{margin:0 0 14px;color:var(--a-ink2);font-size:12.5px}
+.dlg .acts{display:flex;justify-content:flex-end;gap:6px}
+.dlg .acts button{border:0;background:none;color:var(--a-brand);font:700 12.5px var(--sans);padding:.5em .8em;border-radius:8px;cursor:pointer}
+.dlg .acts button:hover{background:var(--a-soft)}
+.osdlg{border-radius:26px;text-align:center}
+.osdlg .osicon{width:40px;height:40px;border-radius:50%;background:var(--a-soft);display:grid;place-items:center;margin:0 auto 10px;font-size:20px}
+.osdlg .acts{flex-direction:column;align-items:stretch}
+.osdlg .acts button{padding:.7em}
+
+/* toast */
+.toasts{position:absolute;top:44px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:40;pointer-events:none;padding:0 16px}
+.toast{background:var(--a-ink);color:var(--a-bg);border-radius:12px;padding:8px 14px;font:600 12px var(--sans);
+  box-shadow:0 4px 18px rgba(0,0,0,.3);max-width:100%;animation:tin .25s ease}
+@keyframes tin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* confetti */
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:35}
+.confetti i{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translateY(780px) rotate(540deg);opacity:.1}}
+
+/* offline banner */
+.offb{display:flex;align-items:center;gap:8px;background:var(--a-warnbg);color:var(--a-warnink);border-radius:12px;
+  padding:7px 12px;font:600 11.5px var(--sans)}
+
+/* achievements grid */
+.achGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ach{background:var(--a-sur2);border-radius:14px;padding:10px 6px;text-align:center}
+.ach.locked{opacity:.42}
+.ach .ic{font-size:22px}
+.ach b{display:block;font-size:10px;margin-top:3px;line-height:1.25}
+.ach small{font-size:9px;color:var(--a-ink3)}
+
+/* settings */
+.setGrp{margin-top:2px}
+.setGrp .gt{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--a-ink3);padding:8px 4px 4px}
+
+/* compare */
+.cmpGrid{display:grid;grid-template-columns:1fr auto 1fr;gap:4px 10px;align-items:center;font-size:13px}
+.cmpGrid .lab{text-align:center;color:var(--a-ink3);font-size:10.5px}
+.cmpGrid .v{font-weight:750;font-variant-numeric:tabular-nums}
+.cmpGrid .v.l{text-align:right}
+.cmpGrid .win{color:var(--a-brand)}
+
+/* share card */
+.shareCard{border-radius:18px;padding:20px 18px;color:#fff;text-align:center;
+  background:linear-gradient(140deg,#0f766e 0%,#0b5d57 55%,#134e48 100%)}
+.shareCard .b1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.shareCard .b2{font-size:12px;opacity:.85}
+.shareCard .wm{font-size:10px;opacity:.6;margin-top:10px}
+
+.demoFab{position:absolute;right:12px;bottom:74px;z-index:28;width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--a-line);background:var(--a-sur);color:var(--a-brand);font-size:18px;cursor:pointer;box-shadow:var(--a-shadow)}
+
+@media print{.panel,.topbar{display:none}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect width="32" height="32" rx="9" fill="var(--brand)"/>
+      <path d="M11 23c-1.8-2.2-2.4-5.8-.9-7.6 1.3-1.5 3.3-1 4 .8.8 2.1.4 5.2-.8 6.8-.7.9-1.7.8-2.3 0Z" fill="var(--brand-ink)"/>
+      <path d="M20.5 17.5c-1.5-1.9-1.9-5-.6-6.5 1.1-1.3 2.9-.9 3.5.7.7 1.8.3 4.4-.7 5.8-.6.8-1.6.7-2.2 0Z" fill="var(--brand-ink)" opacity=".75"/>
+    </svg>
+    Walkora <span class="sub">Interactive Prototype</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="chip brand">v1.0 · simulates PRD MVP–v1.2</span>
+  <button class="btn" id="shellTheme">◐ Page theme</button>
+</header>
+
+<div class="stage">
+  <!-- ============ DEMO PANEL ============ -->
+  <aside class="panel">
+    <div class="pcard">
+      <h3>Demo controls</h3>
+      <p>Drive the prototype without walking 8,000 steps.</p>
+      <div class="row" id="demoBtns">
+        <button data-demo="walk500">🚶 Simulate walk +500</button>
+        <button data-demo="walk2000">🏃 Long walk +2,000</button>
+        <button data-demo="goal">🎯 Complete today's goal</button>
+        <button data-demo="msg">💬 Incoming message</button>
+        <button data-demo="offline">📴 Toggle offline</button>
+        <button data-demo="skipob">⏭ Skip onboarding</button>
+        <button data-demo="reset">♻ Reset prototype</button>
+      </div>
+    </div>
+    <div class="pcard">
+      <h3>Things to try</h3>
+      <ul>
+        <li><b>Onboarding:</b> tap “Not now” on the permission dialog to see the denial-recovery path (ONB-03).</li>
+        <li><b>Guest → account:</b> open Community as a guest, sign in contextually, watch history migrate (J2). Then accept Dele's friend request from the 🔔 bell.</li>
+        <li><b>Fair ranking:</b> switch the leaderboard between Goal % / Steps / Consistency / Improved — ranks re-sort (LDB-02).</li>
+        <li><b>Compare:</b> tap any friend on the board.</li>
+        <li><b>Celebrate:</b> complete the goal — confetti respects reduced-motion.</li>
+        <li><b>Share:</b> Today → Share — privacy preview with redaction toggles (ACH-03).</li>
+        <li><b>Chat safety:</b> ⋮ in a conversation → mute, report, block (MSG-02).</li>
+        <li><b>Theming:</b> Profile → Appearance — app theme is independent of this page.</li>
+      </ul>
+    </div>
+    <div class="pcard">
+      <h3>About</h3>
+      <p style="margin-bottom:0">Single-file prototype of the Walkora PRD/tech-spec. All data is simulated and stored locally in your browser; steps tick while Today is open. Companion docs: <code class="kbd">walkora-prd.html</code> · <code class="kbd">walkora-tech-spec.html</code></p>
+    </div>
+  </aside>
+
+  <!-- ============ PHONE ============ -->
+  <div class="phoneWrap">
+    <div class="phone">
+      <div class="app" id="app" data-t="light">
+        <div class="sbar"><span id="clock">6:27</span><span class="r">📶 wifi · 🔋 100</span></div>
+        <div id="root" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+        <div class="toasts" id="toasts" aria-live="polite"></div>
+        <div id="overlay"></div>
+        <div class="confetti" id="confetti" aria-hidden="true"></div>
+        <button class="demoFab" id="demoFab" title="Demo controls" aria-label="Open demo controls">⚡</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================================================================
+   WALKORA PROTOTYPE — single-file stateful app simulation.
+   Screens are template functions; interaction via event delegation
+   on [data-act]. State persists to localStorage (reset in panel).
+   ================================================================ */
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>Math.round(n).toLocaleString("en-US");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------------- seeded history (deterministic) ---------------- */
+function rng(seed){let s=seed;return()=>((s=(s*1103515245+12345)&0x7fffffff)/0x7fffffff)}
+const DAYNAMES=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+/* "today" in the prototype is Sat Jul 11 2026 → weekday index 5 */
+const TODAY_DOW=5;
+function genHistory(restDays,goal){
+  const r=rng(20260711),days=[];
+  for(let i=60;i>=1;i--){
+    const dow=(TODAY_DOW-(i%7)+7)%7;
+    const rest=restDays.includes(dow);
+    let steps=rest?Math.round(800+r()*2200):Math.round(3200+r()*9800);
+    if(!rest&&r()<0.55)steps=Math.max(steps,goal+Math.round(r()*2500));
+    days.push({ago:i,dow,steps,rest});
+  }
+  return days;
+}
+
+/* ---------------- default state ---------------- */
+const DEF={
+  screen:"ob0", tab:"today", theme:"light",
+  onboarded:false, account:false, name:"Maya",
+  permission:"unset", permDenied:false, source:"hc",
+  goal:8000, restDays:[4], units:"km",
+  stepsToday:6212, offline:false, dismissedSocial:false,
+  lbMode:"goalPct", lbScope:"week",
+  notifPrefs:{goals:true,streaks:true,social:true,recaps:true,quiet:true},
+  privacy:{discoverable:false,activity:"friends",leaderboards:true,approx:false},
+  requests:[{id:"dele",name:"Dele",note:"Found you via invite link"}],
+  friendsAdded:false,
+  muted:{},blocked:{},
+  earned:["firstwalk","firstgoal","week7"],
+  notifs:[
+    {ic:"🔥",t:"12-day streak!",s:"Your longest yet. Tomorrow is a rest day — it won't break it.",when:"2 h ago"},
+    {ic:"📊",t:"Weekly recap ready",s:"You walked 52,406 steps last week — 4 of 5 goal days met.",when:"Yesterday"}
+  ],
+  convos:{}, goalDoneToday:false
+};
+let S=load();
+function load(){try{const v=JSON.parse(localStorage.getItem("wlk-proto"));if(v&&v.v===3)return v.s}catch(e){}return structuredClone(DEF)}
+function save(){localStorage.setItem("wlk-proto",JSON.stringify({v:3,s:S}))}
+
+/* ---------------- friends dataset ---------------- */
+const FRIENDS=[
+ {id:"tunde", name:"Tunde", goal:12000, today:9360, week:[11200,12400,9100,13800,10200,9360,0], prevWeek:64800, streak:8},
+ {id:"nkechi",name:"Nkechi",goal:6000,  today:6710, week:[6300,7100,6050,6800,6400,6710,0],   prevWeek:36200, streak:21},
+ {id:"amara", name:"Amara", goal:5000,  today:3480, week:[5200,2100,5600,4900,5100,3480,0],   prevWeek:19800, streak:3},
+ {id:"dele",  name:"Dele",  goal:9000,  today:7150, week:[8800,9400,7600,9900,6200,7150,0],   prevWeek:41000, streak:5},
+ {id:"pace",  name:"Pace Pal", virtual:true, goal:8000, today:5120, week:[5600,5600,5600,5600,5600,5120,0], prevWeek:39200, streak:0}
+];
+const friendById=id=>FRIENDS.find(f=>f.id===id);
+function visibleFriends(){
+  let list=FRIENDS.filter(f=>!S.blocked[f.id]);
+  if(!S.friendsAdded)list=list.filter(f=>f.id!=="dele");
+  return list;
+}
+
+/* ---------------- derived numbers ---------------- */
+const HIST=()=>genHistory(S.restDays,S.goal);
+function myWeek(){ // last 7 days incl today: [d-6..today]
+  const h=HIST(),out=[];
+  for(let i=6;i>=1;i--){const d=h.find(x=>x.ago===i);out.push({...d})}
+  out.push({ago:0,dow:TODAY_DOW,steps:S.stepsToday,rest:S.restDays.includes(TODAY_DOW)});
+  return out;
+}
+function streak(){
+  let n=S.stepsToday>=S.goal?1:0;
+  for(const d of HIST().slice().reverse()){
+    if(d.rest||d.steps>=S.goal)n++;else break;
+  }
+  return n;
+}
+function bestDay(){return Math.max(...HIST().map(d=>d.steps),S.stepsToday)}
+function weekTotal(w){return w.reduce((a,d)=>a+(d.steps||0),0)}
+function consistency(w,goal,rests){
+  const elig=w.filter(d=>!d.rest);if(!elig.length)return 1;
+  return elig.filter(d=>d.steps>=goal).length/elig.length;
+}
+function myScores(){
+  const w=myWeek();
+  const gp=w.filter(d=>!d.rest).reduce((a,d)=>a+Math.min(d.steps/S.goal,2),0)/Math.max(1,w.filter(d=>!d.rest).length);
+  return {goalPct:gp, steps:weekTotal(w), consistency:consistency(w,S.goal,S.restDays),
+          improved:(weekTotal(w)-46200)/46200, streak:streak()};
+}
+function friendScores(f){
+  const wk=f.week.reduce((a,b)=>a+b,0);
+  const days=f.week.filter(x=>x>0);
+  return {goalPct:days.reduce((a,x)=>a+Math.min(x/f.goal,2),0)/Math.max(1,days.length),
+          steps:wk, consistency:days.filter(x=>x>=f.goal).length/Math.max(1,days.length),
+          improved:(wk-f.prevWeek)/f.prevWeek};
+}
+const MODES={goalPct:{lab:"Goal %",fmt:v=>Math.round(v*100)+"%"},
+             steps:{lab:"Steps",fmt:v=>fmt(v)},
+             consistency:{lab:"Consistency",fmt:v=>Math.round(v*100)+"%"},
+             improved:{lab:"Improved",fmt:v=>(v>=0?"+":"")+Math.round(v*100)+"%"}};
+
+/* ---------------- conversations ---------------- */
+function seedConvos(){
+  if(!S.convos.tunde)S.convos.tunde={msgs:[
+    {who:"them",t:"Morning walk done ☀️ 4k before 8am!",when:"07:52"},
+    {who:"me",t:"Okay show-off 😄 I'm on it",when:"08:04"},
+    {who:"them",t:"Rest day tomorrow — recovery counts too 💪",when:"08:05"}],unread:0};
+  if(!S.convos.nkechi)S.convos.nkechi={msgs:[
+    {who:"them",t:"21-day streak! Your flexible-streak tip saved me on Tuesday 🙏",when:"Yesterday"}],unread:1};
+}
+const TEMPLATES=["Great pace today! 👏","You've got this — 1k to go!","Rest day well earned 🌿","Rematch next week?"];
+
+/* ================================================================
+   RENDERING
+   ================================================================ */
+const root=$("#root"), overlay=$("#overlay"), app=$("#app");
+let modal=null;
+
+function icon(n){
+  const I={
+   today:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+   prog:'<path d="M4 19V10M10 19V5M16 19v-7M21 19H3"/>',
+   comm:'<circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c.6-3 2.9-4.5 5.5-4.5s4.9 1.5 5.5 4.5M15 14.8c2.3.2 4 1.6 4.5 4.2"/>',
+   msg:'<path d="M21 12a8 8 0 0 1-8 8H4l1.5-3A8 8 0 1 1 21 12Z"/>',
+   prof:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.6-5.2 7-5.2s6.2 1.7 7 5.2"/>',
+   bell:'<path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+   back:'<path d="M15 5l-7 7 7 7"/>',
+   share:'<circle cx="6" cy="12" r="2.5"/><circle cx="17" cy="6" r="2.5"/><circle cx="17" cy="18" r="2.5"/><path d="M8.2 10.8l6.6-3.6M8.2 13.2l6.6 3.6"/>',
+   dots:'<circle cx="12" cy="5.5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="18.5" r="1.6"/>',
+   plus:'<path d="M12 5v14M5 12h14"/>',
+   send:'<path d="M4 12l16-7-4.5 14L11 14l-7-2Z"/>'};
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
+}
+function ring(pct,size=112){
+  const r=(size/2)-10,C=2*Math.PI*r,off=C*(1-clamp(pct,0,1));
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Goal progress ${Math.round(pct*100)} percent">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--a-sur2)" stroke-width="11"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--a-brand)" stroke-width="11" stroke-linecap="round"
+      stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 ${size/2} ${size/2})"
+      style="transition:stroke-dashoffset .7s cubic-bezier(.22,.8,.3,1)"/>
+    <text x="50%" y="47%" text-anchor="middle" font-size="${size*.19}" font-weight="800" fill="var(--a-ink)">${Math.round(pct*100)}%</text>
+    <text x="50%" y="62%" text-anchor="middle" font-size="${size*.085}" fill="var(--a-ink3)">of goal</text></svg>`;
+}
+function appbar(title,{back=null,bell=true,extra=""}={}){
+  const unread=S.requests.length&&S.account?S.requests.length:0;
+  const n=S.notifs.length+unread;
+  return `<div class="abar">
+    ${back?`<button class="iconbtn backbtn" data-act="go" data-to="${back}" aria-label="Back">${icon("back")}</button>`:""}
+    <h1>${esc(title)}</h1>
+    <div class="sync" aria-live="polite">${S.offline
+      ?`<b>Offline</b><br>steps still counting`
+      :`Synced just now<br><b>${S.source==="hc"?"Health Connect":"Phone sensor"}</b>`}</div>
+    ${extra}
+    ${bell?`<button class="iconbtn" data-act="notifs" aria-label="Notifications${n?`, ${n} new`:""}">${icon("bell")}${n?`<span class="badge">${n}</span>`:""}</button>`:""}
+  </div>`;
+}
+function nav(){
+  const items=[["today","Today","today"],["progress","Progress","prog"],["community","Community","comm"],["messages","Messages","msg"],["profile","Profile","prof"]];
+  return `<nav class="nav" aria-label="Main navigation">${items.map(([id,lab,ic])=>{
+    const un=id==="messages"?Object.values(S.convos).reduce((a,c)=>a+(c.unread||0),0):0;
+    return `<button data-act="tab" data-to="${id}" aria-current="${S.tab===id}">
+      <span style="position:relative">${icon(ic)}${un?`<span class="badge" style="position:absolute;top:-4px;right:-8px;min-width:14px;height:14px;border-radius:7px;background:#d03b3b;color:#fff;font:700 8.5px/14px var(--sans);padding:0 3px">${un}</span>`:""}</span>${lab}</button>`;
+  }).join("")}</nav>`;
+}
+
+/* ================================================================ SCREENS */
+const SCREENS={};
+
+/* ---------- onboarding ---------- */
+function obShell(step,total,inner,{next="Continue",act="obnext",ghost=null,gact=""}={}){
+  return `<div class="ob">${inner}<div class="grow"></div>
+    ${next?`<button class="pbtn" data-act="${act}">${next}</button>`:""}
+    ${ghost?`<button class="gbtn" data-act="${gact}">${ghost}</button>`:""}
+    <div class="dots">${Array.from({length:total},(_,i)=>`<i class="${i<=step?"on":""}"></i>`).join("")}</div></div>`;
+}
+SCREENS.ob0=()=>obShell(0,5,`
+  <div class="art" style="margin-top:40px">🚶‍♀️</div>
+  <h2>Welcome to Walkora</h2>
+  <p class="lead">Turn everyday steps into achievable goals, visible progress, and walks you actually keep up — on your terms.</p>
+  <div class="c" style="margin-top:8px"><div class="tog" style="border:0;padding:6px 0"><div class="tx"><b>🎯 Flexible goals &amp; rest days</b><small>A planned rest day never breaks your streak.</small></div></div>
+  <div class="tog" style="border:0;padding:6px 0"><div class="tx"><b>🤝 Fair, optional social</b><small>Compete on goal %, not raw totals. Private by default.</small></div></div>
+  <div class="tog" style="border:0;padding:6px 0"><div class="tx"><b>🔒 Useful before sign-in</b><small>Track as a guest. Your data stays on this phone until you say otherwise.</small></div></div></div>`,
+  {next:"Get started"});
+SCREENS.ob1=()=>obShell(1,5,`
+  <div class="art">📱</div>
+  <h2>Count steps automatically</h2>
+  <p class="lead">Walkora uses your phone's motion sensor to count steps in the background — battery-friendly, no GPS.</p>
+  <div class="c"><div class="h">If you decline</div>
+  <div style="font-size:12.5px;color:var(--a-ink2)">You can still browse Walkora and set goals. Step counting stays off until you allow the <b>Physical activity</b> permission — change it anytime in Settings.</div></div>`,
+  {next:"Allow activity permission",act:"askperm",ghost:"Not now",gact:"denyperm"});
+SCREENS.obDenied=()=>obShell(1,5,`
+  <div class="art">🙅</div>
+  <h2>No problem — tracking is off</h2>
+  <p class="lead">Walkora works without it, but steps won't count automatically. Here's how to turn it on later:</p>
+  <div class="c"><div class="tog" style="border:0;padding:5px 0"><div class="tx"><b>1 · Open Settings → Apps → Walkora</b><small>or tap the button below</small></div></div>
+  <div class="tog" style="border:0;padding:5px 0"><div class="tx"><b>2 · Permissions → Physical activity</b><small>choose “Allow”</small></div></div></div>`,
+  {next:"Open system settings (simulated)",act:"grantviasettings",ghost:"Continue without tracking",gact:"obnext"});
+SCREENS.ob2=()=>obShell(2,5,`
+  <h2 style="margin-top:14px">Where should steps come from?</h2>
+  <p class="lead">One reliable total — duplicates across sources are removed automatically.</p>
+  <button class="optRow ${S.source==="hc"?"sel":""}" data-act="src" data-v="hc">
+    <span style="font-size:20px">⌚</span><span class="tx"><b>Health Connect</b><small>Phone + watch (Samsung, Garmin, Fitbit…). Recommended.</small></span><span class="tick">✓</span></button>
+  <button class="optRow ${S.source==="phone"?"sel":""}" data-act="src" data-v="phone">
+    <span style="font-size:20px">📱</span><span class="tx"><b>Phone sensor only</b><small>Just this device. You can add sources later.</small></span><span class="tick">✓</span></button>
+  <div class="note" style="text-align:center">You'll always see which source counted, and when it last synced.</div>`);
+SCREENS.ob3=()=>{
+  return obShell(3,5,`
+  <h2 style="margin-top:6px">Set a starting goal</h2>
+  <p class="lead">Start where you are — you can change this anytime. Consistency beats big numbers.</p>
+  <div class="stepper">
+    <button data-act="goaladj" data-v="-500" aria-label="Decrease goal">−</button>
+    <input id="goalInput" inputmode="numeric" value="${fmt(S.goal)}" aria-label="Daily step goal">
+    <button data-act="goaladj" data-v="500" aria-label="Increase goal">+</button>
+  </div>
+  <div class="note" style="text-align:center">Suggested start: 5,000–8,000</div>
+  <div class="divider"></div>
+  <h2 style="font-size:15px">Rest days</h2>
+  <p class="lead" style="margin-top:-6px">Planned rest never breaks your streak.</p>
+  <div class="dayRow">${DAYNAMES.map((d,i)=>`<button data-act="rest" data-v="${i}" class="${S.restDays.includes(i)?"on":""}" aria-pressed="${S.restDays.includes(i)}">${d[0]}</button>`).join("")}</div>
+  <div class="note" style="text-align:center">${S.restDays.length?S.restDays.map(i=>DAYNAMES[i]).join(", ")+" = rest":"No rest days set"}</div>`);
+};
+SCREENS.ob4=()=>obShell(4,5,`
+  <div class="art">🔒</div>
+  <h2>Private by default</h2>
+  <p class="lead">You choose what's visible, later, if ever. Defaults:</p>
+  <div class="c">
+    <div class="tog"><div class="tx"><b>Profile discovery</b><small>Off — only people with your invite link can find you</small></div><span class="chipA">Off</span></div>
+    <div class="tog"><div class="tx"><b>Activity visibility</b><small>Friends only, once you add some</small></div><span class="chipA">Friends</span></div>
+    <div class="tog"><div class="tx"><b>Leaderboards</b><small>Opt-in per board; approximate totals available</small></div><span class="chipA">Opt-in</span></div>
+  </div>
+  <div class="note" style="text-align:center">Change any of this in Profile → Privacy.</div>`,
+  {next:"Sounds good",act:"obfinish"});
+
+/* ---------- today ---------- */
+SCREENS.today=()=>{
+  const pct=S.stepsToday/S.goal, remain=Math.max(0,S.goal-S.stepsToday);
+  const km=(S.stepsToday*0.00074).toFixed(1), mi=(S.stepsToday*0.00046).toFixed(1);
+  const activeMin=Math.round(S.stepsToday/118);
+  const restToday=S.restDays.includes(TODAY_DOW);
+  const tomorrowRest=S.restDays.includes((TODAY_DOW+1)%7);
+  const stk=streak();
+  const fr=visibleFriends().filter(f=>!f.virtual).slice(0,2);
+  const noPerm=S.permission!=="granted";
+  return `${appbar("Today")}<div class="body">
+    ${S.offline?`<div class="offb">📴 You're offline — steps keep counting on-device and will sync when you're back.</div>`:""}
+    ${noPerm?`<div class="c" style="border-color:var(--a-brand)"><div class="h">Tracking is off</div>
+      <div style="font-size:12.5px;color:var(--a-ink2);margin-bottom:8px">Steps aren't counting because the Physical activity permission is off. <b>Diagnosis: permission missing</b> — not a sensor or sync problem.</div>
+      <button class="pbtn" data-act="askperm" style="padding:10px;font-size:13px">Turn on step tracking</button></div>`:""}
+    <div class="c">
+      <div class="ringWrap">
+        ${ring(pct)}
+        <div class="ringTxt">
+          <div class="big" id="stepNum">${fmt(S.stepsToday)}</div>
+          <div class="sm">of ${fmt(S.goal)} steps</div>
+          ${S.stepsToday>=S.goal
+            ?`<div class="go">Goal reached! 🎉</div>`
+            :`<div class="go">${fmt(remain)} to go${stk>0?` · 🔥 ${stk}-day streak`:""}</div>`}
+        </div>
+      </div>
+      <div class="statRow" style="margin-top:10px">
+        <div class="s"><b>${S.units==="km"?km+" km":mi+" mi"}</b><span>distance</span></div>
+        <div class="s"><b>${activeMin} min</b><span>active</span></div>
+        <div class="s"><b>${restToday?"Rest ✓":tomorrowRest?"Rest ✓":"🔥 "+stk}</b><span>${restToday?"today":tomorrowRest?"tomorrow":"streak"}</span></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="gbtn" style="padding:9px;font-size:12.5px" data-act="tab" data-to="progress">📊 History</button>
+        <button class="gbtn" style="padding:9px;font-size:12.5px" data-act="share">${icon("share")} Share</button>
+      </div>
+    </div>
+    <div class="c"><div class="h">Insight</div>
+      <div style="font-size:12.5px;color:var(--a-ink2)">${S.stepsToday>=S.goal
+        ?"Goal done with daylight to spare. Nice pacing — your streak is safe for tomorrow"+(tomorrowRest?" (rest day)":"")+"."
+        :`You're ${Math.round(pct*100)>=75?"ahead of":"tracking"} your usual Saturday. One ${remain>2500?"solid":"short"} walk (~${Math.max(5,Math.round(remain/118))} min) finishes the goal.`}</div></div>
+    ${S.account&&!S.dismissedSocial&&fr.length?`
+    <div class="c"><div class="h">Friends today <button class="sp" data-act="dismissSocial">Hide</button></div>
+      ${fr.map(f=>{const p=Math.min(f.today/f.goal,2);return `
+      <div class="lb" style="cursor:default">
+        <span class="av sm">${f.name[0]}</span>
+        <span class="nm">${esc(f.name)}<span class="gbar"><i style="width:${clamp(p*100,3,100)}%"></i></span></span>
+        <span class="pc">${Math.round(p*100)}%</span></div>`}).join("")}
+      <div class="lb me" style="cursor:default"><span class="av sm me">${S.name[0]}</span>
+        <span class="nm">You<span class="gbar"><i style="width:${clamp(pct*100,3,100)}%"></i></span></span>
+        <span class="pc">${Math.round(pct*100)}%</span></div>
+      <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:650;font-size:11px;padding:6px 0 0;cursor:pointer" data-act="tab" data-to="community">Open Community ›</button>
+    </div>`:!S.account?`
+    <div class="c"><div class="h">Walking with friends</div>
+      <div style="font-size:12.5px;color:var(--a-ink2);margin-bottom:8px">Fair leaderboards, groups, and encouragement — when you want them. Guest tracking always stays free of sign-in walls.</div>
+      <button class="gbtn" style="padding:9px;font-size:12.5px" data-act="tab" data-to="community">Explore Community</button></div>`:""}
+  </div>${nav()}`;
+};
+
+/* ---------- progress ---------- */
+let progTab="week";
+function weekChart(){
+  const w=myWeek(),max=Math.max(S.goal*1.3,...w.map(d=>d.steps));
+  const W=320,H=140,padB=26,padT=16,slot=W/7,bw=26;
+  const y=v=>padT+(H-padT-padB)*(1-v/max);
+  const best=Math.max(...w.map(d=>d.steps));
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Steps per day this week. ${w.map((d,i)=>DAYNAMES[d.dow]+": "+(d.rest?"rest day, ":"")+fmt(d.steps)).join(". ")}. Goal line at ${fmt(S.goal)}.">`;
+  s+=`<line x1="4" y1="${y(S.goal)}" x2="${W-4}" y2="${y(S.goal)}" stroke="var(--a-ink3)" stroke-width="1" stroke-dasharray="4 3" opacity=".6"/>
+      <text x="${W-4}" y="${y(S.goal)-4}" text-anchor="end" font-size="8.5" fill="var(--a-ink3)">goal ${fmt(S.goal)}</text>`;
+  w.forEach((d,i)=>{
+    const cx=slot*i+slot/2,h=Math.max(3,(H-padT-padB)*d.steps/max),yy=y(d.steps);
+    const today=i===6;
+    s+=`<rect x="${cx-bw/2}" y="${yy}" width="${bw}" height="${H-padB-yy}" rx="4"
+        fill="var(--a-brand)" opacity="${d.rest?.35:today?1:.75}"/>`;
+    if(d.steps===best&&best>0)s+=`<text x="${cx}" y="${yy-5}" text-anchor="middle" font-size="9" font-weight="700" fill="var(--a-ink)">${fmt(d.steps)}</text>`;
+    if(d.rest)s+=`<text x="${cx}" y="${H-padB-6}" text-anchor="middle" font-size="8" fill="var(--a-ink3)" transform="rotate(-90 ${cx} ${H-padB-6})">rest</text>`;
+    s+=`<text x="${cx}" y="${H-8}" text-anchor="middle" font-size="9" fill="${today?"var(--a-brand)":"var(--a-ink3)"}" font-weight="${today?800:500}">${DAYNAMES[d.dow]}</text>`;
+  });
+  s+=`<line x1="2" y1="${H-padB}" x2="${W-2}" y2="${H-padB}" stroke="var(--a-grid)" stroke-width="1"/></svg>`;
+  return s;
+}
+function monthChart(){
+  const h=HIST().slice(-29).concat([{ago:0,dow:TODAY_DOW,steps:S.stepsToday,rest:S.restDays.includes(TODAY_DOW)}]);
+  const max=Math.max(...h.map(d=>d.steps),S.goal*1.2),W=320,H=120,padB=16,padT=8;
+  const y=v=>padT+(H-padT-padB)*(1-v/max);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Last 30 days of steps. Average ${fmt(h.reduce((a,d)=>a+d.steps,0)/30)} per day.">`;
+  s+=`<line x1="2" y1="${y(S.goal)}" x2="${W-2}" y2="${y(S.goal)}" stroke="var(--a-ink3)" stroke-width="1" stroke-dasharray="4 3" opacity=".6"/>`;
+  h.forEach((d,i)=>{
+    const bw=7,cx=6+i*(W-12)/30;
+    s+=`<rect x="${cx}" y="${y(d.steps)}" width="${bw}" height="${H-padB-y(d.steps)}" rx="2" fill="var(--a-brand)" opacity="${d.rest?.3:i===29?1:.7}"/>`;
+  });
+  s+=`<line x1="2" y1="${H-padB}" x2="${W-2}" y2="${H-padB}" stroke="var(--a-grid)" stroke-width="1"/>
+      <text x="6" y="${H-3}" font-size="8.5" fill="var(--a-ink3)">4 weeks ago</text>
+      <text x="${W-6}" y="${H-3}" text-anchor="end" font-size="8.5" fill="var(--a-ink3)">today</text></svg>`;
+  return s;
+}
+SCREENS.progress=()=>{
+  const w=myWeek(),wt=weekTotal(w),met=w.filter(d=>!d.rest&&d.steps>=S.goal).length,elig=w.filter(d=>!d.rest).length;
+  const h30=HIST().slice(-30);const avg30=h30.reduce((a,d)=>a+d.steps,0)/30;
+  const prevW=HIST().slice(-14,-7).reduce((a,d)=>a+d.steps,0);
+  const delta=Math.round((wt-prevW)/prevW*100);
+  return `${appbar("Progress")}<div class="body">
+    <div class="seg" role="tablist" aria-label="Period">
+      ${["day","week","month"].map(t=>`<button role="tab" aria-pressed="${progTab===t}" data-act="progtab" data-v="${t}">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")}
+    </div>
+    ${progTab==="week"?`
+    <div class="c"><div class="h">Steps this week</div>
+      ${weekChart()}
+      <div class="note" style="margin-top:6px">${met} of ${elig} goal days met · ${fmt(wt)} steps total · ${delta>=0?"+":""}${delta}% vs last week${S.restDays.length?` · rest day ${S.restDays.map(i=>DAYNAMES[i]).join("/")} didn't break your streak`:""}.</div>
+    </div>
+    <div class="statRow">
+      <div class="s"><b>${fmt(wt/7)}</b><span>daily avg</span></div>
+      <div class="s"><b>${fmt(Math.max(...w.map(d=>d.steps)))}</b><span>best day</span></div>
+      <div class="s"><b>${Math.round(met/Math.max(1,elig)*100)}%</b><span>goal rate</span></div>
+    </div>`:progTab==="month"?`
+    <div class="c"><div class="h">Last 30 days</div>
+      ${monthChart()}
+      <div class="note" style="margin-top:6px">Average ${fmt(avg30)}/day · ${h30.filter(d=>!d.rest&&d.steps>=S.goal).length} goal days · lighter bars are rest days.</div>
+    </div>
+    <div class="statRow">
+      <div class="s"><b>${fmt(h30.reduce((a,d)=>a+d.steps,0))}</b><span>total steps</span></div>
+      <div class="s"><b>${fmt(avg30)}</b><span>daily avg</span></div>
+      <div class="s"><b>${Math.round((S.units==="km"?0.00074:0.00046)*h30.reduce((a,d)=>a+d.steps,0))} ${S.units}</b><span>distance</span></div>
+    </div>`:`
+    <div class="c"><div class="h">Today so far</div>
+      <div class="ringWrap">${ring(S.stepsToday/S.goal,92)}
+        <div class="ringTxt"><div class="big" style="font-size:24px">${fmt(S.stepsToday)}</div>
+        <div class="sm">yesterday: ${fmt(myWeek()[5].steps)}</div>
+        <div class="go">${S.stepsToday>myWeek()[5].steps*(new Date().getHours()/24)?"Ahead of":"Behind"} yesterday's pace</div></div></div>
+      <div class="note" style="margin-top:8px">Source: ${S.source==="hc"?"Health Connect (watch + phone, duplicates removed)":"phone sensor"} · ${S.offline?"offline — will sync":"synced just now"}.</div>
+    </div>
+    <div class="c"><div class="h">Hour by hour</div>
+      <div class="note">Morning 2,140 · midday ${fmt(Math.max(0,S.stepsToday-3600))} · evening 1,460. Peak: 8–9 am.</div></div>`}
+    <div class="c"><div class="h">Records</div>
+      <div class="tog"><div class="tx"><b>🏆 Best day</b><small>${fmt(bestDay())} steps</small></div></div>
+      <div class="tog"><div class="tx"><b>📅 Best week</b><small>61,940 steps</small></div></div>
+      <div class="tog"><div class="tx"><b>🔥 Longest streak</b><small>${Math.max(23,streak())} days (rest-day aware)</small></div></div>
+      <div class="tog"><div class="tx"><b>📈 Most consistent day</b><small>Wednesday — 86% goal rate</small></div></div>
+    </div>
+    <button class="gbtn" data-act="toast" data-v="Export started — walkora-history.csv (simulated)">⬇ Export my data (CSV)</button>
+  </div>${nav()}`;
+};
+
+/* ---------- community ---------- */
+SCREENS.community=()=>{
+  if(!S.account)return `${appbar("Community")}<div class="body">
+    <div class="ob" style="padding:26px 8px 8px;overflow:visible">
+      <div class="art">🤝</div>
+      <h2 style="font-size:19px">Walk with friends</h2>
+      <p class="lead">Sign in to add friends, join groups, and compete fairly — by goal %, consistency, or improvement. Your guest history comes with you.</p>
+    </div>
+    <div class="c">
+      <div class="tog"><div class="tx"><b>Fair by design</b><small>Rankings default to % of your own goal — a 5k walker can beat a 12k walker.</small></div></div>
+      <div class="tog"><div class="tx"><b>You stay in control</b><small>Hide, mute, block, or report from every screen. Leaderboards are opt-in.</small></div></div>
+      <div class="tog"><div class="tx"><b>Nothing shared yet</b><small>Signing in doesn't publish anything — you choose visibility after.</small></div></div>
+    </div>
+    <button class="pbtn" data-act="signin" data-v="google">Continue with Google</button>
+    <button class="gbtn" data-act="signin" data-v="email">Sign in with email</button>
+    <div class="note" style="text-align:center">Keep tracking as a guest anytime — this is optional.</div>
+  </div>${nav()}`;
+
+  const mode=S.lbMode,me=myScores();
+  const rows=visibleFriends().map(f=>({f,sc:friendScores(f)}));
+  rows.push({me:true,sc:me});
+  rows.sort((a,b)=>b.sc[mode]-a.sc[mode]);
+  return `${appbar("Community",{extra:`<button class="iconbtn" data-act="invite" aria-label="Invite a friend">${icon("plus")}</button>`})}
+  <div class="body">
+    <div class="seg" role="group" aria-label="Ranking mode">
+      ${Object.entries(MODES).map(([k,m])=>`<button aria-pressed="${mode===k}" data-act="lbmode" data-v="${k}">${m.lab}</button>`).join("")}
+    </div>
+    <div class="c"><div class="h">This week · Friends <span class="sp">${MODES[mode].lab} ranking</span></div>
+      ${rows.map((r,i)=>{
+        const v=MODES[mode].fmt(r.sc[mode]);
+        const barPct=mode==="steps"?r.sc.steps/Math.max(...rows.map(x=>x.sc.steps)):mode==="improved"?clamp(r.sc[mode]+0.5,0.05,1):clamp(r.sc[mode],0.03,mode==="goalPct"?1.4:1)/(mode==="goalPct"?1.4:1);
+        if(r.me)return `<div class="lb me" style="cursor:default"><span class="rk">${i+1}</span><span class="av sm me">${S.name[0]}</span>
+          <span class="nm">You<small>goal ${fmt(S.goal)}${S.privacy.approx?" · showing approximate totals":""}</small>
+          <span class="gbar"><i style="width:${barPct*100}%"></i></span></span><span class="pc">${v}</span></div>`;
+        const f=r.f;
+        return `<button class="lb" data-act="compare" data-v="${f.id}">
+          <span class="rk">${i+1}</span><span class="av sm">${f.name[0]}</span>
+          <span class="nm">${esc(f.name)}${f.virtual?`<span class="vtag">VIRTUAL</span>`:""}<small>${f.virtual?"practice companion · can be turned off":`goal ${fmt(f.goal)} · ${Math.round(friendScores(f).consistency*100)}% consistent`}</small>
+          <span class="gbar"><i style="width:${barPct*100}%"></i></span></span><span class="pc">${v}</span></button>`;
+      }).join("")}
+    </div>
+    <div class="c" style="font-size:11.5px;color:var(--a-ink2)">🔒 You control this: show approximate totals, hide your activity, or leave leaderboards in <button class="sp" style="background:none;border:0;padding:0;color:var(--a-brand);font-weight:700;cursor:pointer;font-size:11.5px" data-act="tab" data-to="profile">Privacy</button>. Rankings never use raw totals unless you pick “Steps”.</div>
+    ${S.requests.length?`<div class="c"><div class="h">Friend requests</div>
+      ${S.requests.map(r=>`<div class="lrow" style="cursor:default"><span class="av">${r.name[0]}</span>
+        <span class="tx"><b>${esc(r.name)}</b><small>${esc(r.note)}</small></span>
+        <button class="sp" style="background:var(--a-brand);color:var(--a-brand-ink);border:0;border-radius:9px;padding:.5em .9em;font-weight:700;cursor:pointer" data-act="acceptreq" data-v="${r.id}">Accept</button>
+        <button class="sp" style="background:none;border:0;color:var(--a-ink3);font-weight:650;cursor:pointer;padding:.5em .4em" data-act="declinereq" data-v="${r.id}">Decline</button></div>`).join("")}</div>`:""}
+    <button class="gbtn" data-act="invite">＋ Invite a friend · link or QR</button>
+  </div>${nav()}`;
+};
+
+/* ---------- compare ---------- */
+let compareId=null;
+SCREENS.compare=()=>{
+  const f=friendById(compareId);if(!f){S.screen="community";return SCREENS.community()}
+  const me=myScores(),fs=friendScores(f),myW=myWeek();
+  const rows=[
+    ["steps today",fmt(S.stepsToday),fmt(f.today),S.stepsToday>=f.today],
+    ["yesterday",fmt(myW[5].steps),fmt(f.week[4]),myW[5].steps>=f.week[4]],
+    ["7-day avg",fmt(me.steps/7),fmt(fs.steps/7),me.steps>=fs.steps],
+    ["goal %, this week",Math.round(me.goalPct*100)+"%",Math.round(fs.goalPct*100)+"%",me.goalPct>=fs.goalPct],
+    ["consistency",Math.round(me.consistency*100)+"%",Math.round(fs.consistency*100)+"%",me.consistency>=fs.consistency],
+    ["current streak",streak()+" days",f.streak+" days",streak()>=f.streak]];
+  return `${appbar(f.name,{back:"community",bell:false,extra:f.virtual?"":`<button class="iconbtn" data-act="friendmenu" data-v="${f.id}" aria-label="More options">${icon("dots")}</button>`})}
+  <div class="body">
+    ${f.virtual?`<div class="offb" style="background:var(--a-warnbg);color:var(--a-warnink)">🤖 Virtual companion — a labelled practice pacer, never a real person. Turn off in Settings.</div>`:""}
+    <div class="c">
+      <div style="display:flex;justify-content:space-around;align-items:center;margin-bottom:10px">
+        <div style="text-align:center"><span class="av me" style="margin:0 auto">${S.name[0]}</span><div style="font-weight:700;font-size:12px;margin-top:4px">You</div><div class="note">goal ${fmt(S.goal)}</div></div>
+        <div style="color:var(--a-ink3);font-weight:800">vs</div>
+        <div style="text-align:center"><span class="av" style="margin:0 auto">${f.name[0]}</span><div style="font-weight:700;font-size:12px;margin-top:4px">${esc(f.name)}</div><div class="note">goal ${fmt(f.goal)}</div></div>
+      </div>
+      <div class="cmpGrid">
+        ${rows.map(([lab,a,b,win])=>`
+          <span class="v l ${win?"win":""}">${a}</span><span class="lab">${lab}</span><span class="v ${!win?"win":""}">${b}</span>`).join("")}
+      </div>
+    </div>
+    <div class="note" style="text-align:center">Different goals, different routines — the % rows are the fair comparison.</div>
+    ${f.virtual?"":`<button class="pbtn" data-act="openchat" data-v="${f.id}">💬 Message ${esc(f.name)}</button>
+    <button class="gbtn" data-act="encourage" data-v="${f.id}">👏 Send encouragement</button>`}
+  </div>`;
+};
+
+/* ---------- messages ---------- */
+let chatId=null;
+SCREENS.messages=()=>{
+  if(!S.account)return `${appbar("Messages")}<div class="body">
+    <div class="ob" style="padding:30px 8px 8px;overflow:visible">
+      <div class="art">💬</div>
+      <h2 style="font-size:19px">Encouragement lives here</h2>
+      <p class="lead">Chat with friends and groups after you sign in. Conversations start when you add a friend or join a challenge.</p>
+    </div>
+    <button class="pbtn" data-act="signin" data-v="google">Continue with Google</button>
+    <div class="note" style="text-align:center">Every conversation has mute, report, and block built in.</div>
+  </div>${nav()}`;
+  seedConvos();
+  const list=Object.entries(S.convos).filter(([id])=>!S.blocked[id]).map(([id,c])=>{
+    const f=friendById(id),last=c.msgs[c.msgs.length-1];
+    return {id,f,last,unread:c.unread||0,muted:S.muted[id]};
+  });
+  return `${appbar("Messages")}<div class="body">
+    ${list.length?`<div class="c" style="padding:4px 12px">
+      ${list.map(x=>`<button class="lrow" data-act="openchat" data-v="${x.id}">
+        <span class="av">${x.f.name[0]}</span>
+        <span class="tx"><b>${esc(x.f.name)}${x.muted?" 🔕":""}</b><small>${x.last.who==="me"?"You: ":""}${esc(x.last.t)}</small></span>
+        <span class="end">${esc(x.last.when)}${x.unread?`<br><span class="badge" style="position:static;display:inline-block;margin-top:3px">${x.unread}</span>`:""}</span>
+      </button>`).join("")}</div>`:
+    `<div class="c" style="text-align:center;padding:26px 16px"><div style="font-size:30px">🌱</div>
+     <b>No conversations yet</b><div class="note" style="margin-top:4px">Add a friend in Community and say hi — encouragement is the whole point.</div></div>`}
+    <div class="note" style="text-align:center">Group &amp; challenge chats appear here in v1.2.</div>
+  </div>${nav()}`;
+};
+SCREENS.chat=()=>{
+  const f=friendById(chatId);seedConvos();
+  const c=S.convos[chatId];c.unread=0;
+  return `${appbar(f.name,{back:"messages",bell:false,extra:`<button class="iconbtn" data-act="friendmenu" data-v="${f.id}" aria-label="Conversation options">${icon("dots")}</button>`})}
+  <div class="chatBody" id="chatScroll">
+    <div class="msg sys">Conversations are private. Mute, report, or block anytime from ⋮</div>
+    ${c.msgs.map(m=>`<div class="msg ${m.who==="me"?"mine":"them"}">${esc(m.t)}<small>${esc(m.when)}</small></div>`).join("")}
+  </div>
+  <div class="tmplRow" role="group" aria-label="Quick encouragement">${TEMPLATES.map(t=>`<button data-act="tmpl" data-v="${esc(t)}">${esc(t)}</button>`).join("")}</div>
+  <div class="composer">
+    <input id="chatInput" placeholder="Message ${esc(f.name)}…" aria-label="Message text" maxlength="300">
+    <button class="send" data-act="sendmsg" aria-label="Send">${icon("send")}</button>
+  </div>`;
+};
+
+/* ---------- profile ---------- */
+const ACHS=[
+ {id:"firstwalk",ic:"👟",t:"First walk",s:"Record your first steps"},
+ {id:"firstgoal",ic:"🎯",t:"First goal",s:"Reach a daily goal"},
+ {id:"week7",ic:"📅",t:"Solid week",s:"5 goal days in a week"},
+ {id:"streak14",ic:"🔥",t:"Two weeks",s:"14-day streak"},
+ {id:"best",ic:"🏆",t:"Personal best",s:"Beat your best day"},
+ {id:"social",ic:"🤝",t:"Better together",s:"Add your first friend"}];
+SCREENS.profile=()=>{
+  const stk=streak();
+  return `${appbar("Profile")}<div class="body">
+    <div class="c" style="display:flex;align-items:center;gap:13px">
+      <span class="av" style="width:52px;height:52px;font-size:20px" ${S.account?'class="av me"':""}>${S.account?S.name[0]:"G"}</span>
+      <div style="flex:1">
+        <b style="font-size:16px">${S.account?esc(S.name):"Guest"}</b>
+        <div class="note">${S.account?"@maya_walks · signed in":"Tracking locally on this phone"}</div>
+        <div style="display:flex;gap:6px;margin-top:5px"><span class="chipA on">🔥 ${stk}-day streak</span><span class="chipA">goal ${fmt(S.goal)}</span></div>
+      </div>
+    </div>
+    ${!S.account?`<button class="pbtn" data-act="signin" data-v="google">Sign in — keep your history</button>`:""}
+    <div class="c"><div class="h">Achievements <span class="sp">${S.earned.length}/${ACHS.length}</span></div>
+      <div class="achGrid">${ACHS.map(a=>`<div class="ach ${S.earned.includes(a.id)?"":"locked"}"><span class="ic">${a.ic}</span><b>${a.t}</b><small>${a.s}</small></div>`).join("")}</div>
+    </div>
+
+    <div class="setGrp"><div class="gt">Activity</div><div class="c" style="padding:4px 14px">
+      <div class="tog"><div class="tx"><b>Daily goal</b><small>${fmt(S.goal)} steps · tap to adjust</small></div>
+        <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:700;cursor:pointer" data-act="editgoal">Edit</button></div>
+      <div class="tog"><div class="tx"><b>Rest days</b><small>${S.restDays.length?S.restDays.map(i=>DAYNAMES[i]).join(", ")+" — never breaks a streak":"None set"}</small></div>
+        <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:700;cursor:pointer" data-act="editgoal">Edit</button></div>
+      <div class="tog"><div class="tx"><b>Data source</b><small>${S.source==="hc"?"Health Connect · synced just now":"Phone sensor only"}</small></div>
+        <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:700;cursor:pointer" data-act="switchsrc">Switch</button></div>
+      <div class="tog"><div class="tx"><b>Distance unit</b></div>
+        <div class="seg" style="width:120px"><button aria-pressed="${S.units==="km"}" data-act="units" data-v="km">km</button><button aria-pressed="${S.units==="mi"}" data-act="units" data-v="mi">mi</button></div></div>
+    </div></div>
+
+    <div class="setGrp"><div class="gt">Appearance</div><div class="c" style="padding:10px 14px">
+      <div class="seg"><button aria-pressed="${S.theme==="system"}" data-act="apptheme" data-v="system">System</button>
+      <button aria-pressed="${S.theme==="light"}" data-act="apptheme" data-v="light">Light</button>
+      <button aria-pressed="${S.theme==="dark"}" data-act="apptheme" data-v="dark">Dark</button></div>
+      <div class="note" style="margin-top:8px">High contrast, text size, and reduced motion follow your system accessibility settings.</div>
+    </div></div>
+
+    <div class="setGrp"><div class="gt">Social &amp; privacy</div><div class="c" style="padding:4px 14px">
+      ${[["discoverable","Profile discovery","Let others find you by username",S.privacy.discoverable],
+         ["leaderboards","Leaderboard participation","Appear on friend boards you've joined",S.privacy.leaderboards],
+         ["approx","Approximate totals","Show ranges (~5–7.5k) instead of exact steps",S.privacy.approx]]
+        .map(([k,t,s,v])=>`<div class="tog"><div class="tx"><b>${t}</b><small>${s}</small></div>
+        <button class="sw" role="switch" aria-checked="${v}" aria-label="${t}" data-act="priv" data-v="${k}"></button></div>`).join("")}
+      <div class="tog"><div class="tx"><b>Blocked &amp; hidden users</b><small>${Object.keys(S.blocked).length||"None"}</small></div></div>
+    </div></div>
+
+    <div class="setGrp"><div class="gt">Notifications</div><div class="c" style="padding:4px 14px">
+      ${[["goals","Goals & streaks","Progress nudges, goal reached, streak at risk"],
+         ["social","Social","Requests, challenges, messages — separable from the rest"],
+         ["recaps","Weekly & monthly recaps",""],
+         ["quiet","Quiet hours","22:00 – 07:30"]]
+        .map(([k,t,s])=>`<div class="tog"><div class="tx"><b>${t}</b>${s?`<small>${s}</small>`:""}</div>
+        <button class="sw" role="switch" aria-checked="${S.notifPrefs[k]}" aria-label="${t}" data-act="npref" data-v="${k}"></button></div>`).join("")}
+    </div></div>
+
+    <div class="setGrp"><div class="gt">Account &amp; data</div><div class="c" style="padding:4px 14px">
+      <div class="tog"><div class="tx"><b>Export my data</b><small>Activity, goals, achievements — JSON/CSV</small></div>
+        <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:700;cursor:pointer" data-act="toast" data-v="Export requested — you'll be notified when the bundle is ready (simulated)">Export</button></div>
+      ${S.account?`<div class="tog"><div class="tx"><b>Sign out</b></div>
+        <button class="sp" style="background:none;border:0;color:var(--a-brand);font-weight:700;cursor:pointer" data-act="signout">Sign out</button></div>`:""}
+      <div class="tog"><div class="tx"><b style="color:#d03b3b">Delete account &amp; data</b><small>Two-step, with a grace period</small></div>
+        <button class="sp" style="background:none;border:0;color:#d03b3b;font-weight:700;cursor:pointer" data-act="toast" data-v="Deletion flow opens with re-authentication (simulated)">…</button></div>
+    </div></div>
+    <div class="note" style="text-align:center;padding-bottom:6px">Walkora prototype · v1.0 · Help · Privacy · Terms · Licences</div>
+  </div>${nav()}`;
+};
+
+/* ================================================================ OVERLAYS */
+function renderOverlay(){
+  overlay.innerHTML=modal?modal():"";
+}
+function closeModal(){modal=null;renderOverlay()}
+const MODALS={
+  osperm:()=>`<div class="scrim center" data-act="noop">
+    <div class="dlg osdlg" role="alertdialog" aria-label="System permission dialog">
+      <div class="osicon">🏃</div>
+      <h3>Allow <b>Walkora</b> to access your physical activity?</h3>
+      <div class="acts">
+        <button data-act="permyes" style="font-weight:800">Allow</button>
+        <button data-act="permno">Don't allow</button>
+      </div>
+    </div></div>`,
+  notifs:()=>`<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="dialog" aria-label="Notifications" data-act="noop"><div class="grab"></div>
+    <h3>Notifications</h3>
+    ${S.account&&S.requests.length?S.requests.map(r=>`
+      <div class="lrow" style="cursor:default"><span class="av">${r.name[0]}</span>
+      <span class="tx"><b>${esc(r.name)} sent a friend request</b><small>${esc(r.note)}</small></span>
+      <button class="sp" style="background:var(--a-brand);color:var(--a-brand-ink);border:0;border-radius:9px;padding:.45em .8em;font-weight:700;cursor:pointer" data-act="acceptreq" data-v="${r.id}">Accept</button></div>`).join(""):""}
+    ${S.notifs.map(n=>`<div class="lrow" style="cursor:default"><span style="font-size:20px">${n.ic}</span>
+      <span class="tx"><b>${esc(n.t)}</b><small style="white-space:normal">${esc(n.s)}</small></span><span class="end">${esc(n.when)}</span></div>`).join("")}
+    <div class="note" style="text-align:center;margin-top:8px">Per-category controls live in Profile → Notifications.</div>
+    </div></div>`,
+  share:()=>{
+    const hide=S._shareHide||{steps:false,name:false};
+    return `<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="dialog" aria-label="Share progress" data-act="noop"><div class="grab"></div>
+    <h3>Share today</h3>
+    <p class="note" style="margin:0 0 10px">Privacy preview — exactly what others will see:</p>
+    <div class="shareCard" aria-label="Share card preview">
+      <div class="b2">${hide.name?"A Walkora walker":esc(S.account?S.name:"Guest")} · Saturday</div>
+      <div class="b1">${hide.steps?"Goal "+(S.stepsToday>=S.goal?"reached ✓":Math.round(S.stepsToday/S.goal*100)+"% done"):fmt(S.stepsToday)+" steps"}</div>
+      <div class="b2">${S.stepsToday>=S.goal?"Daily goal complete 🎉":"and still going"} · 🔥 ${streak()}-day streak</div>
+      <div class="wm">Walkora</div>
+    </div>
+    <div class="c" style="margin-top:10px;padding:4px 14px">
+      <div class="tog"><div class="tx"><b>Hide exact step count</b><small>Show goal % instead</small></div>
+        <button class="sw" role="switch" aria-checked="${hide.steps}" data-act="sharehide" data-v="steps" aria-label="Hide exact step count"></button></div>
+      <div class="tog"><div class="tx"><b>Hide my name</b></div>
+        <button class="sw" role="switch" aria-checked="${hide.name}" data-act="sharehide" data-v="name" aria-label="Hide my name"></button></div>
+    </div>
+    <button class="pbtn" style="margin-top:10px" data-act="doshare">Share via system sheet</button>
+    </div></div>`},
+  invite:()=>`<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="dialog" aria-label="Invite a friend" data-act="noop"><div class="grab"></div>
+    <h3>Invite a friend</h3>
+    <p class="note" style="margin:0 0 10px">Works across Android &amp; iPhone. Only people with this link can find you while discovery is off.</p>
+    <div class="c" style="text-align:center;padding:16px">
+      <div style="display:inline-grid;grid-template-columns:repeat(7,10px);gap:2px" aria-label="QR code (decorative)">${Array.from({length:49},(_,i)=>`<span style="width:10px;height:10px;background:${[0,1,2,5,6,7,9,13,14,18,20,21,24,27,28,30,34,35,41,42,44,45,47,48,12,26,36,4,17,23,33,39].includes(i)?"var(--a-ink)":"transparent"};border-radius:2px"></span>`).join("")}</div>
+      <div class="note" style="margin-top:10px;font-family:var(--mono)">walkora.app/i/maya-x7k2</div>
+    </div>
+    <button class="pbtn" style="margin-top:10px" data-act="toast" data-v="Invite link copied (simulated)">Copy link</button>
+    <button class="gbtn" style="margin-top:8px" data-act="toast" data-v="System share sheet opened (simulated)">Share…</button>
+    </div></div>`,
+  signin:()=>`<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="dialog" aria-label="Sign in" data-act="noop"><div class="grab"></div>
+    <h3>Sign in to Walkora</h3>
+    <p class="note" style="margin:0 0 12px">Your ${fmt(HIST().reduce((a,d)=>a+d.steps,0)+S.stepsToday)} locally-tracked steps will move to your account — nothing is lost, nothing becomes public.</p>
+    <button class="pbtn" data-act="dosignin">Continue with Google</button>
+    <button class="gbtn" style="margin-top:8px" data-act="dosignin">Use email instead</button>
+    <div class="note" style="text-align:center;margin-top:10px">Private by default — you choose visibility after sign-in.</div>
+    </div></div>`,
+  friendmenu:()=>{
+    const f=friendById(S._menuFriend);
+    return `<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="menu" aria-label="Options for ${esc(f.name)}" data-act="noop"><div class="grab"></div>
+    <h3>${esc(f.name)}</h3>
+    <div class="c" style="padding:4px 14px;margin-top:8px">
+      <button class="lrow" data-act="encourage" data-v="${f.id}"><span>👏</span><span class="tx"><b>Send encouragement</b></span></button>
+      <button class="lrow" data-act="mute" data-v="${f.id}"><span>🔕</span><span class="tx"><b>${S.muted[f.id]?"Unmute":"Mute"} conversation</b><small>They won't know</small></span></button>
+      <button class="lrow" data-act="report" data-v="${f.id}"><span>🚩</span><span class="tx"><b>Report</b><small>Snapshot goes to moderation — they can't edit it away</small></span></button>
+      <button class="lrow" data-act="block" data-v="${f.id}"><span>⛔</span><span class="tx"><b style="color:#d03b3b">Block ${esc(f.name)}</b><small>Removes them everywhere, immediately</small></span></button>
+    </div></div></div>`},
+  demo:()=>`<div class="scrim" data-act="closemodal">
+    <div class="sheet" role="dialog" aria-label="Demo controls" data-act="noop"><div class="grab"></div>
+    <h3>⚡ Demo controls</h3>
+    <div class="c" style="padding:4px 14px;margin-top:8px">
+      ${[["walk500","🚶 Simulate walk +500"],["walk2000","🏃 Long walk +2,000"],["goal","🎯 Complete today's goal"],["msg","💬 Incoming message"],["offline",(S.offline?"📶 Go online":"📴 Go offline")],["skipob","⏭ Skip onboarding"],["reset","♻ Reset prototype"]]
+      .map(([k,l])=>`<button class="lrow" data-act="demo" data-v="${k}"><span class="tx"><b>${l}</b></span></button>`).join("")}
+    </div></div></div>`
+};
+
+/* ================================================================ ACTIONS */
+function toast(t){
+  const el=document.createElement("div");el.className="toast";el.textContent=t;
+  $("#toasts").appendChild(el);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition="opacity .3s";setTimeout(()=>el.remove(),320)},2400);
+}
+function confetti(){
+  if(reduceMotion)return;
+  const box=$("#confetti"),colors=["#0f766e","#4fd2c1","#eda100","#e87ba4","#5598e7"];
+  box.innerHTML=Array.from({length:26},(_,i)=>
+    `<i style="left:${4+Math.random()*92}%;background:${colors[i%5]};animation-delay:${Math.random()*0.5}s;animation-duration:${1.2+Math.random()*0.9}s"></i>`).join("");
+  setTimeout(()=>box.innerHTML="",2600);
+}
+function addSteps(n){
+  const before=S.stepsToday;
+  S.stepsToday+=n;
+  if(before<S.goal&&S.stepsToday>=S.goal&&!S.goalDoneToday){
+    S.goalDoneToday=true;
+    if(!S.earned.includes("streak14")&&streak()>=14)S.earned.push("streak14");
+    if(S.stepsToday>bestDay()&&!S.earned.includes("best"))S.earned.push("best");
+    S.notifs.unshift({ic:"🎯",t:"Goal reached!",s:`${fmt(S.goal)} steps done. 🔥 ${streak()}-day streak.`,when:"now"});
+    confetti();toast("🎯 Goal reached — "+fmt(S.goal)+" steps!");
+  }
+  save();
+  if(S.screen==="today"){const el=$("#stepNum");if(el){render();return}}
+  render();
+}
+function incomingMsg(){
+  if(!S.account){toast("Sign in first (Community tab) to receive messages");return}
+  seedConvos();
+  const pool=[["tunde","Just passed you on the board 👀 friendly warning"],["nkechi","Evening walk? I need 900 more steps"],["tunde","That hill nearly ended me 😅"]];
+  const [id,t]=pool[Math.floor(Math.random()*pool.length)];
+  if(S.blocked[id]){toast("Blocked sender — message rejected server-side");return}
+  S.convos[id].msgs.push({who:"them",t,when:"now"});
+  if(!(S.screen==="chat"&&chatId===id))S.convos[id].unread=(S.convos[id].unread||0)+1;
+  if(!S.muted[id])toast(`💬 ${friendById(id).name}: ${t.slice(0,34)}…`);
+  save();render();
+  if(S.screen==="chat")scrollChat();
+}
+function scrollChat(){const el=$("#chatScroll");if(el)el.scrollTop=el.scrollHeight}
+function demo(k){
+  ({walk500:()=>addSteps(500),
+    walk2000:()=>addSteps(2000),
+    goal:()=>addSteps(Math.max(0,S.goal-S.stepsToday)||500),
+    msg:incomingMsg,
+    offline:()=>{S.offline=!S.offline;toast(S.offline?"📴 Offline — tracking continues on-device":"📶 Back online — outbox synced");save();render()},
+    skipob:()=>{S.onboarded=true;S.permission="granted";S.screen="today";S.tab="today";save();render()},
+    reset:()=>{localStorage.removeItem("wlk-proto");S=structuredClone(DEF);progTab="week";toast("Prototype reset");render()}
+  })[k]();
+}
+
+const ACTIONS={
+  noop(e){e.stopPropagation()},
+  closemodal(){closeModal()},
+  go(el){S.screen=el.dataset.to;save();render()},
+  tab(el){S.tab=el.dataset.to;S.screen=el.dataset.to;save();render()},
+  obnext(){const seq=["ob0","ob1","ob2","ob3","ob4"];
+    const cur=S.screen==="obDenied"?"ob1":S.screen;
+    const i=seq.indexOf(cur);S.screen=seq[i+1]||"ob4";save();render()},
+  obfinish(){S.onboarded=true;S.screen="today";S.tab="today";
+    S.notifs.unshift({ic:"✅",t:"Tracking confirmed",s:`Counting from ${S.source==="hc"?"Health Connect":"your phone sensor"}. First sync complete.`,when:"now"});
+    save();render();toast("You're all set — go take a walk 🌿")},
+  askperm(){modal=MODALS.osperm;renderOverlay()},
+  permyes(){S.permission="granted";closeModal();
+    if(!S.onboarded){S.screen="ob2"}else toast("Tracking on — steps counting");save();render()},
+  permno(){S.permission="denied";closeModal();
+    if(!S.onboarded){S.screen="obDenied";save();render()}else{toast("Permission still off");render()}},
+  denyperm(){S.permission="denied";S.screen="obDenied";save();render()},
+  grantviasettings(){S.permission="granted";S.screen="ob2";save();render();toast("Permission granted in settings ✓")},
+  src(el){S.source=el.dataset.v;save();render()},
+  goaladj(el){const inp=$("#goalInput");let v=parseInt((inp?inp.value:S.goal+"").replace(/[^\d]/g,""))||S.goal;
+    v=clamp(v+parseInt(el.dataset.v),1000,40000);S.goal=v;save();render()},
+  rest(el){const i=+el.dataset.v;
+    S.restDays=S.restDays.includes(i)?S.restDays.filter(x=>x!==i):[...S.restDays,i].slice(0,3);save();render()},
+  progtab(el){progTab=el.dataset.v;render()},
+  lbmode(el){S.lbMode=el.dataset.v;save();render()},
+  dismissSocial(){S.dismissedSocial=true;save();render();toast("Hidden — bring it back from Community anytime")},
+  share(){S._shareHide={steps:false,name:false};modal=MODALS.share;renderOverlay()},
+  sharehide(el){S._shareHide[el.dataset.v]=!S._shareHide[el.dataset.v];renderOverlay()},
+  doshare(){closeModal();toast("System share sheet opened (simulated)")},
+  notifs(){modal=MODALS.notifs;renderOverlay()},
+  invite(){modal=MODALS.invite;renderOverlay()},
+  signin(){modal=MODALS.signin;renderOverlay()},
+  dosignin(){S.account=true;closeModal();
+    if(!S.earned.includes("social"))S.earned.push("social");
+    S.notifs.unshift({ic:"🔐",t:"Welcome, "+S.name,s:"Local history migrated to your account. Visibility unchanged: private.",when:"now"});
+    save();render();toast("Signed in — history migrated, still private ✓")},
+  signout(){S.account=false;save();render();toast("Signed out — guest tracking continues")},
+  acceptreq(el){const id=el.dataset.v;S.requests=S.requests.filter(r=>r.id!==id);S.friendsAdded=true;
+    seedConvos();S.convos[id]={msgs:[{who:"them",t:"Hey! Thanks for accepting 🙌 Weekend walk challenge?",when:"now"}],unread:1};
+    closeModal();save();render();toast("Dele added — say hi in Messages 👋")},
+  declinereq(el){S.requests=S.requests.filter(r=>r.id!==el.dataset.v);closeModal();save();render()},
+  compare(el){compareId=el.dataset.v;S.screen="compare";save();render()},
+  openchat(el){chatId=el.dataset.v;seedConvos();
+    if(!S.convos[chatId])S.convos[chatId]={msgs:[],unread:0};
+    S.screen="chat";save();render();scrollChat()},
+  sendmsg(){const inp=$("#chatInput");const t=(inp.value||"").trim();if(!t)return;
+    S.convos[chatId].msgs.push({who:"me",t,when:"now"});inp.value="";save();render();scrollChat();
+    setTimeout(()=>{if(S.screen==="chat"&&!S.blocked[chatId]){
+      S.convos[chatId].msgs.push({who:"them",t:["Love it 😄","Deal!","👏👏","Same time tomorrow?"][Math.floor(Math.random()*4)],when:"now"});
+      save();render();scrollChat();}},1400)},
+  tmpl(el){const t=el.dataset.v;S.convos[chatId].msgs.push({who:"me",t,when:"now"});save();render();scrollChat()},
+  encourage(el){const id=el.dataset.v;seedConvos();
+    if(!S.convos[id])S.convos[id]={msgs:[],unread:0};
+    S.convos[id].msgs.push({who:"me",t:"👏 Keep it up — great week!",when:"now"});
+    closeModal();save();render();toast(`Encouragement sent to ${friendById(id).name} 👏`)},
+  friendmenu(el){S._menuFriend=el.dataset.v;modal=MODALS.friendmenu;renderOverlay()},
+  mute(el){const id=el.dataset.v;S.muted[id]=!S.muted[id];closeModal();save();render();
+    toast(S.muted[id]?"Muted — you can still open the chat":"Unmuted")},
+  report(el){closeModal();toast("Report sent — content snapshot preserved for moderation 🚩")},
+  block(el){const id=el.dataset.v;S.blocked[id]=true;closeModal();
+    if(S.screen==="chat"||S.screen==="compare")S.screen=S.tab;
+    save();render();toast(`${friendById(id).name} blocked — removed from boards, chat, and search`)},
+  editgoal(){S.screen="ob3";S._fromProfile=true;save();render()},
+  switchsrc(){S.source=S.source==="hc"?"phone":"hc";save();render();toast("Source switched — totals recomputed, duplicates removed")},
+  units(el){S.units=el.dataset.v;save();render()},
+  apptheme(el){S.theme=el.dataset.v;save();applyTheme();render()},
+  priv(el){const k=el.dataset.v;S.privacy[k]=!S.privacy[k];save();render()},
+  npref(el){const k=el.dataset.v;S.notifPrefs[k]=!S.notifPrefs[k];save();render()},
+  toast(el){toast(el.dataset.v)},
+  demo(el){closeModal();demo(el.dataset.v)}
+};
+
+/* ob3 "continue" needs custom routing when opened from profile */
+const _obnext=ACTIONS.obnext;
+ACTIONS.obnext=function(el){
+  if(S.screen==="ob3"&&S._fromProfile){
+    const inp=$("#goalInput");if(inp){const v=parseInt(inp.value.replace(/[^\d]/g,""));if(v)S.goal=clamp(v,1000,40000)}
+    S._fromProfile=false;S.screen="profile";save();render();toast("Goal updated ✓");return;
+  }
+  if(S.screen==="ob3"){const inp=$("#goalInput");if(inp){const v=parseInt(inp.value.replace(/[^\d]/g,""));if(v)S.goal=clamp(v,1000,40000)}}
+  _obnext(el);
+};
+
+/* ================================================================ RENDER + WIRING */
+function applyTheme(){
+  const sysDark=matchMedia("(prefers-color-scheme: dark)").matches;
+  app.dataset.t=S.theme==="dark"||(S.theme==="system"&&sysDark)?"dark":"light";
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",applyTheme);
+
+function render(){
+  const scr=S.onboarded?S.screen:(S.screen.startsWith("ob")?S.screen:"ob0");
+  if(!SCREENS[scr]){S.screen=S.onboarded?"today":"ob0"}
+  root.innerHTML=SCREENS[S.onboarded||scr.startsWith("ob")?scr:"ob0"]();
+  renderOverlay();
+}
+app.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]");if(!el)return;
+  const fn=ACTIONS[el.dataset.act];
+  if(fn){fn(el,e);}
+});
+app.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.id==="chatInput")ACTIONS.sendmsg();
+  if(e.key==="Enter"&&e.target.id==="goalInput"){const v=parseInt(e.target.value.replace(/[^\d]/g,""));if(v){S.goal=clamp(v,1000,40000);save();render()}}
+});
+$("#demoFab").addEventListener("click",()=>{modal=MODALS.demo;renderOverlay()});
+document.querySelectorAll("#demoBtns button").forEach(b=>b.addEventListener("click",()=>demo(b.dataset.demo)));
+
+/* live step ticking while Today is visible */
+setInterval(()=>{
+  if(S.onboarded&&S.screen==="today"&&S.permission==="granted"&&!document.hidden){
+    const inc=2+Math.floor(Math.random()*9);
+    const before=S.stepsToday;S.stepsToday+=inc;
+    if(before<S.goal&&S.stepsToday>=S.goal){S.stepsToday=before;addSteps(inc);return}
+    const el=$("#stepNum");if(el)el.textContent=fmt(S.stepsToday);
+    save();
+  }
+},4200);
+
+/* clock */
+function tickClock(){const d=new Date();$("#clock").textContent=d.getHours()+":"+String(d.getMinutes()).padStart(2,"0")}
+tickClock();setInterval(tickClock,30000);
+
+/* shell theme */
+(function(){
+  const btn=$("#shellTheme"),order=["system","light","dark"],icons={system:"◐",light:"☀",dark:"☾"};
+  let mode=localStorage.getItem("wlk-theme")||"system";
+  const mq=matchMedia("(prefers-color-scheme: dark)");
+  function ap(){document.documentElement.dataset.theme=(mode==="dark"||(mode==="system"&&mq.matches))?"dark":"light";
+    btn.textContent=icons[mode]+" Page theme"}
+  btn.addEventListener("click",()=>{mode=order[(order.indexOf(mode)+1)%3];localStorage.setItem("wlk-theme",mode);ap()});
+  mq.addEventListener("change",ap);ap();
+})();
+
+applyTheme();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Walkora — Technical Specification. Android-first architecture, offline-first sync, fair leaderboards, and privacy engineering for the Walkora PRD v1.0.">
+<title>Walkora — Technical Specification</title>
+<style>
+/* ============================================================
+   DESIGN TOKENS — shared with walkora-prd.html for a
+   consistent document family. Status hues are the reserved
+   good/warning/serious/critical set (icon + label, never
+   colour alone).
+   ============================================================ */
+:root{
+  --brand:#0f766e;
+  --brand-strong:#0b5d57;
+  --brand-soft:#e6f4f2;
+  --brand-ink:#ffffff;
+
+  --page:#f9f9f7;
+  --surface:#fcfcfb;
+  --surface-2:#f3f2ee;
+  --ink:#0b0b0b;
+  --ink-2:#52514e;
+  --ink-3:#898781;
+  --grid:#e1e0d9;
+  --baseline:#c3c2b7;
+  --hairline:rgba(11,11,11,.10);
+
+  --st-good:#0ca30c; --st-warn:#fab219; --st-serious:#ec835a; --st-critical:#d03b3b;
+  --st-good-bg:#e8f6e8; --st-warn-bg:#fdf3dc; --st-serious-bg:#fdeae2; --st-critical-bg:#fae4e4;
+  --st-good-ink:#0a5d0a; --st-warn-ink:#6e4a00; --st-serious-ink:#8a3416; --st-critical-ink:#8f2020;
+
+  --m-get:#e9edf6;  --m-get-ink:#2c4a77;
+  --m-post:#e8f6e8; --m-post-ink:#0a5d0a;
+  --m-patch:#fdf3dc;--m-patch-ink:#6e4a00;
+  --m-del:#fae4e4;  --m-del-ink:#8f2020;
+  --m-ws:#efe9f8;   --m-ws-ink:#4a3aa7;
+
+  --codebg:#f3f2ee;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 6px 22px rgba(11,11,11,.06);
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --brand:#45d0c0;
+  --brand-strong:#7fe3d6;
+  --brand-soft:#123b37;
+  --brand-ink:#04211e;
+
+  --page:#0d0d0d;
+  --surface:#1a1a19;
+  --surface-2:#232322;
+  --ink:#ffffff;
+  --ink-2:#c3c2b7;
+  --ink-3:#898781;
+  --grid:#2c2c2a;
+  --baseline:#383835;
+  --hairline:rgba(255,255,255,.10);
+
+  --st-good-bg:#12300f; --st-warn-bg:#3a2c07; --st-serious-bg:#3c1f12; --st-critical-bg:#3b1414;
+  --st-good-ink:#7bd97b; --st-warn-ink:#fac95e; --st-serious-ink:#f2a789; --st-critical-ink:#ea8a8a;
+
+  --m-get:#1d2b40;  --m-get-ink:#9dbdea;
+  --m-post:#12300f; --m-post-ink:#7bd97b;
+  --m-patch:#3a2c07;--m-patch-ink:#fac95e;
+  --m-del:#3b1414;  --m-del-ink:#ea8a8a;
+  --m-ws:#241d45;   --m-ws-ink:#b6acf3;
+
+  --codebg:#141414;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 26px rgba(0,0,0,.35);
+}
+
+/* ============================================================ BASE */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:1.7rem;margin-top:0}
+h3{font-size:1.18rem}
+h4{font-size:1rem}
+p{margin:.4em 0 1em}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+ul{padding-left:1.25em}
+li{margin:.25em 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);border:1px solid var(--hairline);border-radius:6px;padding:.08em .35em}
+blockquote{margin:1em 0;padding:.9em 1.2em;border-left:4px solid var(--brand);background:var(--brand-soft);border-radius:0 var(--radius) var(--radius) 0;font-size:1.02rem}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:4px}
+.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ============================================================ TOP BAR */
+#progressbar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--brand);z-index:60}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;padding:10px 20px;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;white-space:nowrap}
+.logo .sub{font-weight:500;color:var(--ink-3);font-size:.85rem}
+.topbar .spacer{flex:1}
+.chip{display:inline-flex;align-items:center;gap:.35em;padding:.18em .7em;border-radius:999px;font-size:.76rem;font-weight:600;
+  background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink-2);white-space:nowrap}
+.chip.brand{background:var(--brand-soft);color:var(--brand);border-color:transparent}
+.btn{display:inline-flex;align-items:center;gap:.45em;border:1px solid var(--hairline);background:var(--surface);color:var(--ink);
+  border-radius:10px;padding:.45em .85em;font:600 .86rem var(--sans);cursor:pointer}
+.btn:hover{background:var(--surface-2)}
+#navToggle{display:none}
+
+/* ============================================================ LAYOUT */
+.layout{display:grid;grid-template-columns:264px minmax(0,1fr);max-width:1360px;margin:0 auto;gap:0 36px;padding:0 20px}
+.sidebar{position:sticky;top:64px;align-self:start;height:calc(100vh - 64px);overflow-y:auto;padding:22px 4px 40px 0;font-size:.86rem;scrollbar-width:thin}
+.sidebar .grp{margin:14px 0 4px;font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);padding-left:12px}
+.sidebar a{display:block;padding:.34em 12px;border-radius:8px;color:var(--ink-2);border-left:2px solid transparent}
+.sidebar a:hover{background:var(--surface-2);text-decoration:none}
+.sidebar a.active{color:var(--brand);font-weight:650;background:var(--brand-soft);border-left-color:var(--brand);border-radius:0 8px 8px 0}
+main{padding:26px 0 90px;min-width:0}
+section.doc{margin:0 0 34px;scroll-margin-top:84px}
+.card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 28px}
+.kicker{font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);margin-bottom:.4em}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.mini{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+.mini h4{display:flex;align-items:center;gap:.5em;margin-bottom:.35em}
+.mini p{margin:.2em 0 0;color:var(--ink-2);font-size:.92rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.checks{list-style:none;padding:0;margin:0;columns:2;column-gap:28px}
+.checks li{break-inside:avoid;display:flex;gap:.55em;margin:.35em 0;font-size:.92rem;color:var(--ink-2)}
+.checks li::before{content:"✓";color:var(--st-good);font-weight:800;flex:none}
+@media (max-width:760px){.checks{columns:1}}
+
+/* ============================================================ COVER */
+.cover{border-radius:20px;overflow:hidden;border:1px solid var(--hairline);box-shadow:var(--shadow);
+  background:
+    radial-gradient(1100px 420px at 85% -20%, color-mix(in srgb,var(--brand) 16%,transparent), transparent 60%),
+    radial-gradient(700px 380px at -10% 110%, color-mix(in srgb,var(--brand) 10%,transparent), transparent 60%),
+    var(--surface);
+  padding:46px 44px 38px;margin-bottom:34px}
+.cover h1{font-size:clamp(1.9rem,4vw,2.9rem);margin:.25em 0 .15em}
+.cover .tagline{font-size:1.12rem;color:var(--ink-2);max-width:64ch}
+.metaTable{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:26px}
+.metaTable div{border-top:2px solid var(--hairline);padding-top:8px}
+.metaTable dt{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+.metaTable dd{margin:2px 0 0;font-weight:600;font-size:.94rem}
+
+/* ============================================================ TABLES */
+.tblWrap{overflow-x:auto;border:1px solid var(--hairline);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{text-align:left;font-size:.73rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);
+  padding:11px 14px;border-bottom:1px solid var(--grid);background:var(--surface-2);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--grid);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.numcol,th.numcol{text-align:right;font-variant-numeric:tabular-nums}
+.st{display:inline-flex;align-items:center;gap:.4em;padding:.14em .6em;border-radius:999px;font-size:.76rem;font-weight:700;white-space:nowrap}
+.st .dot{width:.6em;height:.6em;border-radius:50%;flex:none}
+.st.good{background:var(--st-good-bg);color:var(--st-good-ink)}         .st.good .dot{background:var(--st-good)}
+.st.warn{background:var(--st-warn-bg);color:var(--st-warn-ink)}         .st.warn .dot{background:var(--st-warn)}
+.st.serious{background:var(--st-serious-bg);color:var(--st-serious-ink)}.st.serious .dot{background:var(--st-serious)}
+.st.critical{background:var(--st-critical-bg);color:var(--st-critical-ink)}.st.critical .dot{background:var(--st-critical)}
+
+/* ============================================================ KPI TILES */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:18px 0}
+.kpi{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.kpi .lbl{font-size:.78rem;font-weight:600;color:var(--ink-2)}
+.kpi .val{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+.kpi .sub{font-size:.78rem;color:var(--ink-3)}
+
+/* ============================================================ CODE BLOCKS */
+.codeCard{position:relative;background:var(--codebg);border:1px solid var(--hairline);border-radius:12px;margin:12px 0;overflow:hidden}
+.codeCard .codeHead{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--hairline);
+  font:600 .74rem var(--mono);color:var(--ink-3)}
+.codeCard .copy{margin-left:auto;border:0;background:transparent;color:var(--ink-3);font:600 .74rem var(--sans);cursor:pointer;padding:2px 6px;border-radius:6px}
+.codeCard .copy:hover{color:var(--brand);background:var(--surface-2)}
+.codeCard pre{margin:0;padding:14px 16px;overflow-x:auto;font:.8rem/1.55 var(--mono);color:var(--ink);tab-size:2}
+.codeCard code{background:none;border:0;padding:0;font-size:inherit}
+
+/* ============================================================ DIAGRAMS */
+.diagram{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;overflow-x:auto}
+.diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.diagram + .digCap{text-align:center;color:var(--ink-3);font-size:.82rem;margin-top:8px}
+.dbox{fill:var(--surface-2);stroke:var(--baseline);stroke-width:1;rx:10}
+.dboxB{fill:var(--brand-soft);stroke:var(--brand);stroke-width:1.2}
+.dlbl{fill:var(--ink);font-size:12px;font-weight:700}
+.dsub{fill:var(--ink-2);font-size:9.5px}
+.dgrp{fill:none;stroke:var(--baseline);stroke-width:1;stroke-dasharray:none;rx:14}
+.dgt{fill:var(--ink-3);font-size:10px;font-weight:700;letter-spacing:.08em}
+.darr{stroke:var(--ink-3);stroke-width:1.4;fill:none;marker-end:url(#arr)}
+.dnote{fill:var(--ink-2);font-size:9.5px}
+.lane{stroke:var(--grid);stroke-width:1}
+.seqmsg{stroke:var(--ink-2);stroke-width:1.3;marker-end:url(#arr2)}
+.seqret{stroke:var(--ink-3);stroke-width:1.1;stroke-dasharray:4 3;marker-end:url(#arr2)}
+.seqtxt{fill:var(--ink-2);font-size:9.6px}
+.seqhead{fill:var(--ink);font-size:11px;font-weight:700}
+.seqnum{fill:var(--brand);font-size:9px;font-weight:800}
+
+/* ============================================================ API EXPLORER */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--hairline);
+  border-radius:var(--radius);padding:12px 14px;margin-bottom:16px;box-shadow:var(--shadow)}
+.filters input[type=search]{flex:1 1 220px;min-width:180px;border:1px solid var(--hairline);border-radius:10px;
+  background:var(--page);color:var(--ink);padding:.5em .9em;font:inherit;font-size:.9rem}
+.seg{display:inline-flex;border:1px solid var(--hairline);border-radius:10px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;background:var(--surface);color:var(--ink-2);font:600 .8rem var(--sans);padding:.5em .8em;cursor:pointer;border-right:1px solid var(--hairline)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink)}
+#apiCount{font-size:.82rem;color:var(--ink-3);margin-left:auto}
+details.ep{background:var(--surface);border:1px solid var(--hairline);border-radius:12px;margin-bottom:8px;box-shadow:var(--shadow);overflow:hidden}
+details.ep>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;padding:11px 16px;flex-wrap:wrap}
+details.ep>summary::-webkit-details-marker{display:none}
+.mth{font:700 .72rem var(--mono);padding:.22em .6em;border-radius:7px;min-width:52px;text-align:center}
+.mth.GET{background:var(--m-get);color:var(--m-get-ink)}
+.mth.POST{background:var(--m-post);color:var(--m-post-ink)}
+.mth.PATCH{background:var(--m-patch);color:var(--m-patch-ink)}
+.mth.DELETE{background:var(--m-del);color:var(--m-del-ink)}
+.mth.WS{background:var(--m-ws);color:var(--m-ws-ink)}
+details.ep .path{font-family:var(--mono);font-size:.86rem;font-weight:600}
+details.ep .desc{color:var(--ink-3);font-size:.82rem;flex-basis:100%;padding-left:64px;margin-top:-4px}
+details.ep .epBody{border-top:1px solid var(--grid);padding:14px 16px;font-size:.88rem}
+details.ep .epBody .tag{display:inline-block;font-size:.72rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 4px}
+.authTag{margin-left:auto}
+
+/* ============================================================ ADR */
+details.adr{background:var(--surface);border:1px solid var(--hairline);border-radius:12px;margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden}
+details.adr>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;padding:13px 18px;font-weight:650;flex-wrap:wrap}
+details.adr>summary::-webkit-details-marker{display:none}
+details.adr>summary .code{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--brand);background:var(--brand-soft);border-radius:6px;padding:.15em .5em}
+details.adr .adrBody{border-top:1px solid var(--grid);padding:14px 18px;font-size:.92rem;color:var(--ink-2)}
+details.adr .adrBody b{color:var(--ink)}
+
+/* ============================================================ MISC */
+#tooltip{position:fixed;z-index:70;pointer-events:none;display:none;max-width:280px;background:var(--surface);
+  border:1px solid var(--hairline);border-radius:10px;box-shadow:var(--shadow);padding:8px 12px;font-size:.82rem;line-height:1.45}
+#toTop{position:fixed;right:22px;bottom:22px;z-index:40;display:none;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--hairline);background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:var(--shadow);font-size:1.1rem}
+footer.doc{color:var(--ink-3);font-size:.82rem;padding:26px 0;border-top:1px solid var(--hairline);margin-top:20px}
+.pill{display:inline-block;padding:.1em .55em;border-radius:6px;font-size:.74rem;font-weight:700;background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink-2);white-space:nowrap}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width:1020px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:fixed;inset:57px auto 0 0;width:280px;background:var(--surface);border-right:1px solid var(--hairline);
+    transform:translateX(-105%);transition:transform .2s;z-index:55;padding:18px 14px 40px;height:auto}
+  .sidebar.open{transform:none}
+  #navToggle{display:inline-flex}
+  .cover{padding:32px 26px}
+  details.ep .desc{padding-left:0}
+}
+
+/* ============================================================ PRINT */
+@media print{
+  .topbar,.sidebar,#toTop,#progressbar,.filters,#navToggle,.copy{display:none !important}
+  body{background:#fff;font-size:12px}
+  .layout{display:block;padding:0}
+  .card,.mini,details.ep,details.adr,.kpi,.diagram{box-shadow:none;break-inside:avoid}
+  details{border:1px solid #ccc}
+  a{color:inherit}
+  .cover{break-after:page}
+  section.doc{break-inside:avoid-page}
+}
+</style>
+</head>
+<body>
+
+<div id="progressbar" aria-hidden="true"></div>
+
+<header class="topbar">
+  <button class="btn" id="navToggle" aria-label="Toggle table of contents" aria-expanded="false">☰</button>
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect width="32" height="32" rx="9" fill="var(--brand)"/>
+      <path d="M11 23c-1.8-2.2-2.4-5.8-.9-7.6 1.3-1.5 3.3-1 4 .8.8 2.1.4 5.2-.8 6.8-.7.9-1.7.8-2.3 0Z" fill="var(--brand-ink)"/>
+      <path d="M20.5 17.5c-1.5-1.9-1.9-5-.6-6.5 1.1-1.3 2.9-.9 3.5.7.7 1.8.3 4.4-.7 5.8-.6.8-1.6.7-2.2 0Z" fill="var(--brand-ink)" opacity=".75"/>
+    </svg>
+    Walkora <span class="sub">Technical Specification</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="chip" id="searchHint">Press <code>/</code> to filter the API</span>
+  <span class="chip brand">v1.0 · Draft for review</span>
+  <button class="btn" id="themeBtn" aria-live="polite">◐ Theme: System</button>
+  <button class="btn" onclick="window.print()">Print / PDF</button>
+</header>
+
+<div class="layout">
+
+<!-- ================= SIDEBAR ================= -->
+<nav class="sidebar" id="sidebar" aria-label="Document sections">
+  <div class="grp">Foundations</div>
+  <a href="#overview">1 · Overview &amp; principles</a>
+  <a href="#architecture">2 · System architecture</a>
+  <a href="#stack">3 · Technology stack</a>
+  <a href="#adr">4 · Decision records</a>
+  <div class="grp">Client</div>
+  <a href="#client">5 · Android architecture</a>
+  <a href="#tracking">6 · Step-tracking engine</a>
+  <a href="#offline">7 · Offline-first sync</a>
+  <div class="grp">Backend</div>
+  <a href="#data">8 · Data model</a>
+  <a href="#api">9 · API specification</a>
+  <a href="#leaderboards">10 · Leaderboards &amp; fairness</a>
+  <a href="#messaging">11 · Messaging &amp; realtime</a>
+  <div class="grp">Cross-cutting</div>
+  <a href="#security">12 · Security architecture</a>
+  <a href="#privacyeng">13 · Privacy engineering</a>
+  <a href="#performance">14 · Performance &amp; SLOs</a>
+  <a href="#observability">15 · Observability</a>
+  <div class="grp">Delivery</div>
+  <a href="#testing">16 · Testing strategy</a>
+  <a href="#cicd">17 · CI/CD &amp; environments</a>
+  <a href="#traceability">18 · PRD traceability</a>
+  <a href="#openq">19 · Open technical questions</a>
+</nav>
+
+<!-- ================= MAIN ================= -->
+<main>
+
+<!-- ============ COVER ============ -->
+<div class="cover" id="top">
+  <div class="kicker">Technical Specification</div>
+  <h1>Walkora — Tech Spec</h1>
+  <p class="tagline">Engineering blueprint for the Walkora PRD v1.0: an Android-first, offline-first walking app with a modular-monolith backend, trustworthy step data, fair leaderboards, and privacy engineered in — not bolted on.</p>
+  <dl class="metaTable">
+    <div><dt>Document status</dt><dd>Draft for review</dd></div>
+    <div><dt>Version</dt><dd>1.0</dd></div>
+    <div><dt>Companion</dt><dd>walkora-prd.html (PRD v1.0)</dd></div>
+    <div><dt>Scope</dt><dd>MVP → v1.2 (§18 maps epics)</dd></div>
+    <div><dt>Last updated</dt><dd>July 12, 2026</dd></div>
+    <div><dt>Owners</dt><dd>Engineering · Security · SRE</dd></div>
+  </dl>
+</div>
+
+<!-- ============ 1 OVERVIEW ============ -->
+<section class="doc" id="overview">
+  <div class="card">
+    <div class="kicker">Section 1</div>
+    <h2>Overview &amp; engineering principles</h2>
+    <p>This document specifies <em>how</em> Walkora is built. Product behaviour, priorities, and release phasing are owned by the PRD; every design below cites the PRD requirement IDs it implements (e.g. <code>TRK-05</code>). Where the PRD leaves a decision open (§19 of the PRD), this spec states the working assumption and flags it in §19 here.</p>
+    <div class="grid3">
+      <div class="mini"><h4>Offline-first, always</h4><p>The phone is the primary tracker and must work with no network and no account. Every read hits local storage first; every mutation goes through a durable outbox. The server is a synchronization and social layer, not a dependency for core value. (ACC-01, TRK-03)</p></div>
+      <div class="mini"><h4>Trust the number</h4><p>Every displayed total is explainable: which source, when synced, how conflicts were resolved. Dedup and timezone logic are pure, exhaustively unit-tested functions. (TRK-04, TRK-06, WBL-04)</p></div>
+      <div class="mini"><h4>Server-side authority</h4><p>The client renders; the server decides. Authorization, rate limits, fairness checks, and privacy filters run server-side on every protected operation — client checks are UX, never security. (PRD §13)</p></div>
+      <div class="mini"><h4>Boring at MVP, ready to scale</h4><p>A modular monolith with enforced module boundaries ships fastest and can be split later along the same seams. No microservices, no event bus, no Kubernetes until a measured need exists. (ADR-02)</p></div>
+      <div class="mini"><h4>Privacy as architecture</h4><p>Data minimization, purpose-scoped tables, consent records, and export/deletion pipelines are schema-level concerns designed before the first social feature ships. (PRD §13)</p></div>
+      <div class="mini"><h4>Accessibility is a gate</h4><p>TalkBack, font scaling, and contrast checks run in CI; a release that regresses them does not ship. (PRD §12)</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 ARCHITECTURE ============ -->
+<section class="doc" id="architecture">
+  <div class="card">
+    <div class="kicker">Section 2</div>
+    <h2>System architecture</h2>
+    <p>One Android client, one backend deployable (modular monolith), one relational source of truth. Health Connect is the on-device aggregation layer for wearable data (WBL-01); the backend never talks to wearable vendors at MVP.</p>
+    <div class="diagram" role="img" aria-label="System context diagram. On the device: Compose UI talks to ViewModels, which talk to repositories backed by Room and DataStore; a tracking service reads the step sensor and Health Connect; a sync engine with an outbox talks over HTTPS to the backend API gateway. The backend modular monolith contains identity, activity, social, messaging, and moderation modules, backed by PostgreSQL, Redis, and object storage. Firebase Cloud Messaging delivers push to the device; Google identity is used for sign-in.">
+      <svg viewBox="0 0 900 470" width="900">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="var(--ink-3)"/>
+          </marker>
+        </defs>
+        <!-- DEVICE group -->
+        <rect x="12" y="14" width="360" height="440" class="dgrp" rx="14"/>
+        <text x="28" y="38" class="dgt">ANDROID DEVICE</text>
+        <rect x="30" y="52" width="150" height="52" class="dbox" rx="10"/>
+        <text x="105" y="74" text-anchor="middle" class="dlbl">Compose UI</text>
+        <text x="105" y="90" text-anchor="middle" class="dsub">Material 3 · single activity</text>
+        <rect x="200" y="52" width="150" height="52" class="dbox" rx="10"/>
+        <text x="275" y="74" text-anchor="middle" class="dlbl">ViewModels</text>
+        <text x="275" y="90" text-anchor="middle" class="dsub">UDF · StateFlow</text>
+        <rect x="30" y="136" width="320" height="56" class="dbox dboxB" rx="10"/>
+        <text x="190" y="158" text-anchor="middle" class="dlbl">Repositories (offline-first)</text>
+        <text x="190" y="176" text-anchor="middle" class="dsub">read: Room → UI · write: Room + outbox → sync</text>
+        <rect x="30" y="222" width="150" height="56" class="dbox" rx="10"/>
+        <text x="105" y="244" text-anchor="middle" class="dlbl">Room · DataStore</text>
+        <text x="105" y="262" text-anchor="middle" class="dsub">SQLite · Proto prefs</text>
+        <rect x="200" y="222" width="150" height="56" class="dbox" rx="10"/>
+        <text x="275" y="244" text-anchor="middle" class="dlbl">Sync engine</text>
+        <text x="275" y="262" text-anchor="middle" class="dsub">WorkManager · outbox</text>
+        <rect x="30" y="308" width="150" height="56" class="dbox" rx="10"/>
+        <text x="105" y="330" text-anchor="middle" class="dlbl">Tracking service</text>
+        <text x="105" y="348" text-anchor="middle" class="dsub">STEP_COUNTER · batching</text>
+        <rect x="200" y="308" width="150" height="56" class="dbox" rx="10"/>
+        <text x="275" y="330" text-anchor="middle" class="dlbl">Health Connect</text>
+        <text x="275" y="348" text-anchor="middle" class="dsub">wearables · Samsung/Garmin…</text>
+        <rect x="30" y="392" width="320" height="44" class="dbox" rx="10"/>
+        <text x="190" y="410" text-anchor="middle" class="dlbl">Keystore · EncryptedStorage</text>
+        <text x="190" y="426" text-anchor="middle" class="dsub">tokens, biometric app lock (ACC-07)</text>
+        <!-- arrows device -->
+        <path d="M180 78 H198" class="darr"/>
+        <path d="M275 106 V134" class="darr"/>
+        <path d="M105 194 V220" class="darr"/>
+        <path d="M275 194 V220" class="darr"/>
+        <path d="M105 306 V280" class="darr"/>
+        <path d="M275 306 V280" class="darr"/>
+
+        <!-- BACKEND group -->
+        <rect x="470" y="14" width="418" height="330" class="dgrp" rx="14"/>
+        <text x="486" y="38" class="dgt">BACKEND · ONE DEPLOYABLE (MODULAR MONOLITH)</text>
+        <rect x="488" y="52" width="382" height="46" class="dbox dboxB" rx="10"/>
+        <text x="679" y="72" text-anchor="middle" class="dlbl">API gateway layer</text>
+        <text x="679" y="88" text-anchor="middle" class="dsub">TLS · authn · rate limits · idempotency · problem+json</text>
+        <rect x="488" y="118" width="118" height="50" class="dbox" rx="10"/>
+        <text x="547" y="139" text-anchor="middle" class="dlbl">Identity</text>
+        <text x="547" y="155" text-anchor="middle" class="dsub">OIDC · sessions</text>
+        <rect x="620" y="118" width="118" height="50" class="dbox" rx="10"/>
+        <text x="679" y="139" text-anchor="middle" class="dlbl">Activity</text>
+        <text x="679" y="155" text-anchor="middle" class="dsub">ingest · dedup</text>
+        <rect x="752" y="118" width="118" height="50" class="dbox" rx="10"/>
+        <text x="811" y="139" text-anchor="middle" class="dlbl">Social</text>
+        <text x="811" y="155" text-anchor="middle" class="dsub">friends · boards</text>
+        <rect x="488" y="182" width="118" height="50" class="dbox" rx="10"/>
+        <text x="547" y="203" text-anchor="middle" class="dlbl">Messaging</text>
+        <text x="547" y="219" text-anchor="middle" class="dsub">WS · fan-out</text>
+        <rect x="620" y="182" width="118" height="50" class="dbox" rx="10"/>
+        <text x="679" y="203" text-anchor="middle" class="dlbl">Moderation</text>
+        <text x="679" y="219" text-anchor="middle" class="dsub">reports · audit</text>
+        <rect x="752" y="182" width="118" height="50" class="dbox" rx="10"/>
+        <text x="811" y="203" text-anchor="middle" class="dlbl">Privacy</text>
+        <text x="811" y="219" text-anchor="middle" class="dsub">export · deletion</text>
+        <rect x="488" y="256" width="118" height="66" class="dbox" rx="10"/>
+        <text x="547" y="280" text-anchor="middle" class="dlbl">PostgreSQL 16</text>
+        <text x="547" y="296" text-anchor="middle" class="dsub">source of truth</text>
+        <text x="547" y="310" text-anchor="middle" class="dsub">partitioned activity</text>
+        <rect x="620" y="256" width="118" height="66" class="dbox" rx="10"/>
+        <text x="679" y="280" text-anchor="middle" class="dlbl">Redis</text>
+        <text x="679" y="296" text-anchor="middle" class="dsub">boards (ZSET) · rate</text>
+        <text x="679" y="310" text-anchor="middle" class="dsub">limits · ws presence</text>
+        <rect x="752" y="256" width="118" height="66" class="dbox" rx="10"/>
+        <text x="811" y="280" text-anchor="middle" class="dlbl">Object storage</text>
+        <text x="811" y="296" text-anchor="middle" class="dsub">avatars · group img</text>
+        <text x="811" y="310" text-anchor="middle" class="dsub">export bundles</text>
+        <path d="M679 98 V116" class="darr"/>
+        <path d="M547 232 V254" class="darr"/>
+        <path d="M679 232 V254" class="darr"/>
+        <path d="M811 232 V254" class="darr"/>
+
+        <!-- EXTERNAL -->
+        <rect x="470" y="372" width="196" height="62" class="dbox" rx="10"/>
+        <text x="568" y="396" text-anchor="middle" class="dlbl">Firebase Cloud Messaging</text>
+        <text x="568" y="412" text-anchor="middle" class="dsub">push: goals, social, security (NTF)</text>
+        <rect x="692" y="372" width="196" height="62" class="dbox" rx="10"/>
+        <text x="790" y="396" text-anchor="middle" class="dlbl">Google Identity</text>
+        <text x="790" y="412" text-anchor="middle" class="dsub">Sign in with Google (ACC-02)</text>
+
+        <!-- cross arrows -->
+        <path d="M352 164 H466 V75 H486" class="darr"/>
+        <text x="415" y="152" class="dnote" text-anchor="middle">HTTPS/1.1+2 · JSON</text>
+        <text x="415" y="176" class="dnote" text-anchor="middle">WSS (chat)</text>
+        <path d="M568 372 V348 H420 V196 H372" class="darr" opacity=".85"/>
+        <text x="452" y="340" class="dnote" text-anchor="middle">push</text>
+        <path d="M790 372 V352 H878 V90 H872" class="darr" opacity=".85"/>
+      </svg>
+    </div>
+    <p class="digCap">Fig 1 — System context. One client, one deployable, one relational source of truth.</p>
+    <h3 style="margin-top:22px">Architecture rules</h3>
+    <ul class="checks">
+      <li>Backend modules communicate only through in-process interfaces — no shared table writes across modules</li>
+      <li>Module seams (identity / activity / social / messaging / moderation / privacy) are the future service boundaries</li>
+      <li>All external I/O behind interfaces; vendors (FCM, object storage) swappable</li>
+      <li>Every protected route re-checks authorization server-side (PRD §13)</li>
+      <li>Feature flags are server-driven config, evaluated per user (WBL-06, GRP-01)</li>
+      <li>Client works fully with no network: reads never block on HTTP</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 3 STACK ============ -->
+<section class="doc" id="stack">
+  <div class="card">
+    <div class="kicker">Section 3</div>
+    <h2>Technology stack</h2>
+    <p>Chosen for team velocity, hiring pool, and operational simplicity. Full rationale and rejected alternatives in §4.</p>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>Layer</th><th>Choice</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Android language / UI</td><td>Kotlin 2.x · Jetpack Compose · Material 3</td><td>Single-activity; dynamic colour off (brand palette per PRD §19-13)</td></tr>
+          <tr><td>Client architecture</td><td>MVVM with unidirectional data flow</td><td>StateFlow state, sealed-interface events; multi-module by feature</td></tr>
+          <tr><td>DI</td><td>Hilt</td><td>Compile-time graph; test doubles per module</td></tr>
+          <tr><td>Local persistence</td><td>Room (SQLite) + Proto DataStore</td><td>Room = activity/history/outbox; DataStore = prefs; Keystore-backed encrypted storage for tokens</td></tr>
+          <tr><td>Background work</td><td>WorkManager + <code>TYPE_STEP_COUNTER</code> sensor batching</td><td>No persistent foreground service on modern APIs; boot receiver re-arms (TRK-01)</td></tr>
+          <tr><td>Health data</td><td>Health Connect SDK</td><td>Preferred aggregation layer (WBL-01); read-only steps/distance at MVP</td></tr>
+          <tr><td>Networking</td><td>Retrofit + OkHttp + kotlinx.serialization</td><td>OkHttp WebSocket for chat; certificate pinning for api.walkora.app</td></tr>
+          <tr><td>Backend</td><td>Kotlin · Spring Boot 3 · JVM 21</td><td>One deployable, modular monolith (ADR-02); virtual threads for I/O</td></tr>
+          <tr><td>Primary datastore</td><td>PostgreSQL 16</td><td>Monthly-partitioned activity tables; row-level soft-delete + purge jobs</td></tr>
+          <tr><td>Cache / realtime state</td><td>Redis 7</td><td>Leaderboard ZSETs, rate-limit buckets, WS presence, idempotency keys</td></tr>
+          <tr><td>Object storage</td><td>S3-compatible</td><td>Avatars, group images (scanned on upload), export bundles (signed URLs)</td></tr>
+          <tr><td>Auth</td><td>OIDC (Google) + email/password (Argon2id)</td><td>15-min JWT access + rotating refresh; server session registry (ACC-04)</td></tr>
+          <tr><td>Push</td><td>Firebase Cloud Messaging</td><td>Data messages; client renders per NTF category prefs</td></tr>
+          <tr><td>Observability</td><td>OpenTelemetry → managed backend · Crashlytics</td><td>Traces, RED metrics, structured logs; §15</td></tr>
+          <tr><td>CI/CD</td><td>GitHub Actions · Gradle · Play staged rollout</td><td>§17; infra as code (Terraform)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px"><strong>Working assumption — minimum SDK:</strong> <code>minSdk 26</code> (Android 8.0), pending the PRD §19 decision. Health Connect requires the companion app below API 34 and is built-in from 34; devices without it fall back to the phone sensor with clear messaging (WBL-05).</p>
+  </div>
+</section>
+
+<!-- ============ 4 ADRs ============ -->
+<section class="doc" id="adr">
+  <div class="card">
+    <div class="kicker">Section 4</div>
+    <h2>Architecture decision records</h2>
+    <p>Each record states the decision, the alternatives seriously considered, and why. Statuses always pair an icon with a label.</p>
+    <div id="adrList"></div>
+  </div>
+</section>
+
+<!-- ============ 5 CLIENT ============ -->
+<section class="doc" id="client">
+  <div class="card">
+    <div class="kicker">Section 5</div>
+    <h2>Android client architecture</h2>
+    <p>Multi-module Gradle build: features compile against small core APIs, so tracking logic never depends on social code and MVP modules ship without v1.2 code paths.</p>
+    <div class="codeCard"><div class="codeHead">module graph<button class="copy">Copy</button></div><pre><code>:app                          // single activity, navigation graph, DI wiring
+:core:designsystem            // theme, components, a11y helpers
+:core:data                    // repositories, Room, DataStore, outbox
+:core:network                 // Retrofit/OkHttp, DTOs, auth interceptor
+:core:tracking                // sensor pipeline, Health Connect adapter, dedup
+:core:sync                    // WorkManager jobs, cursor sync, backoff policy
+:feature:onboarding           // ONB epic
+:feature:today                // DSH epic
+:feature:progress             // HIS epic
+:feature:goals                // GOL epic
+:feature:community            // FRD + LDB epics (v1.1)
+:feature:groups               // GRP + CHL epics (v1.2)
+:feature:messages             // MSG epic (v1.2)
+:feature:profile              // PRO + SET + ACC epics</code></pre></div>
+    <div class="two" style="margin-top:18px">
+      <div>
+        <h3>Unidirectional data flow</h3>
+        <ul>
+          <li><strong>UI</strong> observes a single immutable <code>UiState</code> per screen via <code>StateFlow</code>.</li>
+          <li><strong>ViewModel</strong> reduces user events + repository flows into state; no Android framework types below the ViewModel.</li>
+          <li><strong>Repositories</strong> expose <code>Flow</code>s backed by Room. Network results land in Room first, then flow to UI — the UI never renders a network response directly.</li>
+          <li>Every screen state is one of <code>Loading / Content / Empty / Error / PermissionDenied / Offline</code> — the explicit-states requirement (DSH-04) is a type, not a convention.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>App-level services</h3>
+        <ul>
+          <li><strong>PermissionCoordinator</strong> — owns the explain-then-ask flow and denial recovery deep links (ONB-02/03).</li>
+          <li><strong>StateBroadcaster</strong> — sync/source status shown wherever a total appears (TRK-06).</li>
+          <li><strong>NotificationRouter</strong> — maps FCM data messages to Android channels; one channel per NTF category so OS-level toggles mirror in-app prefs (NTF-01).</li>
+          <li><strong>AppLock</strong> — optional BiometricPrompt gate; keys in Keystore (ACC-07).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 TRACKING ============ -->
+<section class="doc" id="tracking">
+  <div class="card">
+    <div class="kicker">Section 6</div>
+    <h2>Step-tracking engine</h2>
+    <p>The hardest correctness problem in the product. The design separates <em>capture</em> (cheap, dumb, lossless) from <em>interpretation</em> (pure functions, exhaustively tested).</p>
+    <h3>Capture pipeline</h3>
+    <ul>
+      <li><code>TYPE_STEP_COUNTER</code> is a monotonic since-boot counter. The agent persists <code>(boot_id, counter_value, elapsed_realtime, wall_clock, tz_offset)</code> snapshots — raw, never interpreted at capture time.</li>
+      <li>Sensor batching (<code>maxReportLatencyUs</code> ≈ 5 min) lets the SoC buffer while the AP sleeps — the battery requirement (TRK-01) is met by hardware, not by a foreground service.</li>
+      <li><code>BOOT_COMPLETED</code> + <code>TIME_SET</code>/<code>TIMEZONE_CHANGED</code> receivers write marker rows so interpretation can detect counter resets and clock changes (PRD §15 data-quality list).</li>
+      <li>Health Connect is polled by a periodic worker (15 min, constraint-free) and on app open; imports store provenance per record (WBL-02/04).</li>
+    </ul>
+    <h3>Interpretation: day bucketing &amp; dedup</h3>
+    <ul>
+      <li>Snapshots become <strong>intervals</strong>: <code>(source, start_utc, end_utc, steps, tz_offset_at_end)</code>. A counter delta across a boot marker is discarded (reset) — steps are never invented.</li>
+      <li>A day total is the sum of intervals bucketed by <strong>local date at the user's timezone when the interval ended</strong> — midnight rollover and DST fall out of bucketing rather than special cases (TRK-02).</li>
+      <li><strong>Dedup rule (WBL-04):</strong> for any overlapping time range covered by more than one source, only the highest-priority source counts. Priority is user-ordered (default: wearable via Health Connect &gt; phone sensor). Overlaps are resolved by interval subtraction — never by summing, never by max().</li>
+      <li>Each stored day total keeps per-source contributions so the UI can answer "where did this number come from?" (TRK-06).</li>
+    </ul>
+    <div class="codeCard"><div class="codeHead">dedup — pure function, property-tested<button class="copy">Copy</button></div><pre><code>fun mergeDay(intervals: List&lt;Interval&gt;, priority: List&lt;SourceId&gt;): DayTotal {
+    // 1. sort sources by user priority; higher priority claims time first
+    // 2. sweep-line over the day: each instant is owned by exactly one source
+    // 3. an interval's steps are distributed uniformly across its duration;
+    //    only the owned sub-ranges contribute (partial overlap ⇒ pro-rated)
+    // 4. result: total + per-source breakdown + list of resolved conflicts
+    //    (surfaced in UI as "12:00–13:00 counted from Watch, not Phone")
+}
+
+// Invariants (property tests):
+//  • mergeDay(single source)      == sum of its intervals
+//  • total ≤ sum of all sources   (dedup never inflates)
+//  • reordering priority never changes the covered time, only the owner
+//  • intervals crossing local midnight split exactly at the boundary</code></pre></div>
+    <h3>Zero-step diagnostics (TRK-05)</h3>
+    <p>The diagnostics engine evaluates ordered predicates and returns the <em>first failing cause</em>, each mapping to specific UI guidance:</p>
+    <div class="tblWrap"><table>
+      <thead><tr><th>#</th><th>Check</th><th>Signal</th><th>User guidance</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Activity permission granted?</td><td><code>checkSelfPermission</code></td><td>Explain + deep link to grant (ONB-03)</td></tr>
+        <tr><td>2</td><td>Sensor available?</td><td><code>getDefaultSensor == null</code></td><td>Unsupported-device guidance; offer Health Connect (WBL-05)</td></tr>
+        <tr><td>3</td><td>Battery restriction active?</td><td><code>isBackgroundRestricted</code> / OEM heuristics</td><td>Targeted battery-settings guidance (ONB-07)</td></tr>
+        <tr><td>4</td><td>Selected source disconnected?</td><td>Health Connect permission/state</td><td>Reconnect flow</td></tr>
+        <tr><td>5</td><td>Wearable sync stale?</td><td>HC record freshness vs threshold</td><td>“Open your watch app to sync” + last-sync time</td></tr>
+        <tr><td>6</td><td>Server sync delayed?</td><td>outbox age / last pull cursor</td><td>Sync-pending badge; manual refresh (TRK-07)</td></tr>
+        <tr><td>7</td><td>None of the above</td><td>—</td><td>“No steps recorded yet today” — an honest zero</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ 7 OFFLINE SYNC ============ -->
+<section class="doc" id="offline">
+  <div class="card">
+    <div class="kicker">Section 7</div>
+    <h2>Offline-first synchronization</h2>
+    <p>Two independent channels: a <strong>push channel</strong> (durable outbox of local mutations) and a <strong>pull channel</strong> (cursor-based delta download). Either can run without the other; both are idempotent and safe to retry.</p>
+    <div class="two">
+      <div>
+        <h3>Outbox (push)</h3>
+        <ul>
+          <li>Every local mutation writes its domain row <em>and</em> an outbox row in one Room transaction — atomically durable before any network attempt.</li>
+          <li>Each outbox entry carries a client-generated UUID used as the <code>Idempotency-Key</code>; server retries are exact-once in effect.</li>
+          <li>Drained FIFO per entity stream by a WorkManager unique worker; exponential backoff with jitter, network constraint, chunked batches.</li>
+          <li>Guest mode simply never schedules the worker; on registration the accumulated outbox becomes the history-migration upload (ACC-03).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Cursor sync (pull)</h3>
+        <ul>
+          <li><code>GET /v1/sync?cursor=…</code> returns ordered change events across entities + next cursor; the client applies them transactionally and persists the cursor.</li>
+          <li>Server keeps a per-user monotonically ordered change log (Postgres <code>bigserial</code> per user stream) — cheap, replayable, no CRDTs needed.</li>
+          <li>Conflict policy: activity data merges via the §6 dedup (device data always wins over stale server state); settings/profile are last-write-wins per field with server timestamps; social state (friendships, memberships) is server-authoritative — the client never resolves it locally.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="diagram" style="margin-top:16px" role="img" aria-label="Sequence diagram of daily sync. The sensor agent persists snapshots to Room. The sync worker reads the outbox, sends a batch to the API with an idempotency key. The activity module validates and runs dedup, writes to PostgreSQL, enqueues a leaderboard update to Redis, and returns accepted per-record results. The worker marks outbox entries done, then pulls changes since its cursor and applies them to Room, which updates the UI reactively.">
+      <svg viewBox="0 0 880 330" width="880">
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="var(--ink-2)"/>
+          </marker>
+        </defs>
+        <!-- lifelines -->
+        <g text-anchor="middle">
+          <rect x="20"  y="14" width="120" height="30" class="dbox" rx="8"/><text x="80"  y="34" class="seqhead">Sensor agent</text>
+          <rect x="170" y="14" width="120" height="30" class="dbox" rx="8"/><text x="230" y="34" class="seqhead">Room (+outbox)</text>
+          <rect x="320" y="14" width="120" height="30" class="dbox" rx="8"/><text x="380" y="34" class="seqhead">Sync worker</text>
+          <rect x="490" y="14" width="130" height="30" class="dbox" rx="8"/><text x="555" y="34" class="seqhead">API · Activity</text>
+          <rect x="650" y="14" width="100" height="30" class="dbox" rx="8"/><text x="700" y="34" class="seqhead">Postgres</text>
+          <rect x="770" y="14" width="90" height="30" class="dbox" rx="8"/><text x="815" y="34" class="seqhead">Redis</text>
+        </g>
+        <g>
+          <line x1="80"  y1="44" x2="80"  y2="316" class="lane"/>
+          <line x1="230" y1="44" x2="230" y2="316" class="lane"/>
+          <line x1="380" y1="44" x2="380" y2="316" class="lane"/>
+          <line x1="555" y1="44" x2="555" y2="316" class="lane"/>
+          <line x1="700" y1="44" x2="700" y2="316" class="lane"/>
+          <line x1="815" y1="44" x2="815" y2="316" class="lane"/>
+        </g>
+        <!-- messages -->
+        <g>
+          <line x1="80" y1="72" x2="228" y2="72" class="seqmsg"/>
+          <text x="86" y="66" class="seqtxt"><tspan class="seqnum">1 </tspan>batched counter snapshots (tx: row + outbox)</text>
+
+          <line x1="230" y1="106" x2="378" y2="106" class="seqmsg"/>
+          <text x="236" y="100" class="seqtxt"><tspan class="seqnum">2 </tspan>drain outbox (FIFO, unique worker)</text>
+
+          <line x1="380" y1="140" x2="553" y2="140" class="seqmsg"/>
+          <text x="386" y="134" class="seqtxt"><tspan class="seqnum">3 </tspan>POST /v1/activity:batch · Idempotency-Key</text>
+
+          <line x1="555" y1="174" x2="698" y2="174" class="seqmsg"/>
+          <text x="561" y="168" class="seqtxt"><tspan class="seqnum">4 </tspan>validate → dedup → upsert day totals</text>
+
+          <line x1="555" y1="204" x2="813" y2="204" class="seqmsg"/>
+          <text x="561" y="198" class="seqtxt"><tspan class="seqnum">5 </tspan>enqueue board score update (async)</text>
+
+          <line x1="553" y1="232" x2="382" y2="232" class="seqret"/>
+          <text x="392" y="226" class="seqtxt"><tspan class="seqnum">6 </tspan>207-style per-record results → mark outbox done</text>
+
+          <line x1="380" y1="266" x2="553" y2="266" class="seqmsg"/>
+          <text x="386" y="260" class="seqtxt"><tspan class="seqnum">7 </tspan>GET /v1/sync?cursor=c₄₂</text>
+
+          <line x1="553" y1="296" x2="232" y2="296" class="seqret"/>
+          <text x="240" y="290" class="seqtxt"><tspan class="seqnum">8 </tspan>changes + next cursor → apply tx → UI flows update</text>
+        </g>
+      </svg>
+    </div>
+    <p class="digCap">Fig 2 — Daily sync round-trip. Steps 1–2 work with no network; 3–8 run whenever connectivity allows.</p>
+  </div>
+</section>
+
+<!-- ============ 8 DATA MODEL ============ -->
+<section class="doc" id="data">
+  <div class="card">
+    <div class="kicker">Section 8</div>
+    <h2>Data model</h2>
+    <p>Server schema (PostgreSQL). The client mirrors the activity/goal/profile subset in Room with the same shapes plus outbox metadata. Conventions: UUIDv7 primary keys, <code>created_at/updated_at</code> everywhere, soft-delete (<code>deleted_at</code>) only where retention requires it, hard purge jobs otherwise.</p>
+    <div id="entityList"></div>
+    <h3 style="margin-top:20px">Schema notes</h3>
+    <ul class="checks">
+      <li><code>activity_days</code> is range-partitioned by month; hot queries hit ≤ 2 partitions</li>
+      <li>Per-source contributions kept alongside merged totals — “which source?” is one row read (TRK-06)</li>
+      <li>Consent, sessions, and audit are append-only; corrections are new rows, never updates</li>
+      <li>Contact-discovery hashes live in a purpose-scoped table with a TTL — never in <code>users</code> (FRD-02)</li>
+      <li>All foreign keys to <code>users</code> are <code>ON DELETE</code> handled by the deletion pipeline (§13), not by cascade surprises</li>
+      <li>Messages are stored per conversation partition; report/moderation state references messages by immutable ID</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 9 API ============ -->
+<section class="doc" id="api">
+  <div class="card">
+    <div class="kicker">Section 9</div>
+    <h2>API specification</h2>
+    <p>REST + JSON over TLS, versioned under <code>/v1</code>. Errors are RFC 9457 <code>application/problem+json</code>. Cursor pagination (<code>?cursor=…&amp;limit=…</code>) everywhere lists are returned. All mutating requests accept an <code>Idempotency-Key</code>; keys are cached in Redis for 24 h. Rate limits are token buckets per user + IP, returned in <code>RateLimit-*</code> headers.</p>
+    <div class="codeCard"><div class="codeHead">example — activity batch ingest<button class="copy">Copy</button></div><pre><code>POST /v1/activity:batch
+Authorization: Bearer &lt;access-token&gt;
+Idempotency-Key: 018f3c2a-9a7e-7cc1-b1c5-3d1f2f6a7b1e
+
+{ "records": [ { "clientId": "018f3c2a-…", "source": "phone_sensor",
+    "startUtc": "2026-07-12T06:10:00Z", "endUtc": "2026-07-12T06:42:00Z",
+    "steps": 2412, "tzOffsetMin": -240 } ] }
+
+HTTP/1.1 200 OK
+{ "results": [ { "clientId": "018f3c2a-…", "status": "accepted",
+    "dayLocal": "2026-07-12", "mergedDayTotal": 7432,
+    "conflicts": [ { "range": "06:10–06:42", "countedFrom": "watch_hc",
+                     "suppressed": "phone_sensor" } ] } ],
+  "fairness": { "flagged": false } }</code></pre></div>
+  </div>
+  <div class="filters" role="search" aria-label="Filter API endpoints" style="margin-top:16px">
+    <input type="search" id="apiSearch" placeholder="Filter endpoints… (press /)" aria-label="Filter endpoints by text">
+    <div class="seg" role="group" aria-label="Filter by domain" id="domSeg">
+      <button aria-pressed="true" data-v="">All</button>
+      <button aria-pressed="false" data-v="Auth">Auth</button>
+      <button aria-pressed="false" data-v="Activity">Activity</button>
+      <button aria-pressed="false" data-v="Social">Social</button>
+      <button aria-pressed="false" data-v="Groups">Groups</button>
+      <button aria-pressed="false" data-v="Messaging">Messaging</button>
+      <button aria-pressed="false" data-v="Privacy">Privacy</button>
+    </div>
+    <span id="apiCount" aria-live="polite"></span>
+  </div>
+  <div id="apiList"></div>
+</section>
+
+<!-- ============ 10 LEADERBOARDS ============ -->
+<section class="doc" id="leaderboards">
+  <div class="card">
+    <div class="kicker">Section 10</div>
+    <h2>Leaderboards, ranking modes &amp; fairness</h2>
+    <p>Boards are materialized in Redis sorted sets and rebuilt from Postgres on demand — Redis is a cache, never the source of truth.</p>
+    <h3>Score computation (LDB-02)</h3>
+    <div class="tblWrap"><table>
+      <thead><tr><th>Mode</th><th>Score formula</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Goal % (default)</td><td><code>min(steps / goal, 2.0)</code> summed over period days ÷ eligible days</td><td>Capped at 200% per day so one huge day can't buy a week; rest days excluded from the denominator (GOL-03)</td></tr>
+        <tr><td>Steps</td><td>Σ merged day totals</td><td>Classic mode, opt-in view</td></tr>
+        <tr><td>Consistency</td><td>goal-met days ÷ eligible days</td><td>Rest-day aware</td></tr>
+        <tr><td>Most improved</td><td>(this period − previous period) ÷ max(previous, floor)</td><td>Floor prevents division-by-tiny; new users need one full baseline period</td></tr>
+        <tr><td>Active days</td><td>count(days ≥ activity threshold)</td><td>Threshold configurable per board</td></tr>
+        <tr><td>Team average</td><td>mean of member goal-% scores</td><td>Group/challenge team mode; joins mid-period pro-rate</td></tr>
+      </tbody>
+    </table></div>
+    <h3 style="margin-top:20px">Privacy &amp; virtual participants</h3>
+    <ul>
+      <li>Board reads run through a server-side privacy filter: opt-outs removed, approximate-visibility users bucketed (“~5,000–7,500”) before serialization (LDB-03, PRO-03). The raw value never leaves the server for a user who chose approximate display.</li>
+      <li>Virtual companions (LDB-05) are server-generated series with a deterministic daily curve per pace setting; rows carry <code>isVirtual: true</code> and clients must render the label — the API never disguises them.</li>
+    </ul>
+    <h3>Fairness pipeline (LDB-07, CHL-04)</h3>
+    <ul>
+      <li><strong>Ingest checks (synchronous):</strong> reject impossible records — negative or absurd step counts (&gt; 5 steps/second sustained), future timestamps, overlapping same-source intervals.</li>
+      <li><strong>Pattern checks (async):</strong> daily totals over a configurable ceiling (default 60k), constant-cadence signatures, step bursts while the device reports stationary, repeated manual clock changes around challenge windows.</li>
+      <li>Flagged data stays in the owner's personal history but is <strong>excluded from boards and challenge standings</strong> pending review (“pending verification” badge). Review actions (clear / exclude / sanction) are audited; disputes follow the §13 corrections workflow.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 11 MESSAGING ============ -->
+<section class="doc" id="messaging">
+  <div class="card">
+    <div class="kicker">Section 11</div>
+    <h2>Messaging &amp; realtime</h2>
+    <div class="two">
+      <div>
+        <h3>Transport</h3>
+        <ul>
+          <li>One authenticated WebSocket per app session (<code>WS /v1/ws</code>), multiplexing chat, presence, and live challenge standings. Tokens are re-validated on connect and on a 10-min heartbeat.</li>
+          <li>Offline recipients get FCM data pushes; message history back-fills over the §7 cursor sync — <strong>the socket is an optimization, never the source of truth</strong>.</li>
+          <li>Delivery: at-least-once with client-side dedup on message UUID; ordering per conversation via server sequence numbers.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Safety at the write path (MSG-02/03/04)</h3>
+        <ul>
+          <li>Rate limits enforced <em>before</em> persistence: per-user, per-conversation, and burst buckets in Redis; violations return <code>429 problem+json</code> with retry hints.</li>
+          <li>Block lists are checked at send time server-side — a blocked sender's message is rejected, not hidden client-side.</li>
+          <li>Reports snapshot the message content immutably at report time (edits/deletes can't destroy evidence); moderation actions write to the append-only audit log with actor, action, policy basis.</li>
+          <li>Text-only at launch: no media in chat = no CSAM/image-abuse surface until moderation capacity exists (PRD §19-7).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 SECURITY ============ -->
+<section class="doc" id="security">
+  <div class="card">
+    <div class="kicker">Section 12</div>
+    <h2>Security architecture</h2>
+    <div class="grid3">
+      <div class="mini"><h4>Authentication</h4><p>Sign in with Google (OIDC, nonce-bound) and email/password (Argon2id, breach-list check, verification required). Access JWT 15 min · refresh tokens rotate on every use with reuse detection → family revocation. Sessions registry backs “sign out all devices” (ACC-04). Enumeration-safe responses on register/recover.</p></div>
+      <div class="mini"><h4>Authorization</h4><p>Every route declares a policy: resource ownership, friendship visibility, group role (member/moderator/admin), or platform-admin scope. Policies are unit-tested as a matrix; a route without a declared policy fails CI. Platform-admin actions require step-up auth and are fully audited (PRD §7.5).</p></div>
+      <div class="mini"><h4>Transport &amp; storage</h4><p>TLS 1.2+ only, HSTS, certificate pinning in the client. At rest: full-disk + column-level encryption for tokens and consent evidence. Client tokens in Keystore-backed encrypted storage; no secrets in SharedPreferences or logs.</p></div>
+      <div class="mini"><h4>Input &amp; upload safety</h4><p>Strict schema validation at the boundary (unknown fields rejected on writes); output encoding by serializer. Image uploads: type sniffing, re-encode to strip EXIF/GPS, dimension caps, malware scan before publish (PRD §13 file-upload controls).</p></div>
+      <div class="mini"><h4>Abuse resistance</h4><p>Layered rate limits (IP → user → action). Friend-request and invite throttles. Idempotency keys prevent replay double-writes. WAF-level bot rules on auth endpoints. Suspicious-activity signals feed the §10 fairness pipeline and the trust-and-safety queue.</p></div>
+      <div class="mini"><h4>Supply chain &amp; secrets</h4><p>Dependency scanning + Renovate auto-PRs; SAST on every PR; secrets only in the cloud secret manager, rotated, never in the repo; signed releases with Play integrity checks. Third-party licence audit per release (SET-04).</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 PRIVACY ENGINEERING ============ -->
+<section class="doc" id="privacyeng">
+  <div class="card">
+    <div class="kicker">Section 13</div>
+    <h2>Privacy engineering</h2>
+    <div class="two">
+      <div>
+        <h3>Consent &amp; minimization</h3>
+        <ul>
+          <li>Consent records are append-only rows: <code>(user, purpose, granted, policy_version, at)</code> — the PRD's consent history (ACC-06) is a query, not a reconstruction.</li>
+          <li>Health data types are enumerated allow-list only (steps, distance at MVP); requesting a new type is a schema + review change, not a config flip.</li>
+          <li>Contact discovery (FRD-02): client hashes normalized numbers (salted, per-deployment); server matches against opted-in hashes, returns matches only, stores the uploaded set for max 24 h with a deletion endpoint. Raw contact lists never leave the device.</li>
+          <li>Analytics events pass a build-time schema linter: any event carrying free text or precise health values fails the build until reviewed (PRD §19-12).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Export &amp; deletion pipelines</h3>
+        <ul>
+          <li><strong>Export (ACC-05, HIS-07):</strong> async job assembles JSON + CSV into an object-storage bundle; signed URL, 7-day expiry, notification on ready. Includes activity, goals, achievements, profile, consent history.</li>
+          <li><strong>Deletion:</strong> two-phase — immediate soft-lock (account unusable, hidden from all social surfaces) then hard purge after a grace window (working assumption 14 days, pending PRD §19-8 retention decision). The purge worker walks a registered manifest of user-data locations; an unregistered table with a <code>user_id</code> column fails CI.</li>
+          <li>Backups age out within the retention window; deletion completion is measured (PRD §17 trust metric “export &amp; deletion completion rate = 100%”).</li>
+          <li>Messages authored by a deleted user are tombstoned (“account deleted”) to preserve conversation integrity for others — documented in the privacy notice.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14 PERFORMANCE ============ -->
+<section class="doc" id="performance">
+  <div class="card">
+    <div class="kicker">Section 14</div>
+    <h2>Performance budgets &amp; SLOs</h2>
+    <p>Budgets are release gates (§17); SLOs map one-to-one to the PRD §17 reliability metrics and are alertable in §15.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="lbl">Cold start → Today usable</div><div class="val">&lt; 1.5 s</div><div class="sub">P90, mid-tier device, from local data</div></div>
+      <div class="kpi"><div class="lbl">Tracking battery drain</div><div class="val">&lt; 1.5 %</div><div class="sub">per 24 h attributable to Walkora</div></div>
+      <div class="kpi"><div class="lbl">API latency (reads)</div><div class="val">≤ 300 ms</div><div class="sub">P95 server-side</div></div>
+      <div class="kpi"><div class="lbl">Sync success</div><div class="val">≥ 99 %</div><div class="sub">outbox drained &lt; 24 h (PRD)</div></div>
+      <div class="kpi"><div class="lbl">Chat delivery</div><div class="val">≤ 2 s</div><div class="sub">P95 online-to-online</div></div>
+      <div class="kpi"><div class="lbl">Crash-free sessions</div><div class="val">≥ 99.8 %</div><div class="sub">per release train (PRD)</div></div>
+    </div>
+    <h3>How the budgets are met</h3>
+    <ul class="checks">
+      <li>Today renders entirely from Room; network refresh is silent and diffed (no skeleton flash)</li>
+      <li>Baseline Profiles + R8; startup traced in CI with Macrobenchmark</li>
+      <li>Leaderboard reads are Redis O(log N); Postgres only on cache rebuild</li>
+      <li>Activity partitions keep day-range scans index-only</li>
+      <li>Batched ingest: one round-trip per sync, not per interval</li>
+      <li>Images served resized via CDN; avatars capped at 512px</li>
+      <li>WS fan-out sharded by conversation; no cross-node chatter at MVP scale</li>
+      <li>Load tested at 50× projected MVP traffic before each phase gate (k6)</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 15 OBSERVABILITY ============ -->
+<section class="doc" id="observability">
+  <div class="card">
+    <div class="kicker">Section 15</div>
+    <h2>Observability</h2>
+    <div class="grid3">
+      <div class="mini"><h4>Traces &amp; metrics</h4><p>OpenTelemetry SDK on client and server; trace context propagated from sync worker through ingest to Redis update. RED metrics per route; USE metrics per dependency. SLO burn-rate alerts (fast+slow windows) for every §14 target.</p></div>
+      <div class="mini"><h4>Logs</h4><p>Structured JSON, request-scoped IDs, <strong>no health values or message content in logs</strong> — a log-schema test enforces the redaction list. Client logs are local ring buffers attached to support reports only with user consent.</p></div>
+      <div class="mini"><h4>Product health</h4><p>Crashlytics for crash-free sessions; Play vitals (ANR, wakeups) watched per release. Tracking-health telemetry (sensor gaps, boot recoveries, HC availability) is aggregated and anonymous — it measures the engine, not the person.</p></div>
+    </div>
+    <p style="margin-top:8px">Dashboards ship with the feature: a PR that adds an endpoint without RED metrics and an alert rule fails review. On-call runbooks live beside the module they cover.</p>
+  </div>
+</section>
+
+<!-- ============ 16 TESTING ============ -->
+<section class="doc" id="testing">
+  <div class="card">
+    <div class="kicker">Section 16</div>
+    <h2>Testing strategy</h2>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>Layer</th><th>Tooling</th><th>What must be covered</th></tr></thead>
+        <tbody>
+          <tr><td>Pure logic (client)</td><td>JUnit 5 · kotest property tests</td><td>Dedup invariants (§6), day bucketing across DST/timezone/boot, streak &amp; rest-day rules, score formulas — the trust-critical math gets property-based coverage, not examples only</td></tr>
+          <tr><td>Persistence</td><td>Room migration tests · SQLite in CI</td><td>Every schema migration forward-tested with seeded data; outbox transactionality</td></tr>
+          <tr><td>UI</td><td>Compose UI tests · Paparazzi screenshots</td><td>All six screen states per screen (DSH-04); light/dark/high-contrast; font scale 200% without truncation (PRD §12)</td></tr>
+          <tr><td>Accessibility</td><td>Accessibility Test Framework in CI + manual TalkBack passes</td><td>Labels, focus order, touch targets; a11y regressions block release (§1 principle)</td></tr>
+          <tr><td>Backend</td><td>JUnit · Testcontainers (Postgres/Redis)</td><td>Authorization policy matrix per route; ingest validation; fairness rules; privacy filters on board reads</td></tr>
+          <tr><td>Contract</td><td>OpenAPI spec + generated client · schema diff check in CI</td><td>Breaking API change without a version bump fails the build</td></tr>
+          <tr><td>End-to-end</td><td>Managed device lab (small matrix incl. one low-RAM device)</td><td>J1–J5 journeys from the PRD §10, including permission-denial recovery and offline day</td></tr>
+          <tr><td>Load / chaos</td><td>k6 · fault injection on Redis/Postgres</td><td>50× MVP traffic; Redis loss degrades to Postgres reads, never data loss</td></tr>
+          <tr><td>Security</td><td>SAST · dependency scan · annual pentest before v1.2</td><td>Auth flows, IDOR sweeps on all resource routes, upload pipeline</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px"><strong>Field-truth testing:</strong> step-count accuracy is validated with walk protocols (pocket, hand, bag; 100/500/2000-step scripted walks) against manual counts across the device matrix each release — sensors differ per OEM and no unit test catches that.</p>
+  </div>
+</section>
+
+<!-- ============ 17 CI/CD ============ -->
+<section class="doc" id="cicd">
+  <div class="card">
+    <div class="kicker">Section 17</div>
+    <h2>CI/CD, environments &amp; release gates</h2>
+    <div class="two">
+      <div>
+        <h3>Pipeline (GitHub Actions)</h3>
+        <ol>
+          <li>PR: lint + unit + Room migrations + screenshot diff + a11y checks + SAST + API schema diff — required, &lt; 15 min</li>
+          <li>Merge to main: full suite + Macrobenchmark + backend integration (Testcontainers) → staging deploy + internal track build</li>
+          <li>Release branch: E2E device-lab run + load test + release notes → Play closed track</li>
+          <li>Production: staged rollout 1% → 10% → 50% → 100%, auto-halt on crash-free or SLO regression; backend deploys blue-green with migration gating (expand → migrate → contract)</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Environments &amp; flags</h3>
+        <ul>
+          <li><strong>dev</strong> (ephemeral per-PR backend) · <strong>staging</strong> (prod-shaped, synthetic data only) · <strong>prod</strong>. No production data in lower environments, ever.</li>
+          <li>Server-driven feature flags gate every phase feature (friends, groups, chat, providers) — v1.2 code can ship dark in the MVP binary.</li>
+          <li>Remote config carries fairness thresholds and diagnostics tuning so trust rules adjust without a release.</li>
+          <li>DB migrations are backward-compatible for one release window (expand/contract), so rollback is always possible.</li>
+        </ul>
+        <h3 style="margin-top:14px">Phase release gates (PRD §16)</h3>
+        <ul>
+          <li>P0 acceptance green · a11y verification pass · privacy checklist signed</li>
+          <li>v1.1+: abuse/rate-limit tests green; v1.2: moderation staffing + guidelines live (PRD §19-7)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18 TRACEABILITY ============ -->
+<section class="doc" id="traceability">
+  <div class="card">
+    <div class="kicker">Section 18</div>
+    <h2>PRD traceability</h2>
+    <p>Every PRD epic maps to owning spec sections; nothing in the catalog is unowned.</p>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>PRD epic</th><th>Release</th><th>Owning spec sections</th></tr></thead>
+        <tbody>
+          <tr><td><code>ONB</code> Onboarding &amp; activation</td><td><span class="pill">MVP</span></td><td>§5 (PermissionCoordinator), §6 (diagnostics)</td></tr>
+          <tr><td><code>TRK</code> Step-tracking engine</td><td><span class="pill">MVP</span></td><td>§6, §7, §14 (battery budget), §16 (field-truth)</td></tr>
+          <tr><td><code>DSH</code> Today dashboard</td><td><span class="pill">MVP</span></td><td>§5 (UDF states), §14 (cold start)</td></tr>
+          <tr><td><code>GOL</code> Goals &amp; streaks</td><td><span class="pill">MVP</span></td><td>§6 (bucketing), §8 (goals/streaks), §10 (rest-day scoring)</td></tr>
+          <tr><td><code>HIS</code> History &amp; insights</td><td><span class="pill">MVP</span></td><td>§8 (partitions), §13 (export)</td></tr>
+          <tr><td><code>ACC</code> Accounts &amp; auth</td><td><span class="pill">MVP</span></td><td>§12 (auth), §7 (guest migration), §13 (deletion)</td></tr>
+          <tr><td><code>PRO</code> Profile &amp; privacy</td><td><span class="pill">MVP</span></td><td>§8 (visibility model), §10 (privacy filter), §12</td></tr>
+          <tr><td><code>FRD</code> Friends &amp; discovery</td><td><span class="pill">v1.1</span></td><td>§9 (Social API), §13 (contact hashing), §12 (abuse)</td></tr>
+          <tr><td><code>LDB</code> Leaderboards &amp; ranking</td><td><span class="pill">v1.1</span></td><td>§10 (scores, privacy, virtual, fairness)</td></tr>
+          <tr><td><code>ACH</code> Achievements &amp; sharing</td><td><span class="pill">v1.1</span></td><td>§8 (achievements), §9 (share-card API), §12 (upload safety)</td></tr>
+          <tr><td><code>GRP</code> Groups</td><td><span class="pill">v1.2</span></td><td>§8 (groups/roles), §9 (Groups API), §12 (role authz)</td></tr>
+          <tr><td><code>CHL</code> Challenges</td><td><span class="pill">v1.2</span></td><td>§10 (modes, eligibility windows, fairness)</td></tr>
+          <tr><td><code>MSG</code> Messaging &amp; safety</td><td><span class="pill">v1.2</span></td><td>§11, §12 (rate limits), §8 (reports/audit)</td></tr>
+          <tr><td><code>NTF</code> Notifications</td><td><span class="pill">MVP</span></td><td>§5 (NotificationRouter), §9 (prefs API)</td></tr>
+          <tr><td><code>WBL</code> Wearables &amp; Health Connect</td><td><span class="pill">MVP</span></td><td>§6 (HC adapter, dedup), §8 (sources)</td></tr>
+          <tr><td><code>SET</code> Settings</td><td><span class="pill">MVP</span></td><td>§5 (DataStore), §9 (settings API), §13 (consent)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 19 OPEN QUESTIONS ============ -->
+<section class="doc" id="openq">
+  <div class="card">
+    <div class="kicker">Section 19</div>
+    <h2>Open technical questions</h2>
+    <p>Working assumptions used in this spec, awaiting the PRD §19 decisions or further validation.</p>
+    <div class="tblWrap">
+      <table>
+        <thead><tr><th>Question</th><th>Working assumption</th><th>Risk if it changes</th></tr></thead>
+        <tbody>
+          <tr><td>Minimum Android version (PRD §19-1)</td><td><code>minSdk 26</code></td><td><span class="st warn"><span class="dot"></span>! Moderate</span> — lower requires legacy sensor + notification fallbacks</td></tr>
+          <tr><td>Health Connect data types (PRD §19-3)</td><td>Steps + distance, read-only</td><td><span class="st good"><span class="dot"></span>✓ Low</span> — additive schema change</td></tr>
+          <tr><td>Retention periods (PRD §19-8)</td><td>14-day deletion grace; raw intervals 24 months, day totals indefinitely until deletion</td><td><span class="st warn"><span class="dot"></span>! Moderate</span> — partition + purge schedules must match</td></tr>
+          <tr><td>Age assurance approach (PRD §19-5)</td><td>Self-declared age gate; social features 16+</td><td><span class="st serious"><span class="dot"></span>▲ High</span> — stronger assurance changes the registration flow and data collected</td></tr>
+          <tr><td>Public groups at launch (PRD §19-6)</td><td>Invite-only only; public behind a dark flag</td><td><span class="st good"><span class="dot"></span>✓ Low</span> — flag flip + discovery index later</td></tr>
+          <tr><td>Direct provider integrations (PRD §19-4)</td><td>None at MVP; Health Connect covers vendors</td><td><span class="st warn"><span class="dot"></span>! Moderate</span> — direct OAuth ingest adds a server-side source pipeline</td></tr>
+          <tr><td>Monetization (PRD §19-11)</td><td>None modeled</td><td><span class="st warn"><span class="dot"></span>! Moderate</span> — entitlements would touch API auth and client gating</td></tr>
+          <tr><td>Analytics consent model (PRD §19-12)</td><td>Opt-in analytics, schema-linted events</td><td><span class="st good"><span class="dot"></span>✓ Low</span> — pipeline designed for either default</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <footer class="doc">
+      Walkora Technical Specification v1.0 · Draft for review · Companion to the Walkora PRD v1.0 · July 12, 2026<br>
+      Requirement IDs referenced throughout (e.g. <code>TRK-05</code>) resolve to the functional catalog in <code>walkora-prd.html</code> §7.
+    </footer>
+  </div>
+</section>
+
+</main>
+</div>
+
+<div id="tooltip" role="tooltip"></div>
+<button id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+"use strict";
+/* ============================================================ THEME */
+(function(){
+  const btn=document.getElementById("themeBtn"),order=["system","light","dark"],icons={system:"◐",light:"☀",dark:"☾"};
+  let mode=localStorage.getItem("wlk-theme")||"system";
+  const mq=matchMedia("(prefers-color-scheme: dark)");
+  function apply(){
+    const dark=mode==="dark"||(mode==="system"&&mq.matches);
+    document.documentElement.dataset.theme=dark?"dark":"light";
+    btn.textContent=icons[mode]+" Theme: "+mode[0].toUpperCase()+mode.slice(1);
+  }
+  btn.addEventListener("click",()=>{mode=order[(order.indexOf(mode)+1)%3];localStorage.setItem("wlk-theme",mode);apply();});
+  mq.addEventListener("change",apply);
+  apply();
+})();
+
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=t=>{const d=document.createElement("span");d.textContent=t;return d.innerHTML};
+
+/* ============================================================ ADR DATA */
+const ADRS=[
+{id:"ADR-01",title:"Kotlin + Jetpack Compose for the Android client",status:"Accepted",
+ body:{context:"Android-first product (PRD §20) with heavy custom UI (rings, charts, celebrations) and strict accessibility requirements.",
+ decision:"Kotlin 2.x with Jetpack Compose and Material 3, single-activity architecture.",
+ alternatives:"XML Views (mature but slower iteration, harder design-system enforcement); Flutter/KMP (cross-platform not needed for an Android-first launch; Health Connect and sensor work is deeply platform-specific).",
+ consequences:"Fast UI iteration and testable composables; requires Compose-specific performance discipline (stability, baseline profiles) covered in §14."}},
+{id:"ADR-02",title:"Modular monolith backend, not microservices",status:"Accepted",
+ body:{context:"MVP traffic is small and the team is small; PRD phases add social domains over ~3 releases.",
+ decision:"One Spring Boot deployable with enforced module boundaries (identity, activity, social, messaging, moderation, privacy). Modules interact through interfaces only; no cross-module table access (verified by architecture tests).",
+ alternatives:"Microservices from day one (operational tax, distributed transactions for zero benefit at this scale); serverless functions (poor fit for WebSockets and long-lived sync workers).",
+ consequences:"Single deploy and single database simplify operations and privacy pipelines; the module seams are the future extraction points if scale demands it."}},
+{id:"ADR-03",title:"Health Connect as the only wearable integration at MVP",status:"Accepted",
+ body:{context:"PRD WBL-01/WBL-06: Health Connect preferred; direct vendor integrations need separate validation.",
+ decision:"All wearable data enters via the on-device Health Connect SDK. No server-side vendor OAuth at MVP.",
+ alternatives:"Direct Garmin/Fitbit cloud APIs (per-vendor contracts, quotas, webhooks, and privacy reviews; large surface for a small team).",
+ consequences:"Zero vendor credentials server-side, dedup happens where the data is (on device), and provider breakage risk is Google's API surface, not six vendors'. Devices without HC fall back to the phone sensor with guidance (WBL-05)."}},
+{id:"ADR-04",title:"Outbox + cursor sync instead of a sync framework or CRDTs",status:"Accepted",
+ body:{context:"Offline-first requirement with a simple conflict landscape: activity merges deterministically (§6), settings are last-write-wins, social state is server-owned.",
+ decision:"Durable client outbox with idempotency keys (push) plus a per-user ordered change log with cursors (pull).",
+ alternatives:"Firebase/Realm sync (lock-in, weak control over dedup semantics); CRDTs (unneeded generality — no field here requires concurrent-edit merging).",
+ consequences:"Sync is inspectable and testable as plain data; replay is trivial; the change log adds one append per mutation, acceptable at our write rates."}},
+{id:"ADR-05",title:"PostgreSQL as the single source of truth; Redis as disposable cache",status:"Accepted",
+ body:{context:"Leaderboards need fast ranked reads (LDB); activity needs partitioned time-series-ish storage; privacy needs one place to reason about user data.",
+ decision:"PostgreSQL 16 owns all durable state. Redis holds only recomputable projections: board ZSETs, rate-limit buckets, presence, idempotency keys.",
+ alternatives:"Dedicated time-series DB (operational cost; day-grain totals don't need it); DynamoDB-style KV (privacy pipelines and ad-hoc fairness queries want SQL).",
+ consequences:"Losing Redis degrades latency, never data. The deletion manifest (§13) has one database to walk."}},
+{id:"ADR-06",title:"Short-lived JWT + rotating refresh with a server session registry",status:"Accepted",
+ body:{context:"PRD requires session management, sign-out-all, and revocation (ACC-04) — pure stateless JWT can't revoke.",
+ decision:"15-minute access JWTs validated statelessly; refresh tokens are opaque, single-use, rotated, and bound to a sessions row. Reuse of a rotated refresh token revokes the whole family.",
+ alternatives:"Long-lived JWTs (revocation impossible); server session on every request (per-request DB hit; unnecessary given the 15-min window).",
+ consequences:"Worst-case 15 minutes of access after compromise + immediate refresh-path revocation; sessions table doubles as the user-visible device list."}},
+{id:"ADR-07",title:"WebSocket for realtime with FCM + cursor sync as the reliable path",status:"Accepted",
+ body:{context:"Chat and live standings (MSG, CHL) want low latency, but Android backgrounding kills sockets routinely.",
+ decision:"Best-effort WSS while foregrounded; FCM data pushes for offline notify; §7 cursor sync is the guaranteed delivery mechanism. Message truth lives in Postgres.",
+ alternatives:"MQTT broker (another stateful system to run); FCM-only (multi-second latency and payload limits make live chat feel broken).",
+ consequences:"No message is ever lost to a dropped socket; realtime is purely additive polish."}},
+{id:"ADR-08",title:"Server-computed ranking scores; clients never rank",status:"Accepted",
+ body:{context:"Fair ranking modes (LDB-02), privacy filtering (LDB-03), and anti-cheat (LDB-07) must agree for all viewers, and approximate-visibility users must not leak raw values.",
+ decision:"All board scores, ranks, tie-breaks, and privacy redactions are computed server-side; clients render the returned list verbatim.",
+ alternatives:"Client-side ranking from raw friend data (leaks private values, diverges across devices, trivially cheatable).",
+ consequences:"One implementation of fairness to test and audit; board payloads stay small and cacheable."}},
+{id:"ADR-09",title:"Guest mode is local-only, with explicit migration on registration",status:"Accepted",
+ body:{context:"PRD ACC-01/ACC-03: full tracking without an account; eligible history migrates on sign-up.",
+ decision:"Guests get no server identity at all — no shadow accounts. Registration uploads the local outbox/history through the normal ingest path, then flips sync on.",
+ alternatives:"Anonymous server accounts (creates server-side personal data for users who never consented to a relationship with the server; complicates deletion).",
+ consequences:"Privacy story is clean (“guest data never leaves the device”); migration reuses the ingest pipeline instead of a bespoke import."}}];
+
+$("#adrList").innerHTML=ADRS.map(a=>`
+  <details class="adr">
+    <summary><span class="code">${a.id}</span>${esc(a.title)}
+      <span class="authTag st good"><span class="dot"></span>✓ ${a.status}</span></summary>
+    <div class="adrBody">
+      <p><b>Context.</b> ${esc(a.body.context)}</p>
+      <p><b>Decision.</b> ${esc(a.body.decision)}</p>
+      <p><b>Alternatives considered.</b> ${esc(a.body.alternatives)}</p>
+      <p style="margin-bottom:0"><b>Consequences.</b> ${esc(a.body.consequences)}</p>
+    </div>
+  </details>`).join("");
+
+/* ============================================================ ENTITY DATA */
+const ENTITIES=[
+{name:"users",note:"Account root. Sensitive profile fields optional (PRO-01).",cols:[
+ ["id","uuid v7","PK"],["username","citext unique","handle, PRO-01"],["display_name","text",""],
+ ["avatar_key","text null","object-storage key"],["region","text null","optional"],["units","enum km|mi","SET-05"],
+ ["visibility","jsonb","discovery/activity/friends/groups flags (PRO-03)"],["created_at / deleted_at","timestamptz","soft-lock then purge (§13)"]]},
+{name:"auth_identities · sessions",note:"One user, many identities; sessions power the device list and revocation (ACC-04, ADR-06).",cols:[
+ ["identity: provider","enum google|email","OIDC subject or email"],["identity: password_hash","text null","Argon2id, email only"],
+ ["session: refresh_family","uuid","rotation + reuse detection"],["session: device_label, last_seen","text, timestamptz","user-visible"],
+ ["session: revoked_at","timestamptz null","sign-out-all sets in bulk"]]},
+{name:"data_sources",note:"Per-user registered sources with priority order (WBL-02).",cols:[
+ ["id","uuid","PK"],["user_id","uuid FK",""],["kind","enum phone_sensor|health_connect",""],
+ ["hc_origin","text null","contributing app package for HC records"],["priority","int","user-ordered, dedup input (§6)"],
+ ["status / last_sync_at","enum, timestamptz","surfaced in UI (TRK-06)"]]},
+{name:"activity_intervals",note:"Raw merged-input intervals; monthly partitions; retention-limited (§19).",cols:[
+ ["user_id + start_utc","composite index","partition key by month"],["source_id","uuid FK",""],
+ ["end_utc, steps","timestamptz, int","validated at ingest (§10)"],["tz_offset_min","smallint","bucketing input (TRK-02)"],
+ ["client_id","uuid unique","idempotent ingest"],["flag","enum null","fairness state (LDB-07)"]]},
+{name:"activity_days",note:"Merged daily truth; what every screen and board reads.",cols:[
+ ["user_id + day_local","PK","local-date bucketed"],["steps, distance_m, active_min","int","merged via §6"],
+ ["by_source","jsonb","per-source contributions (TRK-06)"],["goal_steps, goal_met, is_rest","int, bool, bool","denormalized for board math (GOL)"],
+ ["suspicious","bool","excluded from boards while true"]]},
+{name:"goals · streaks",note:"Versioned goal schedule + computed streak state (GOL epic).",cols:[
+ ["goal: schedule","jsonb","per-weekday targets + rest days (GOL-02)"],["goal: effective_from","date","history = versions (GOL-07)"],
+ ["streak: current, longest","int","rest-day aware (GOL-03)"],["streak: mode","enum strict|flexible|paused","GOL-04"]]},
+{name:"friendships",note:"Single row per pair, state machine; hide/mute are per-user overlays (FRD).",cols:[
+ ["user_lo + user_hi","PK pair","canonical ordering"],["state","enum pending|accepted|declined|blocked","block wins over all"],
+ ["requested_by","uuid",""],["overlays","jsonb","hidden/muted per side (FRD-04)"]]},
+{name:"groups · group_members",note:"Invite-only at launch (GRP-01); roles drive authorization (§12).",cols:[
+ ["group: kind","enum private|public_flagged","public behind flag"],["group: settings","jsonb","goal, board mode, notifications"],
+ ["member: role","enum member|moderator|admin","policy matrix input"],["member: state","enum active|suspended|left",""]]},
+{name:"challenges · participants",note:"Typed challenges with eligibility windows (CHL).",cols:[
+ ["type","enum target|consistency|goal_pct|improved","score modes (§10)"],["window_start/end","timestamptz","eligibility (CHL-04)"],
+ ["ruleset","jsonb","target, team config, caps"],["participant: status","enum invited|joined|declined|done",""],
+ ["participant: final_score","numeric null","frozen at completion"]]},
+{name:"conversations · messages",note:"1:1, group, and challenge chats; text-only at launch (§11).",cols:[
+ ["conversation: kind","enum direct|group|challenge",""],["message: seq","bigint per-conv","ordering"],
+ ["message: body","text","validated, rate-limited pre-insert"],["message: deleted_by_author","bool","tombstone, evidence preserved via reports"]]},
+{name:"reports · moderation_actions · audit_log",note:"Append-only safety spine (MSG-04, PRD §7.5).",cols:[
+ ["report: snapshot","jsonb","immutable content copy at report time"],["action: actor, basis","uuid, text","policy citation required"],
+ ["audit: append-only","—","every admin/moderator action; no updates or deletes"]]},
+{name:"consents · notification_prefs",note:"Consent history is data, not inference (ACC-06, NTF-01).",cols:[
+ ["consent: purpose","enum health|contacts|analytics|terms","per policy_version"],["consent: granted, at","bool, timestamptz","append-only"],
+ ["prefs: per-category","jsonb","mirrors Android channels"],["prefs: quiet_hours","jsonb","NTF-02"]]},
+{name:"achievements · share_cards",note:"Earned achievements + generated cards with privacy state (ACH).",cols:[
+ ["achievement: kind, earned_at","enum, timestamptz","timeline (ACH-05)"],["card: redactions","jsonb","hide steps/photo choices baked in (ACH-03)"],
+ ["card: asset_key","text","rendered image in object storage"]]},
+{name:"contact_hashes (TTL table)",note:"Purpose-scoped, 24 h max (FRD-02, §13).",cols:[
+ ["user_id","uuid","uploader"],["hash","bytea","salted, normalized number"],["expires_at","timestamptz","reaper-enforced"],["—","—","never joined to anything but opted-in match lookups"]]}];
+
+$("#entityList").innerHTML=ENTITIES.map(e=>`
+  <details class="ep">
+    <summary><span class="mth GET" style="min-width:auto">TABLE</span><span class="path">${esc(e.name)}</span>
+      <span class="desc">${esc(e.note)}</span></summary>
+    <div class="epBody"><div class="tblWrap" style="box-shadow:none">
+      <table><thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>${e.cols.map(c=>`<tr><td><code>${esc(c[0])}</code></td><td>${esc(c[1])}</td><td>${esc(c[2])}</td></tr>`).join("")}</tbody></table>
+    </div></div>
+  </details>`).join("");
+
+/* ============================================================ API DATA */
+const API=[
+["POST","/v1/auth/register","Auth","Email registration; enumeration-safe response; sends verification","Public",
+ "Body: email, password, ageGate. 202 always (no account-existence leak). Verification link required before sign-in (ACC-02/06)."],
+["POST","/v1/auth/token","Auth","Sign in (email or Google OIDC code); returns access + refresh","Public",
+ "Rotating refresh (ADR-06). Response: accessToken (15 min), refreshToken, session descriptor."],
+["POST","/v1/auth/refresh","Auth","Rotate refresh token","Refresh token",
+ "Single-use; reuse of an old token revokes the session family and alerts the user (security notification, NTF-05)."],
+["GET","/v1/auth/sessions","Auth","List active sessions/devices","User",
+ "Backs the ACC-04 device list. DELETE /v1/auth/sessions/{id} revokes one; DELETE /v1/auth/sessions revokes all."],
+["POST","/v1/users/me/migration","Auth","Guest-to-account history upload","User",
+ "Accepts the accumulated local history through the ingest validators; idempotent per clientId (ACC-03, ADR-09)."],
+["GET","/v1/users/me","Auth","Profile, settings, visibility, goal summary","User",
+ "PATCH updates profile/settings fields; visibility changes take effect on the next board read (PRO-02/03)."],
+["POST","/v1/activity:batch","Activity","Batched interval ingest with dedup + fairness checks","User",
+ "See §9 example. Per-record results; conflicts explain which source counted (WBL-04). Flagged records return status: 'held'."],
+["GET","/v1/activity/days","Activity","Day totals for a local-date range","User",
+ "Params: from, to, source?. Returns merged totals + by-source breakdown + lastSync (HIS-01, TRK-06)."],
+["GET","/v1/activity/summary","Activity","Aggregates: averages, records, comparisons, calendar","User",
+ "Period params; powers Progress and recaps (HIS-02/03/04). Includes plain-text summary strings for accessibility (PRD §12)."],
+["POST","/v1/activity/corrections","Activity","Dispute / correct a record","User",
+ "Creates a correction case (HIS-06); original rows immutable; resolution appends (PRD §15)."],
+["GET","/v1/goals · PATCH /v1/goals","Activity","Read/update the goal schedule","User",
+ "Schedule is versioned; PATCH creates a new effective_from version (GOL-02/07). Validation: 500–100,000 steps."],
+["GET","/v1/sync","Activity","Cursor delta pull across entities","User",
+ "Params: cursor, limit. Ordered change events + nextCursor (§7). Streams: activity, goals, social, messages, prefs."],
+["GET","/v1/friends","Social","Friend list with per-friend overlay state","User",
+ "Includes hidden/muted flags for the caller only; blocked users never appear (FRD-04)."],
+["POST","/v1/friends/requests","Social","Send a friend request (username, link, or QR token)","User",
+ "Throttled (§12 abuse). Recipient privacy honored: non-discoverable users can only be reached via their own invite tokens (FRD-01/02)."],
+["POST","/v1/contacts:match","Social","Consent-gated contact-hash matching","User + consent",
+ "Requires an active contacts consent record; uploads live ≤ 24 h in the TTL table; response contains matches only (FRD-02, §13)."],
+["GET","/v1/leaderboards/{scope}","Social","Ranked board for friends/group/challenge","User",
+ "Params: period, mode (goal_pct|steps|consistency|improved|active_days|team_avg). Server-ranked, privacy-filtered, virtual rows labelled (§10, ADR-08)."],
+["POST","/v1/blocks · /v1/reports","Social","Block a user / report content or a user","User",
+ "Block is immediate and bidirectional-invisible (FRD-04). Reports snapshot content immutably (MSG-04); both available from every social surface."],
+["POST","/v1/groups","Groups","Create a group (invite-only at launch)","User",
+ "Creator becomes admin. Body: name, image (upload token), settings. Public kind rejected while the GRP-01 flag is dark."],
+["POST","/v1/groups/{id}/members","Groups","Invite/join via invite token; manage membership","Role-based",
+ "Admin/moderator actions (remove, suspend) enforce the §12 policy matrix and write audit rows."],
+["POST","/v1/groups/{id}/challenges","Groups","Create a challenge in a group","Group admin",
+ "Body: type, window, ruleset. Standings live at GET /v1/challenges/{id}/standings with the same privacy filter as boards (CHL)."],
+["GET","/v1/conversations · POST …/messages","Messaging","List conversations; send a message","User",
+ "Send path: rate limit → block check → validate → persist → fan-out (WS + FCM). Per-conversation seq for ordering (§11)."],
+["WS","/v1/ws","Messaging","Multiplexed realtime: chat, presence, live standings","User",
+ "Auth on connect + heartbeat re-auth. Best-effort only; cursor sync guarantees delivery (ADR-07)."],
+["GET","/v1/achievements","Social","Achievement timeline + recap summaries","User",
+ "Weekly/monthly recap payloads include accessible text alternatives (ACH-02/05)."],
+["POST","/v1/share-cards","Social","Render a share card with chosen redactions","User",
+ "Body: kind, redactions (hideSteps, hidePhoto), background. Returns asset URL after privacy preview confirmation client-side (ACH-03/04)."],
+["POST","/v1/privacy/export","Privacy","Request a full data export","User",
+ "Async job → signed bundle URL, 7-day expiry, push when ready (§13). One active request at a time."],
+["DELETE","/v1/users/me","Privacy","Account deletion (two-phase)","User + re-auth",
+ "Immediate soft-lock; hard purge after the grace window; confirmation email with cancel link during grace (§13)."],
+["GET","/v1/privacy/consents","Privacy","Consent history","User",
+ "Append-only record of grants/revocations with policy versions (ACC-06)."],
+["GET","/v1/notifications/prefs · PATCH","Privacy","Per-category notification preferences","User",
+ "Categories mirror Android channels; social categories separable from activity/security (NTF-01/02)."],
+["GET","/v1/config","Privacy","Server-driven flags + remote config","User",
+ "Feature flags per user (phased rollout), fairness thresholds, diagnostics tuning (§17)."],
+["POST","/v1/admin/moderation/queue/{id}:action","Privacy","Moderation action on a queued report","Platform admin + step-up",
+ "Actions: clear, remove_content, mute, suspend, escalate. Requires policy basis; writes audit_log; subject notified with appeal path (PRD §7.5)."]];
+
+const apiList=$("#apiList");
+apiList.innerHTML=API.map(e=>`
+  <details class="ep" data-dom="${e[2]}" data-txt="${esc((e[0]+" "+e[1]+" "+e[3]).toLowerCase())}">
+    <summary>
+      <span class="mth ${e[0]}">${e[0]}</span>
+      <span class="path">${esc(e[1])}</span>
+      <span class="authTag pill">${esc(e[4])}</span>
+      <span class="desc">${esc(e[3])}</span>
+    </summary>
+    <div class="epBody">${esc(e[5])}</div>
+  </details>`).join("");
+
+/* API filters */
+(function(){
+  const state={q:"",dom:""};
+  const eps=$$("#apiList details.ep");
+  function apply(){
+    let n=0;
+    eps.forEach(d=>{
+      const ok=(!state.dom||d.dataset.dom===state.dom)&&(!state.q||d.dataset.txt.includes(state.q));
+      d.style.display=ok?"":"none";if(ok)n++;
+    });
+    $("#apiCount").textContent=n+" of "+eps.length+" endpoints";
+  }
+  $("#apiSearch").addEventListener("input",e=>{state.q=e.target.value.trim().toLowerCase();apply();});
+  $("#domSeg").addEventListener("click",e=>{
+    const b=e.target.closest("button");if(!b)return;
+    $$("#domSeg button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");state.dom=b.dataset.v;apply();
+  });
+  document.addEventListener("keydown",e=>{
+    if(e.key==="/"&&!/input|textarea|select/i.test(document.activeElement.tagName)){
+      e.preventDefault();$("#apiSearch").focus();$("#api").scrollIntoView();
+    }
+  });
+  apply();
+})();
+
+/* ============================================================ COPY BUTTONS */
+$$(".codeCard .copy").forEach(b=>{
+  b.addEventListener("click",async()=>{
+    const code=b.closest(".codeCard").querySelector("pre").innerText;
+    try{await navigator.clipboard.writeText(code);b.textContent="Copied ✓";}
+    catch{b.textContent="Select & copy";}
+    setTimeout(()=>b.textContent="Copy",1600);
+  });
+});
+
+/* ============================================================ SCROLLSPY / PROGRESS / NAV / TOTOP */
+(function(){
+  const links=$$(".sidebar a"),map={};
+  links.forEach(a=>map[a.getAttribute("href").slice(1)]=a);
+  const obs=new IntersectionObserver(en=>{
+    en.forEach(x=>{if(x.isIntersecting){links.forEach(a=>a.classList.remove("active"));map[x.target.id]?.classList.add("active");}});
+  },{rootMargin:"-15% 0px -75% 0px"});
+  $$("section.doc").forEach(s=>obs.observe(s));
+  const bar=$("#progressbar"),top=$("#toTop");
+  addEventListener("scroll",()=>{
+    const h=document.documentElement;
+    bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+"%";
+    top.style.display=h.scrollTop>800?"block":"none";
+  },{passive:true});
+  top.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));
+  const sb=$("#sidebar"),tg=$("#navToggle");
+  tg.addEventListener("click",()=>{const o=sb.classList.toggle("open");tg.setAttribute("aria-expanded",o);});
+  sb.addEventListener("click",e=>{if(e.target.tagName==="A")sb.classList.remove("open");});
+})();
+
+/* Print: open all accordions so the PDF is complete */
+addEventListener("beforeprint",()=>$$("details").forEach(d=>d.open=true));
+</script>
+</body>
+</html>

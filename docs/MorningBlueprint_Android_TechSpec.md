@@ -5,7 +5,7 @@
 |---|---|
 | **Product** | Morning Blueprint — "Your Sacred 3-Hour Morning" |
 | **Platform** | Android (native, phone-portrait primary) |
-| **Document version** | 1.1 (adds §28 folder structure, §29 phased execution plan) |
+| **Document version** | 1.2 (v1.1 added §28 folder structure, §29 phased execution plan; v1.2 adds ADR-00 architecture-style rationale) |
 | **Date** | 2026-07-16 |
 | **Status** | Draft for engineering review |
 | **Audience** | Android engineers, QA, PM, security review |
@@ -186,6 +186,15 @@ Convention plugins in `build-logic/`: `mb.android.library`, `mb.android.feature`
 ## 5. Architectural Decision Records (ADRs)
 
 Each ADR: context → decision → consequences. Stored in-repo under `docs/adr/` post-M0; summarized here.
+
+**ADR-00 — Architecture style: MVVM + UDF + Repository pattern over a pragmatic clean layering.**
+*Context.* The app's risk profile is unusual for its size: most state changes originate **underneath** the UI (alarms firing while the app is dead, a foreground-service timer ticking, midnight rollover, restore rewriting the database), and its hardest logic (streak math across DST, alarm-time calculation, day attribution) must be exhaustively unit-testable. Team is 2 engineers; maintainability by any Android hire matters more than architectural novelty.
+*Decision.* Three patterns composed at three altitudes — none of them alternatives to each other:
+1. **Clean layering (macro)** — the Dependency Rule only: `ui → domain ← data`, with `:core:domain` a pure JVM module (zero `android.*`) and the rule enforced by the module graph + `ModuleGraphGuardPlugin`, not convention. Use-cases exist **only** for multi-repository orchestration and invariant enforcement (`CompleteSessionUseCase`, `RestoreBackupUseCase`); entity↔model mapping exists only where shapes genuinely differ.
+2. **Repository pattern (the seam)** — interfaces in `:core:domain`, implementations in `:core:data`/`:core:alarm` (dependency inversion via Hilt). Repositories own: single-source-of-truth mediation (Room/DataStore/AlarmManager hidden behind one contract), transactions and invariants (I1–I4 live here exactly once, so every entry point inherits them), and the test seam (hand-written fakes in `:core:testing`). Platform services get the same inversion under different names: `AlarmScheduler`, `TimerEngine`, `Speech`, `Clock` — injecting `Clock` is what makes "simulate a full day including rollover" a JVM test.
+3. **MVVM + UDF (micro)** — one ViewModel per screen exposing a single immutable `StateFlow<UiState>`; sealed `UiEvent`s up, state down, one-shot effects via a channel (§13.1). Background-originated changes all collapse into one code path: *a repository Flow emitted → `UiState` recomputed*.
+*Alternatives rejected.* **MVVM without UDF** (scattered mutable fields): every background mutation becomes a potential race; recomposition skipping breaks. **Full MVI** (reducers/stores, Orbit-style): UDF's benefits plus a formalism tax that adds boilerplate, not correctness, at this team size — sealed events already provide the explicit action vocabulary. **MVP/MVC**: presenters holding view references are structurally incompatible with declarative UI. **Compose-only state hoisting (no ViewModels)**: forfeits config-change survival, `SavedStateHandle` restoration, and the JVM-testable seam. **By-the-book Clean Architecture** (use-case-per-getter, mappers at every boundary, interfaces for everything): indirection without added safety — the strict-layering budget is spent where the risk lives (alarms, time math, data integrity), not on ceremony.
+*Consequences.* Every screen is JVM-testable with Turbine + fakes (basis for §23 coverage gates); trivial reads call repositories directly from ViewModels (accepted deviation from strict Clean); the stack matches Google's documented Android architecture, so AndroidX APIs and new hires fit without translation. Any deviation from this composition requires a superseding ADR.
 
 **ADR-01 — Single-activity Compose app + separate `AlarmActivity`.**
 Full-screen-intent alarms must render < 500 ms from a cold process on a locked device. Inflating the full nav graph risks jank and lock-screen policy friction. `AlarmActivity` is a leaf activity (`excludeFromRecents`, `showWhenLocked`, `turnScreenOn`, `launchMode=singleInstance`) with one Compose screen and zero feature-module deps. *Consequence:* alarm UI components duplicated at the design-token level only.
@@ -834,7 +843,7 @@ morning-blueprint/
 │       ├── nightly-benchmarks.yml               # stage 6
 │       └── weekly-security.yml                  # stage 7
 ├── docs/
-│   ├── adr/                                     # ADR-001…012 as adr-NNN-title.md
+│   ├── adr/                                     # ADR-000…012 as adr-NNN-title.md
 │   ├── play/declarations.md                     # exact-alarm / FSI / FGS declarations
 │   └── qa/a11y.md                               # TalkBack test charter
 │
@@ -1199,7 +1208,7 @@ Critical path: P0→P1→P2→P4→P5→P6→P10→P11→P12   (alarm/timer chai
 ```
 
 ### Phase 0 — Project Bootstrap (wk 1, both engineers) `[M0]`
-**Build:** repo layout per §28; `build-logic` convention plugins incl. `ModuleGraphGuardPlugin`; version catalog; empty modules compiling; CI pipeline stages 1–5 live (`pr.yml`) including `manifest-guard`; detekt/ktlint/lint configs; PR template; ADR-001…012 committed to `docs/adr/`.
+**Build:** repo layout per §28; `build-logic` convention plugins incl. `ModuleGraphGuardPlugin`; version catalog; empty modules compiling; CI pipeline stages 1–5 live (`pr.yml`) including `manifest-guard`; detekt/ktlint/lint configs; PR template; ADR-000…012 committed to `docs/adr/`.
 **Exit gate:** a PR touching any module builds, lints, and runs (empty) tests in CI; a deliberately added `INTERNET` permission fails CI.
 
 ### Phase 1 — Design System & Parity Contract (wk 1–3, E2 leads) `[M0]`

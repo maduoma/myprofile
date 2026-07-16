@@ -5,7 +5,7 @@
 |---|---|
 | **Product** | Morning Blueprint — "Your Sacred 3-Hour Morning" |
 | **Platform** | Android (native, phone-portrait primary) |
-| **Document version** | 1.0 |
+| **Document version** | 1.1 (adds §28 folder structure, §29 phased execution plan) |
 | **Date** | 2026-07-16 |
 | **Status** | Draft for engineering review |
 | **Audience** | Android engineers, QA, PM, security review |
@@ -42,10 +42,12 @@
 25. [Observability & Diagnostics](#25-observability--diagnostics)
 26. [Coding Standards & Conventions](#26-coding-standards--conventions)
 27. [Delivery Plan Mapping & Estimates](#27-delivery-plan-mapping--estimates)
-28. [Appendix A — Full Room Schema (DDL-level)](#28-appendix-a--full-room-schema-ddl-level)
-29. [Appendix B — Backup JSON Schemas (v1/v2)](#29-appendix-b--backup-json-schemas-v1v2)
-30. [Appendix C — Design Tokens](#30-appendix-c--design-tokens)
-31. [Appendix D — Test Device & OEM Matrix](#31-appendix-d--test-device--oem-matrix)
+28. [Complete Project Folder & File Structure](#28-complete-project-folder--file-structure)
+29. [Phased Execution Plan (First → Last)](#29-phased-execution-plan-first--last)
+30. [Appendix A — Full Room Schema (DDL-level)](#30-appendix-a--full-room-schema-ddl-level)
+31. [Appendix B — Backup JSON Schemas (v1/v2)](#31-appendix-b--backup-json-schemas-v1v2)
+32. [Appendix C — Design Tokens](#32-appendix-c--design-tokens)
+33. [Appendix D — Test Device & OEM Matrix](#33-appendix-d--test-device--oem-matrix)
 
 ---
 
@@ -810,7 +812,453 @@ Critical path: **Alarm subsystem → OEM validation** (start M1 day 1; everythin
 
 ---
 
-## 28. Appendix A — Full Room Schema (DDL-level)
+## 28. Complete Project Folder & File Structure
+
+The authoritative source tree. Names below are binding (Section 26 conventions); a file not listed here is either a sibling following the same pattern (e.g., additional components, additional DAOs) or requires reviewer sign-off. Package root: `com.morningblueprint`.
+
+```
+morning-blueprint/
+├── settings.gradle.kts
+├── build.gradle.kts
+├── gradle.properties
+├── gradle/
+│   ├── libs.versions.toml                       # version catalog (§3)
+│   └── wrapper/gradle-wrapper.properties
+├── .editorconfig
+├── config/
+│   ├── detekt/detekt.yml
+│   └── lint/lint.xml
+├── .github/
+│   └── workflows/
+│       ├── pr.yml                               # CI stages 1–5 (§24.2)
+│       ├── nightly-benchmarks.yml               # stage 6
+│       └── weekly-security.yml                  # stage 7
+├── docs/
+│   ├── adr/                                     # ADR-001…012 as adr-NNN-title.md
+│   ├── play/declarations.md                     # exact-alarm / FSI / FGS declarations
+│   └── qa/a11y.md                               # TalkBack test charter
+│
+├── build-logic/                                 # convention plugins (§4)
+│   ├── settings.gradle.kts
+│   └── convention/
+│       ├── build.gradle.kts
+│       └── src/main/kotlin/
+│           ├── AndroidApplicationConventionPlugin.kt
+│           ├── AndroidLibraryConventionPlugin.kt      # mb.android.library
+│           ├── AndroidFeatureConventionPlugin.kt      # mb.android.feature
+│           ├── AndroidComposeConventionPlugin.kt      # mb.android.compose
+│           ├── JvmLibraryConventionPlugin.kt          # mb.jvm.library
+│           ├── HiltConventionPlugin.kt                # mb.hilt
+│           └── ModuleGraphGuardPlugin.kt              # dependency-rule check (§4)
+│
+├── app/
+│   ├── build.gradle.kts
+│   ├── proguard-rules.pro
+│   └── src/
+│       ├── main/
+│       │   ├── AndroidManifest.xml              # manifest-guard target (§21)
+│       │   ├── kotlin/com/morningblueprint/app/
+│       │   │   ├── MbApplication.kt             # Hilt app, startup orchestration (§7.3)
+│       │   │   ├── MainActivity.kt              # single activity, edge-to-edge
+│       │   │   ├── navigation/
+│       │   │   │   ├── MbNavHost.kt             # assembles feature graphs (§15)
+│       │   │   │   └── MbBottomBarVisibility.kt
+│       │   │   ├── di/
+│       │   │   │   ├── AppModule.kt             # Clock, MbDispatchers, AppScope
+│       │   │   │   └── SnackbarModule.kt
+│       │   │   └── startup/
+│       │   │       ├── AppInitializer.kt        # seed reconcile, alarm sync, timer recovery
+│       │   │       └── ThemeSnapshot.kt         # pre-setContent DataStore snapshot (§15)
+│       │   └── res/
+│       │       ├── values/{strings.xml,themes.xml}
+│       │       ├── drawable/ic_launcher_foreground.xml
+│       │       ├── mipmap-anydpi-v26/ic_launcher.xml
+│       │       ├── raw/{mb_alarm.ogg,mb_chime.ogg}
+│       │       └── xml/{data_extraction_rules.xml,backup_rules.xml,locales_config.xml}
+│       ├── debug/kotlin/com/morningblueprint/app/gallery/
+│       │   └── ComponentGalleryScreen.kt        # M0 parity contract (§14)
+│       └── androidTest/kotlin/com/morningblueprint/app/
+│           ├── journeys/                        # 6 critical journeys (§23.3)
+│           │   ├── OnboardingJourneyTest.kt
+│           │   ├── AlarmToggleJourneyTest.kt
+│           │   ├── SessionLifecycleJourneyTest.kt
+│           │   ├── JournalCrudJourneyTest.kt
+│           │   ├── ReadoutJourneyTest.kt
+│           │   └── BackupRestoreJourneyTest.kt
+│           └── DirectBootSmokeTest.kt
+│
+├── core/
+│   ├── designsystem/
+│   │   ├── build.gradle.kts
+│   │   └── src/main/kotlin/com/morningblueprint/core/designsystem/
+│   │       ├── theme/
+│   │       │   ├── MbTheme.kt                   # dark/light/auto + LocalMbColors (§14)
+│   │       │   ├── MbTokens.kt                  # Appendix C, 1:1 with prototype CSS vars
+│   │       │   ├── MbColors.kt                  # extended palette CompositionLocal
+│   │       │   ├── MbType.kt                    # Cormorant Garamond / Outfit scales
+│   │       │   ├── MbShapes.kt
+│   │       │   └── MbMotion.kt                  # LocalMotion, reduced-motion gate
+│   │       ├── component/
+│   │       │   ├── MbCard.kt
+│   │       │   ├── MbChip.kt
+│   │       │   ├── MbProgressRing.kt            # Canvas arc + glow
+│   │       │   ├── MbToggle.kt                  # 48dp target (A11Y-04)
+│   │       │   ├── MbPrimaryButton.kt           # gold→violet gradient
+│   │       │   ├── MbOutlineButton.kt
+│   │       │   ├── MbSecondaryButton.kt
+│   │       │   ├── MbTabRow.kt
+│   │       │   ├── MbTopBar.kt
+│   │       │   ├── MbBottomBar.kt
+│   │       │   ├── MbStatusToast.kt             # snackbar with prototype pill styling
+│   │       │   ├── MbSectionLabel.kt
+│   │       │   ├── MbHeatmap.kt                 # single-Canvas grid (§20)
+│   │       │   ├── MbSessionTicks.kt
+│   │       │   ├── MbEmptyState.kt
+│   │       │   └── PressScale.kt                # .965 press modifier
+│   │       └── icon/MbIcons.kt                  # vector set mirroring prototype ICONS
+│   │
+│   ├── ui/
+│   │   ├── build.gradle.kts
+│   │   └── src/main/kotlin/com/morningblueprint/core/ui/
+│   │       ├── nav/Routes.kt                    # @Serializable routes (§15)
+│   │       ├── snackbar/SnackbarController.kt
+│   │       ├── permission/
+│   │       │   ├── PermissionsCoordinator.kt    # §17
+│   │       │   ├── PermissionState.kt
+│   │       │   └── OemBatteryGuidance.kt        # per-OEM copy table
+│   │       ├── lifecycle/LifecycleEffects.kt
+│   │       ├── format/RelativeDateFormatter.kt  # "Today"/"Yesterday" render-time (ADR-07)
+│   │       └── preview/MbPreviews.kt            # @PreviewLightDark + fontScale 2.0
+│   │
+│   ├── domain/                                  # PURE JVM — no android.* (§6)
+│   │   ├── build.gradle.kts
+│   │   └── src/
+│   │       ├── main/kotlin/com/morningblueprint/core/domain/
+│   │       │   ├── model/
+│   │       │   │   ├── Session.kt               # + SessionId value class, Phase enum
+│   │       │   │   ├── SessionCompletion.kt     # + Outcome enum
+│   │       │   │   ├── DayProgress.kt
+│   │       │   │   ├── StreakState.kt
+│   │       │   │   ├── Declaration.kt           # + DeclarationCategory
+│   │       │   │   ├── Scripture.kt             # + Translation enum
+│   │       │   │   ├── JournalEntry.kt
+│   │       │   │   ├── BigThree.kt              # + TaskSlot, TaskCategory
+│   │       │   │   ├── UserPrefs.kt             # + ThemeMode, VibrationPattern
+│   │       │   │   ├── TimerState.kt
+│   │       │   │   └── AlarmConfig.kt
+│   │       │   ├── repository/                  # interfaces only (§6.2)
+│   │       │   │   ├── SessionRepository.kt
+│   │       │   │   ├── CompletionRepository.kt
+│   │       │   │   ├── JournalRepository.kt
+│   │       │   │   ├── DeclarationRepository.kt
+│   │       │   │   ├── ScriptureRepository.kt
+│   │       │   │   ├── PlannerRepository.kt
+│   │       │   │   ├── AlarmConfigRepository.kt
+│   │       │   │   ├── PrefsRepository.kt
+│   │       │   │   ├── BackupRepository.kt
+│   │       │   │   └── TimerStateRepository.kt
+│   │       │   ├── platform/                    # platform seams (§6.2)
+│   │       │   │   ├── AlarmScheduler.kt
+│   │       │   │   ├── TimerEngine.kt
+│   │       │   │   ├── Speech.kt
+│   │       │   │   ├── HapticsController.kt
+│   │       │   │   └── Clock.kt
+│   │       │   ├── calculator/
+│   │       │   │   ├── StreakCalculator.kt
+│   │       │   │   ├── DayKeyResolver.kt
+│   │       │   │   ├── NextAlarmTimeCalculator.kt
+│   │       │   │   ├── ReadoutPlaylistResolver.kt
+│   │       │   │   ├── DailyVerseSelector.kt
+│   │       │   │   ├── HeatmapBucketer.kt
+│   │       │   │   └── PhaseRateCalculator.kt
+│   │       │   └── usecase/
+│   │       │       ├── CompleteSessionUseCase.kt
+│   │       │       ├── StartSessionUseCase.kt   # single-timer invariant I1
+│   │       │       ├── SkipSessionUseCase.kt
+│   │       │       ├── ToggleAlarmUseCase.kt
+│   │       │       ├── SaveJournalEntryUseCase.kt
+│   │       │       ├── DeleteJournalEntryUseCase.kt
+│   │       │       ├── CommitBigThreeUseCase.kt
+│   │       │       ├── RolloverUseCase.kt
+│   │       │       ├── ExportBackupUseCase.kt
+│   │       │       ├── RestoreBackupUseCase.kt
+│   │       │       ├── ExportJournalUseCase.kt
+│   │       │       └── result/UseCaseResults.kt # sealed results (§19)
+│   │       └── test/kotlin/com/morningblueprint/core/domain/
+│   │           ├── calculator/                  # §23.2 suites
+│   │           │   ├── StreakCalculatorTest.kt
+│   │           │   ├── NextAlarmTimeCalculatorTest.kt
+│   │           │   ├── DailyVerseSelectorTest.kt
+│   │           │   ├── ReadoutPlaylistResolverTest.kt
+│   │           │   └── HeatmapBucketerTest.kt
+│   │           └── usecase/
+│   │               ├── RolloverUseCaseTest.kt
+│   │               ├── StartSessionUseCaseTest.kt
+│   │               └── CompleteSessionUseCaseTest.kt
+│   │
+│   ├── data/
+│   │   ├── build.gradle.kts
+│   │   ├── schemas/                             # exported Room schemas (§7.1)
+│   │   └── src/
+│   │       ├── main/
+│   │       │   ├── kotlin/com/morningblueprint/core/data/
+│   │       │   │   ├── db/
+│   │       │   │   │   ├── MbDatabase.kt
+│   │       │   │   │   ├── MbTypeConverters.kt
+│   │       │   │   │   ├── entity/
+│   │       │   │   │   │   ├── SessionEntity.kt
+│   │       │   │   │   │   ├── AlarmConfigEntity.kt
+│   │       │   │   │   │   ├── SessionCompletionEntity.kt
+│   │       │   │   │   │   ├── DailySummaryEntity.kt
+│   │       │   │   │   │   ├── JournalEntryEntity.kt
+│   │       │   │   │   │   ├── DeclarationEntity.kt
+│   │       │   │   │   │   ├── ScriptureEntity.kt
+│   │       │   │   │   │   ├── BookmarkEntity.kt
+│   │       │   │   │   │   ├── TaskEntity.kt
+│   │       │   │   │   │   └── TimerStateEntity.kt
+│   │       │   │   │   └── dao/
+│   │       │   │   │       ├── SessionDao.kt
+│   │       │   │   │       ├── AlarmConfigDao.kt
+│   │       │   │   │       ├── CompletionDao.kt
+│   │       │   │   │       ├── DailySummaryDao.kt
+│   │       │   │   │       ├── JournalDao.kt
+│   │       │   │   │       ├── DeclarationDao.kt
+│   │       │   │   │       ├── ScriptureDao.kt
+│   │       │   │   │       ├── BookmarkDao.kt
+│   │       │   │   │       ├── TaskDao.kt
+│   │       │   │   │       └── TimerStateDao.kt
+│   │       │   │   ├── prefs/
+│   │       │   │   │   ├── MbDataStore.kt
+│   │       │   │   │   └── PrefsRepositoryImpl.kt
+│   │       │   │   ├── repository/              # domain impls (§7.4)
+│   │       │   │   │   ├── SessionRepositoryImpl.kt
+│   │       │   │   │   ├── CompletionRepositoryImpl.kt
+│   │       │   │   │   ├── JournalRepositoryImpl.kt
+│   │       │   │   │   ├── DeclarationRepositoryImpl.kt
+│   │       │   │   │   ├── ScriptureRepositoryImpl.kt
+│   │       │   │   │   ├── PlannerRepositoryImpl.kt
+│   │       │   │   │   ├── AlarmConfigRepositoryImpl.kt
+│   │       │   │   │   └── TimerStateRepositoryImpl.kt
+│   │       │   │   ├── seed/
+│   │       │   │   │   ├── SeedReconciler.kt    # ADR-06
+│   │       │   │   │   ├── SeedParser.kt
+│   │       │   │   │   └── SeedModels.kt
+│   │       │   │   ├── backup/
+│   │       │   │   │   ├── BackupRepositoryImpl.kt
+│   │       │   │   │   ├── BackupCodec.kt       # v1/v2 sniff + decode (§12.1)
+│   │       │   │   │   ├── BackupSanitizer.kt   # hostile-input pipeline (§12.3)
+│   │       │   │   │   ├── V1BackupDecoder.kt   # prototype import mapping
+│   │       │   │   │   ├── V2BackupSchema.kt
+│   │       │   │   │   └── SafetyBackupStore.kt # rotating pre-restore backups
+│   │       │   │   ├── export/
+│   │       │   │   │   ├── JournalPdfExporter.kt   # PdfDocument, no WebView (SP-06)
+│   │       │   │   │   ├── JournalMarkdownExporter.kt
+│   │       │   │   │   └── FilenameSanitizer.kt
+│   │       │   │   ├── work/
+│   │       │   │   │   ├── MidnightRolloverWorker.kt
+│   │       │   │   │   ├── DailySummaryWorker.kt
+│   │       │   │   │   └── BackupReminderWorker.kt
+│   │       │   │   └── di/DataModule.kt         # binds repos, provides DB/DataStore
+│   │       │   └── assets/seed/
+│   │       │       ├── sessions.json
+│   │       │       ├── declarations.json
+│   │       │       ├── scriptures.json          # ≥90 verses × bundled translations
+│   │       │       └── prompts.json
+│   │       └── test/kotlin/com/morningblueprint/core/data/
+│   │           ├── db/{MigrationTest.kt,CompletionDaoTest.kt,JournalDaoTest.kt}
+│   │           ├── backup/
+│   │           │   ├── BackupSanitizerTest.kt   # fuzz corpus
+│   │           │   ├── BackupRoundTripTest.kt   # golden-file identity
+│   │           │   └── fixtures/prototype-v1-export.json
+│   │           └── seed/SeedReconcilerTest.kt
+│   │
+│   ├── alarm/
+│   │   ├── build.gradle.kts
+│   │   └── src/
+│   │       ├── main/
+│   │       │   ├── AndroidManifest.xml          # receivers, AlarmActivity, services
+│   │       │   └── kotlin/com/morningblueprint/core/alarm/
+│   │       │       ├── scheduler/
+│   │       │       │   ├── AlarmSchedulerImpl.kt      # setAlarmClock (ADR-02)
+│   │       │       │   ├── AlarmRescheduler.kt        # syncAll(), 6 triggers (§8.4)
+│   │       │       │   └── AlarmPendingIntents.kt     # PI factory, requestCode=sessionId
+│   │       │       ├── receiver/
+│   │       │       │   ├── AlarmReceiver.kt           # fire path (§8.3)
+│   │       │       │   ├── BootReceiver.kt            # directBootAware
+│   │       │       │   ├── TimeChangeReceiver.kt
+│   │       │       │   ├── PackageReplacedReceiver.kt
+│   │       │       │   └── ExactAlarmPermissionReceiver.kt
+│   │       │       ├── ring/
+│   │       │       │   ├── AlarmRingerService.kt      # FGS, sound+vibration owner
+│   │       │       │   ├── AlarmRinger.kt             # MediaPlayer USAGE_ALARM, ramp
+│   │       │       │   ├── SnoozePolicy.kt            # 9min ×3, discipline gate
+│   │       │       │   └── MissedAlarmHandler.kt
+│   │       │       ├── ui/
+│   │       │       │   ├── AlarmActivity.kt           # showWhenLocked (ADR-01)
+│   │       │       │   ├── AlarmRingScreen.kt
+│   │       │       │   ├── AlarmRingViewModel.kt
+│   │       │       │   └── HoldToDismiss.kt           # 2s hold + a11y action (A11Y-06)
+│   │       │       ├── timer/
+│   │       │       │   ├── TimerService.kt            # FGS specialUse (ADR-04)
+│   │       │       │   ├── TimerEngineImpl.kt         # state machine (§9.1)
+│   │       │       │   ├── TimerRecovery.kt           # death/reboot reconstruction
+│   │       │       │   └── TimerNotification.kt
+│   │       │       ├── directboot/DeviceProtectedAlarmMirror.kt  # §8.6
+│   │       │       ├── notification/MbNotificationChannels.kt    # §16
+│   │       │       ├── haptics/HapticsControllerImpl.kt
+│   │       │       ├── speech/AndroidSpeech.kt        # TTS impl (§11.3)
+│   │       │       ├── diag/
+│   │       │       │   ├── Breadcrumbs.kt             # ring buffer (§25)
+│   │       │       │   └── AlarmHealthCheck.kt
+│   │       │       └── di/AlarmModule.kt
+│   │       └── test/kotlin/com/morningblueprint/core/alarm/
+│   │           ├── AlarmReconciliationTest.kt   # ShadowAlarmManager
+│   │           ├── TimerRecoveryTest.kt
+│   │           └── SnoozePolicyTest.kt
+│   │
+│   └── testing/
+│       ├── build.gradle.kts
+│       └── src/main/kotlin/com/morningblueprint/core/testing/
+│           ├── FixedClock.kt
+│           ├── MainDispatcherRule.kt
+│           ├── fake/
+│           │   ├── FakeCompletionRepository.kt
+│           │   ├── FakeJournalRepository.kt
+│           │   ├── FakeDeclarationRepository.kt
+│           │   ├── FakePrefsRepository.kt
+│           │   ├── FakeSpeech.kt
+│           │   └── RecordingAlarmScheduler.kt
+│           └── fixture/{SeedFixtures.kt,SyntheticJournal.kt}
+│
+├── feature/                                     # every module: ui/ + vm/ pattern (§13.1)
+│   ├── onboarding/src/main/kotlin/com/morningblueprint/feature/onboarding/
+│   │   ├── OnboardingRoute.kt
+│   │   ├── OnboardingScreen.kt                  # 3 slides, permission slide
+│   │   ├── OnboardingViewModel.kt
+│   │   ├── OnboardingUiState.kt
+│   │   └── SplashConfig.kt
+│   ├── home/src/main/kotlin/com/morningblueprint/feature/home/
+│   │   ├── HomeRoute.kt / HomeScreen.kt / HomeViewModel.kt / HomeUiState.kt
+│   │   └── component/{StreakBadge.kt,TodayProgressCard.kt,PhaseCard.kt,
+│   │                  VerseTeaserCard.kt,QuickAccessGrid.kt}
+│   ├── sessions/src/main/kotlin/com/morningblueprint/feature/sessions/
+│   │   ├── SessionsRoute.kt / SessionsScreen.kt / SessionsViewModel.kt / SessionsUiState.kt
+│   │   └── component/{PhaseHeader.kt,SessionCard.kt}
+│   ├── timer/src/main/kotlin/com/morningblueprint/feature/timer/
+│   │   ├── ActiveSessionRoute.kt / ActiveSessionScreen.kt
+│   │   ├── ActiveSessionViewModel.kt / ActiveSessionUiState.kt
+│   │   └── component/{TimerReadout.kt,TimerRing.kt,SessionPromptCard.kt}
+│   ├── scripture/src/main/kotlin/com/morningblueprint/feature/scripture/
+│   │   ├── ScriptureRoute.kt / ScriptureScreen.kt
+│   │   ├── ScriptureViewModel.kt / ScriptureUiState.kt
+│   │   └── component/{VerseFeatureCard.kt,MeditationPromptList.kt,TranslationBadges.kt}
+│   ├── declarations/src/main/kotlin/com/morningblueprint/feature/declarations/
+│   │   ├── library/{DeclarationsRoute.kt,DeclarationsScreen.kt,
+│   │   │            DeclarationsViewModel.kt,DeclarationsUiState.kt}
+│   │   └── readout/{ReadoutRoute.kt,ReadoutScreen.kt,ReadoutViewModel.kt,
+│   │                ReadoutUiState.kt,SpeakingBars.kt}
+│   ├── journal/src/main/kotlin/com/morningblueprint/feature/journal/
+│   │   ├── list/{JournalRoute.kt,JournalScreen.kt,JournalViewModel.kt,JournalUiState.kt}
+│   │   └── editor/{JournalEditorRoute.kt,JournalEditorScreen.kt,
+│   │               JournalEditorViewModel.kt,JournalEditorUiState.kt,
+│   │               SessionPickerMenu.kt,DraftStore.kt}
+│   ├── planner/src/main/kotlin/com/morningblueprint/feature/planner/
+│   │   ├── PlannerRoute.kt / PlannerScreen.kt / PlannerViewModel.kt / PlannerUiState.kt
+│   │   └── component/{TaskSlotCard.kt,CategoryRow.kt}
+│   ├── analytics/src/main/kotlin/com/morningblueprint/feature/analytics/
+│   │   ├── AnalyticsRoute.kt / AnalyticsScreen.kt
+│   │   ├── AnalyticsViewModel.kt / AnalyticsUiState.kt
+│   │   └── component/{StreakHeroCard.kt,StatGrid.kt,PhaseRateBars.kt,WeeklySummaryCard.kt}
+│   └── settings/src/main/kotlin/com/morningblueprint/feature/settings/
+│       ├── SettingsRoute.kt / SettingsScreen.kt / SettingsViewModel.kt / SettingsUiState.kt
+│       ├── alarms/{AlarmsRoute.kt,AlarmsScreen.kt,AlarmsViewModel.kt,AlarmsUiState.kt}
+│       ├── data/{BackupRestoreSheet.kt,ExportSheet.kt}
+│       └── diag/AlarmHealthCheckScreen.kt       # hidden, version-tap ×5 (§25)
+│
+└── baselineprofile/
+    ├── build.gradle.kts
+    └── src/main/kotlin/com/morningblueprint/baselineprofile/
+        ├── BaselineProfileGenerator.kt
+        ├── StartupBenchmark.kt
+        └── JournalScrollBenchmark.kt
+```
+
+Each `:feature:*` module also carries `src/test/kotlin/.../XxxViewModelTest.kt` (Turbine) and screenshot tests under `src/test/kotlin/.../XxxScreenshotTest.kt` (Roborazzi) — omitted above for brevity but required by the Definition of Done (§26).
+
+---
+
+## 29. Phased Execution Plan (First → Last)
+
+Granular build order within the PRD's M0–M4 envelope. Phases are strictly ordered by dependency; within a phase, workstreams marked ∥ run in parallel across the two engineers (E1, E2). Every phase has a hard **exit gate** — do not start the next phase's dependent work until the gate passes.
+
+```
+P0 → P1 ─┬→ P2 ─┬→ P4 (alarms) ──┬→ P5 (timer) → P6 (tracking) ─┬→ P9 → P10 → P11 → P12 → P13
+         │      └→ P3 (shell)  ──┘                              │
+         └────────────────────────→ P7 (content) → P8 (journal) ┘
+Critical path: P0→P1→P2→P4→P5→P6→P10→P11→P12   (alarm/timer chain — never starve it)
+```
+
+### Phase 0 — Project Bootstrap (wk 1, both engineers) `[M0]`
+**Build:** repo layout per §28; `build-logic` convention plugins incl. `ModuleGraphGuardPlugin`; version catalog; empty modules compiling; CI pipeline stages 1–5 live (`pr.yml`) including `manifest-guard`; detekt/ktlint/lint configs; PR template; ADR-001…012 committed to `docs/adr/`.
+**Exit gate:** a PR touching any module builds, lints, and runs (empty) tests in CI; a deliberately added `INTERNET` permission fails CI.
+
+### Phase 1 — Design System & Parity Contract (wk 1–3, E2 leads) `[M0]`
+**Build:** `:core:designsystem` complete — `MbTokens.kt` (Appendix C), `MbTheme`, typography with bundled fonts, all components listed in §28, `PressScale`, reduced-motion gate; debug `ComponentGalleryScreen` rendering every component beside prototype screenshots; Roborazzi baselines (light/dark/2.0 font).
+**Exit gate:** design/PM sign-off on the gallery = the visual parity contract (PRD R8). *This gate freezes tokens; later visual disputes reference the gallery, not the prototype.*
+
+### Phase 2 — Data Foundation (wk 2–3, E1 leads, ∥ with P1) `[M0]`
+**Build:** `:core:domain` models/interfaces/calculators (with full unit suites — the calculators are pure and testable now); `:core:data` Room schema v1 + DAOs + converters, DataStore prefs, seed JSON (prototype content) + `SeedReconciler`, repository impls; `:core:testing` fakes and fixtures.
+**Exit gate:** all §23.2 domain suites green; DAO tests green; seed loads idempotently (run ×3 = same rows); schema exported and committed.
+
+### Phase 3 — App Shell, Navigation & Onboarding (wk 3–4, E2) `[M0]`
+**Build:** `MainActivity` + `MbNavHost` with all routes stubbed, bottom bar with per-tab back stacks, deep-link declarations, splash + `ThemeSnapshot`, theming end-to-end (dark/light/auto switch live in Settings skeleton), onboarding 3 slides + `PermissionsCoordinator` (notifications, exact-alarm state surfacing).
+**Exit gate:** journey test #1 (onboarding→home) green; predictive back verified; theme switch instant; nav state survives process death (don't defer this — it shapes ViewModel design).
+
+### Phase 4 — Alarm & Wake Subsystem (wk 4–6, E1 — critical path, starts the moment P2 gates) `[M1]`
+**Build order within phase:** (1) `AlarmSchedulerImpl` + PI factory + `NextAlarmTimeCalculator` wiring → (2) `AlarmReceiver` fire path (reschedule-first) + `AlarmRingerService`/`AlarmRinger` → (3) `AlarmActivity` + ring screen + `SnoozePolicy` + `HoldToDismiss` (discipline) → (4) `BootReceiver`/`TimeChangeReceiver`/`PackageReplacedReceiver` + `AlarmRescheduler.syncAll()` → (5) direct-boot mirror → (6) `MissedAlarmHandler`; Alarms setup screen (`:feature:settings/alarms`) wired to `ToggleAlarmUseCase`.
+∥ E2 meanwhile: Home + Sessions screens against fake/live repos (completed-state rendering, phase tabs, CTA logic).
+**Exit gate:** journey test #2 green; `AlarmReconciliationTest` green; **overnight physical-device test fires on Pixel + Samsung + Xiaomi** (Appendix D charter round 1); reboot-with-pending-alarm fires; stale-fire rejected.
+
+### Phase 5 — Session Timer (wk 6–7, E1) `[M1]`
+**Build:** `TimerService`/`TimerEngineImpl` state machine, Room `timer_state` mirroring, end-of-session exact-alarm backstop, `TimerRecovery`, `TimerNotification`; `:feature:timer` ActiveSession screen (ring, readout isolation, controls, keep-screen-on); single-timer invariant surfaced in UI.
+**Exit gate:** `TimerRecoveryTest` green (kill mid-run, reboot, finished-while-dead); journey test #3 green; recomposition budget met (§20 table); ADR-04 Play declaration drafted — **submit an internal-track build now to smoke-test FGS review early.**
+
+### Phase 6 — Tracking, Rollover & Live Dashboards (wk 7, both) `[M1]`
+**Build:** `CompleteSessionUseCase`/`SkipSessionUseCase` writing completions + summaries transactionally; `RolloverUseCase` + `MidnightRolloverWorker` + foreground check + `DayChanged` flow; Home/Sessions fully data-driven (delete every remaining hardcoded value); Big Three planner screen + daily slot creation.
+**Exit gate:** M1 milestone review — complete a full simulated day (time-travel via `FixedClock` build flag): alarms→sessions→completions→rollover→next day clean; `RolloverUseCaseTest` idempotency green.
+
+### Phase 7 — Content: Scripture, Declarations, TTS (wk 8–9, E2; ∥ E1 starts Phase 10 backup codec) `[M2]`
+**Build:** Scripture screen (rotation via `DailyVerseSelector`, translation switcher over bundled translations only, bookmarks + list, prompt pools); Declarations library (active toggles, category tabs) + Readout (playlist-resolved-once, index/transport, `AndroidSpeech` with focus handling, speaking-bars, unavailable-TTS fallback); seed expansion to ≥ 90 verses lands here (content task — licensing answer from PRD Q1 is a **hard input to this phase; escalate in wk 6 if unresolved**).
+**Exit gate:** journey test #5 green; verse deterministic across process restarts; TTS verified on a device with no network and on one with the engine's language pack missing.
+
+### Phase 8 — Journal & Editor (wk 9–10, E2) `[M2]`
+**Build:** journal list (filters, relative dates render-time), editor (session picker, empty-save rejection, 20k cap, draft persistence via `DraftStore` + `SavedStateHandle`), delete + undo snackbar, in-session journal entry (timer intact on return).
+**Exit gate:** journey test #4 green; draft survives process death; M2 review passes all P0 ACs for E5/E6.
+
+### Phase 9 — Analytics (wk 11, E2) `[M3]`
+**Build:** SQL aggregates (streak window, totals, phase rates, heatmap, weekly summary) + `:feature:analytics` screen + Home streak badge unification; empty states for day-1 users.
+**Exit gate:** streak values on Home and Analytics provably identical (single use-case source); synthetic 400-day dataset renders < 1 frame budget; zero invented numbers anywhere (grep-level audit of hardcoded literals).
+
+### Phase 10 — Backup, Restore & Export (wk 10–12, E1) `[M3]`
+**Build:** `BackupCodec` v2 + `V1BackupDecoder` (with the committed prototype export fixture), `BackupSanitizer` + fuzz corpus, SAF flows, `SafetyBackupStore`, transactional apply + recovery flag, post-restore hooks (seed reconcile, summary rebuild, `syncAll`, streak recompute); `JournalPdfExporter` + `JournalMarkdownExporter`; Auto Backup rules verified device-to-device; backup reminder worker.
+**Exit gate:** journey test #6 green; golden-file round-trip identity; restore of a real prototype-exported file produces correct entries; malformed-corpus suite 100 % rejected with zero partial writes.
+
+### Phase 11 — Hardening & NFR Sweep (wk 13–14, both) `[M4]`
+**Build/verify:** Baseline Profiles + Macrobenchmark budgets enforced in nightly CI; APK-size gate; battery overnight matrix; full a11y audit (TalkBack charter, contrast test, 200 % font screenshots) and fixes; StrictMode clean; migration test 1→1 trivially green but harness proven; Appendix D manual charter executed on all matrix devices; breadcrumbs + Alarm Health Check screen finished; Play listing, data-safety form, declarations submitted.
+**Exit gate:** every NFR-01…12 measured with evidence attached to the milestone review; zero P0/P1 bugs open; release checklist signed.
+
+### Phase 12 — Beta → GA (wk 14–15+) `[M4→GA]`
+**Do:** closed beta (≥ 20 users, PRD M4) with a 2-week soak focused on alarm reliability reports; triage weekly; staged rollout 10 → 25 → 50 → 100 % with §24.3 halt criteria; monitor Play vitals daily during rollout.
+**Exit gate (project "last"):** 100 % rollout stable ≥ 7 days at PG-5 thresholds → tag `v1.0.0`, open v1.1 planning.
+
+### Phase 13 — V1.1 (post-GA, +6 wk)
+Order: custom schedule (`E2-S5`, touches alarm math — do first while context is warm) → phase-transition alerts → voice dictation (`RECORD_AUDIO` flow) → custom declarations CRUD → journal tags + FTS search → Glance widget → biometric app lock/`FLAG_SECURE`. Each item enters through the same gates: ADR if it touches §5/8/9/12, tests per §23, gallery update if visual.
+
+**Standing rules across all phases:** the alarm chain (P4–P6) is never blocked by polish work; any phase slipping > 3 days triggers scope review against its milestone; every exit gate produces a short written record in `docs/adr/` or the milestone notes — gates are evidence, not ceremonies.
+
+---
+
+## 30. Appendix A — Full Room Schema (DDL-level)
 
 ```sql
 CREATE TABLE sessions (
@@ -896,7 +1344,7 @@ CREATE TABLE timer_state (                      -- singleton (id = 1)
 );
 ```
 
-## 29. Appendix B — Backup JSON Schemas (v1/v2)
+## 31. Appendix B — Backup JSON Schemas (v1/v2)
 
 **v1 (prototype, import-only):**
 ```json
@@ -929,7 +1377,7 @@ CREATE TABLE timer_state (                      -- singleton (id = 1)
 ```
 Decoder rules: `ignoreUnknownKeys`, missing arrays = empty, caps per Section 12.3.
 
-## 30. Appendix C — Design Tokens
+## 32. Appendix C — Design Tokens
 
 Dark (light per prototype `:root[data-theme=light]`):
 
@@ -947,7 +1395,7 @@ Dark (light per prototype `:root[data-theme=light]`):
 
 Dim/border variants = base color at 11 % / 22 % alpha (matches prototype `*-d` / `*-b`). Shapes: card 18 dp, button 16 dp, hero 22–24 dp, chip pill. Motion: fadeIn 380 ms, slideUp 400 ms, scaleIn spring (overshoot 1.56 cubic-bezier equiv.), press scale 0.965. Type scale: displaySerif 34/600, timerSerif 54/400, statSerif 32–48/600, title 18/700, body 15/400, caption 11–12, overline 11/700 +10 % tracking uppercase.
 
-## 31. Appendix D — Test Device & OEM Matrix
+## 33. Appendix D — Test Device & OEM Matrix
 
 | Device class | API | Purpose |
 |---|---|---|

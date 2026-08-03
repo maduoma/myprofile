@@ -1,0 +1,1017 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#05070c">
+  <meta name="description" content="Privacy Policy for Neon Exit, an offline-first puzzle game by Dodemy Inc.">
+  <meta name="robots" content="index, follow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'none'; style-src 'unsafe-inline'; upgrade-insecure-requests">
+  <link rel="canonical" href="https://maduoma.github.io/myprofile/neon-exit-privacy-policy.html">
+  <title>Privacy Policy · Neon Exit</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --canvas: #edf1f7;
+      --surface: #ffffff;
+      --surface-raised: #f7f9fc;
+      --ink: #10141c;
+      --muted: #5a6577;
+      --line: #d3dbe6;
+      --accent: #0b6fd1;
+      --accent-strong: #0759a8;
+      --accent-soft: #e1efff;
+      --cyan: #00778c;
+      --pink: #b01560;
+      --yellow: #9a5600;
+      --green: #2a7a16;
+      --hero: #05070c;
+      --hero-raised: #151b2a;
+      --hero-ink: #edf2fa;
+      --hero-muted: #b6c1d4;
+      --shadow: 0 24px 70px rgba(16, 20, 28, 0.12);
+      --shadow-small: 0 10px 28px rgba(16, 20, 28, 0.08);
+      --radius-large: 2rem;
+      --radius-medium: 1.2rem;
+      --radius-small: 0.8rem;
+      --content: 74rem;
+      --display: "Aptos Display", "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
+      --body: Aptos, "Segoe UI Variable", "Trebuchet MS", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --canvas: #05070c;
+        --surface: #0c111c;
+        --surface-raised: #151b2a;
+        --ink: #edf2fa;
+        --muted: #aab6ca;
+        --line: #2a3550;
+        --accent: #3df5ff;
+        --accent-strong: #8df9ff;
+        --accent-soft: #123b46;
+        --cyan: #3df5ff;
+        --pink: #ff77b7;
+        --yellow: #ffc23d;
+        --green: #7cff4d;
+        --hero: #0c111c;
+        --hero-raised: #151b2a;
+        --hero-ink: #edf2fa;
+        --hero-muted: #b6c1d4;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+        --shadow-small: 0 12px 30px rgba(0, 0, 0, 0.24);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 1.5rem;
+    }
+
+    body {
+      min-width: 18rem;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 92% 2%, rgba(61, 245, 255, 0.12), transparent 26rem),
+        radial-gradient(circle at 4% 46%, rgba(255, 77, 157, 0.07), transparent 24rem),
+        var(--canvas);
+      font-family: var(--body);
+      font-size: 1rem;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--accent-strong);
+      font-weight: 700;
+      text-underline-offset: 0.18em;
+      text-decoration-thickness: 0.08em;
+    }
+
+    a:hover {
+      color: var(--cyan);
+    }
+
+    a:focus-visible,
+    summary:focus-visible,
+    .skip-link:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 4px;
+      border-radius: 0.35rem;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.7rem 1rem;
+      color: #05070c;
+      background: var(--yellow);
+      border-radius: 999px;
+      font-weight: 800;
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      width: min(calc(100% - 2rem), var(--content));
+      margin-inline: auto;
+    }
+
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      margin-top: 1rem;
+      padding: clamp(2rem, 6vw, 5.5rem);
+      color: var(--hero-ink);
+      background:
+        linear-gradient(135deg, rgba(5, 7, 12, 0.98), rgba(21, 27, 42, 0.98)),
+        var(--hero);
+      border: 1px solid rgba(61, 245, 255, 0.22);
+      border-radius: var(--radius-large);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      content: "";
+      border: 1px solid rgba(61, 245, 255, 0.26);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 32rem;
+      height: 32rem;
+      top: -17rem;
+      right: -9rem;
+      box-shadow: 0 0 0 4rem rgba(255, 77, 157, 0.04), 0 0 0 8rem rgba(61, 245, 255, 0.035);
+    }
+
+    .hero::after {
+      width: 15rem;
+      height: 15rem;
+      right: 13%;
+      bottom: -11rem;
+      border-color: rgba(255, 194, 61, 0.25);
+    }
+
+    .brand-row,
+    .document-meta,
+    .hero-grid,
+    .legal-nav,
+    .summary-grid,
+    .data-grid,
+    .contact-card,
+    .footer-row {
+      display: flex;
+    }
+
+    .brand-row {
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: clamp(2rem, 7vw, 5rem);
+      color: var(--hero-muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 2.5rem;
+      height: 2.5rem;
+      place-items: center;
+      color: #05070c;
+      background: linear-gradient(135deg, #3df5ff, #7cff4d);
+      border-radius: 0.8rem;
+      box-shadow: 0 0 2rem rgba(61, 245, 255, 0.28);
+      font-size: 0.75rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-grid {
+      align-items: end;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .hero-copy {
+      max-width: 48rem;
+    }
+
+    .kicker,
+    .section-number,
+    .eyebrow {
+      margin: 0 0 0.65rem;
+      color: var(--cyan);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--display);
+      line-height: 1.1;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      letter-spacing: -0.065em;
+    }
+
+    .lead {
+      max-width: 46rem;
+      margin: 1.5rem 0 0;
+      color: var(--hero-muted);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+    }
+
+    .document-meta {
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      color: var(--hero-muted);
+      font-size: 0.9rem;
+    }
+
+    .document-meta span {
+      padding: 0.45rem 0.75rem;
+      border: 1px solid rgba(237, 242, 250, 0.16);
+      border-radius: 999px;
+    }
+
+    .hero-signal {
+      flex: 0 0 13rem;
+      padding: 1.2rem;
+      background: rgba(12, 17, 28, 0.78);
+      border: 1px solid rgba(124, 255, 77, 0.26);
+      border-radius: var(--radius-medium);
+      box-shadow: var(--shadow-small);
+    }
+
+    .hero-signal strong {
+      display: block;
+      color: var(--green);
+      font-size: 1.55rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-signal span {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--hero-muted);
+      font-size: 0.86rem;
+    }
+
+    .legal-nav {
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0 2.5rem;
+      padding: 0.55rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: var(--shadow-small);
+    }
+
+    .legal-nav a {
+      padding: 0.65rem 1rem;
+      color: var(--muted);
+      border-radius: 999px;
+      text-decoration: none;
+    }
+
+    .legal-nav a:hover,
+    .legal-nav a[aria-current="page"] {
+      color: var(--ink);
+      background: var(--accent-soft);
+    }
+
+    .legal-nav a[aria-current="page"] {
+      color: var(--accent-strong);
+    }
+
+    main {
+      padding-bottom: 3rem;
+    }
+
+    .summary-card,
+    .callout,
+    .contact-card,
+    .data-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-small);
+    }
+
+    .summary-card {
+      margin-bottom: 2rem;
+      padding: clamp(1.3rem, 4vw, 2.2rem);
+      border-radius: var(--radius-medium);
+    }
+
+    .summary-card h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      letter-spacing: -0.04em;
+    }
+
+    .summary-card > p {
+      max-width: 58rem;
+      margin: 0.8rem 0 0;
+      color: var(--muted);
+    }
+
+    .summary-grid {
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1.4rem 0 0;
+    }
+
+    .summary-grid span {
+      padding: 0.6rem 0.8rem;
+      color: var(--muted);
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .summary-grid strong {
+      color: var(--ink);
+    }
+
+    .callout {
+      margin: 2rem 0;
+      padding: 1.2rem 1.35rem;
+      border-left: 4px solid var(--cyan);
+      border-radius: 0 var(--radius-small) var(--radius-small) 0;
+    }
+
+    .callout strong {
+      color: var(--ink);
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(12rem, 17rem) minmax(0, 1fr);
+      gap: clamp(2rem, 5vw, 4.5rem);
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 1rem;
+      padding: 1.15rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-medium);
+      box-shadow: var(--shadow-small);
+    }
+
+    .toc h2 {
+      margin: 0 0 0.8rem;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .toc ol {
+      display: grid;
+      gap: 0.35rem;
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .toc a {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .toc a:hover {
+      color: var(--accent-strong);
+    }
+
+    article {
+      min-width: 0;
+    }
+
+    .section {
+      padding: 0 0 2.4rem;
+      margin: 0 0 2.4rem;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 1.5rem;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: clamp(1.65rem, 3vw, 2.45rem);
+      letter-spacing: -0.045em;
+    }
+
+    .section h3 {
+      margin: 1.5rem 0 0.35rem;
+      font-size: 1.15rem;
+      letter-spacing: -0.025em;
+    }
+
+    .section p,
+    .section ul,
+    .section ol {
+      color: var(--muted);
+    }
+
+    .section p {
+      margin: 0.95rem 0 0;
+    }
+
+    .section ul,
+    .section ol {
+      margin: 1rem 0 0;
+      padding-left: 1.35rem;
+    }
+
+    .section li + li {
+      margin-top: 0.55rem;
+    }
+
+    .section strong {
+      color: var(--ink);
+    }
+
+    .data-grid {
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+    }
+
+    .data-card {
+      flex: 1 1 14rem;
+      min-width: 0;
+      padding: 1.1rem;
+      border-radius: var(--radius-small);
+      box-shadow: none;
+    }
+
+    .data-card h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .data-card p {
+      margin-top: 0.45rem;
+      font-size: 0.92rem;
+    }
+
+    .contact-card {
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.2rem;
+      padding: 1.2rem;
+      border-radius: var(--radius-medium);
+    }
+
+    .contact-card p {
+      margin: 0;
+    }
+
+    .contact-card .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer {
+      padding: 2rem 0 3rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-row {
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+    }
+
+    @media (max-width: 50rem) {
+      .hero-grid {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .hero-signal {
+        max-width: 22rem;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .toc {
+        position: static;
+        margin-bottom: 2.5rem;
+      }
+
+      .toc ol {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 34rem) {
+      .page-shell {
+        width: min(calc(100% - 1rem), var(--content));
+      }
+
+      .hero {
+        margin-top: 0.5rem;
+        padding: 1.5rem;
+        border-radius: 1.35rem;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 16vw, 4.2rem);
+      }
+
+      .legal-nav {
+        border-radius: var(--radius-medium);
+      }
+
+      .legal-nav a {
+        flex: 1 1 8rem;
+        text-align: center;
+      }
+
+      .toc ol {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      :root {
+        --canvas: #ffffff;
+        --surface: #ffffff;
+        --surface-raised: #ffffff;
+        --ink: #000000;
+        --muted: #222222;
+        --line: #bbbbbb;
+      }
+
+      body {
+        background: #ffffff;
+        font-size: 10.5pt;
+      }
+
+      .skip-link,
+      .legal-nav,
+      .toc,
+      footer {
+        display: none;
+      }
+
+      .hero {
+        margin-top: 0;
+        color: #000000;
+        background: #ffffff;
+        border: 2px solid #000000;
+        box-shadow: none;
+      }
+
+      .hero::before,
+      .hero::after,
+      .brand-mark,
+      .hero-signal {
+        display: none;
+      }
+
+      .hero-grid,
+      .layout {
+        display: block;
+      }
+
+      .lead,
+      .document-meta,
+      .hero-signal span,
+      .hero-signal strong,
+      .kicker,
+      .section-number {
+        color: #000000;
+      }
+
+      .summary-card,
+      .callout,
+      .contact-card,
+      .data-card {
+        box-shadow: none;
+      }
+
+      a {
+        color: #000000;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to policy content</a>
+
+  <div class="page-shell">
+    <header class="hero" aria-labelledby="page-title">
+      <div class="brand-row">
+        <span class="brand-mark" aria-hidden="true">NE</span>
+        <span>Dodemy · Legal documents</span>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="kicker">Neon Exit · Privacy</p>
+          <h1 id="page-title">Your play stays yours.</h1>
+          <p class="lead">
+            Neon Exit is an offline-first puzzle game. This policy explains what stays on your
+            device, what Google services may process, and what happens only when you choose an
+            online feature or contact us.
+          </p>
+          <div class="document-meta" aria-label="Document details">
+            <span>Last updated: August 3, 2026</span>
+            <span>Effective: August 3, 2026</span>
+          </div>
+        </div>
+
+        <div class="hero-signal" aria-label="Privacy summary">
+          <strong>Local first</strong>
+          <span>Core puzzles, settings, progress and wallet data are designed to remain on the
+            device.</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="legal-nav" aria-label="Legal documents">
+      <a href="https://maduoma.github.io/myprofile/neon-exit-privacy-policy.html" aria-current="page">Privacy policy</a>
+      <a href="https://maduoma.github.io/myprofile/terms-of-service.html">Terms of service</a>
+      <a href="mailto:dodemyinc@gmail.com?subject=Neon%20Exit%20Privacy">Contact</a>
+    </nav>
+
+    <main id="content">
+      <section class="summary-card" aria-labelledby="at-a-glance">
+        <p class="eyebrow">At a glance</p>
+        <h2 id="at-a-glance">A small data footprint, explained clearly.</h2>
+        <p>
+          We do not ask you to create an account, and Neon Exit does not need your contacts,
+          photos, microphone, camera or precise location. Optional advertising, purchases and a
+          future live-league configuration are provided through third-party or separately
+          configured services described below.
+        </p>
+        <div class="summary-grid" aria-label="Key privacy facts">
+          <span><strong>No account</strong> or sign-in</span>
+          <span><strong>No precise location</strong> permission</span>
+          <span><strong>HTTPS</strong> for configured network services</span>
+          <span><strong>Reset or uninstall</strong> to clear local game data</span>
+        </div>
+      </section>
+
+      <div class="callout" role="note">
+        <strong>Important distinction:</strong>
+        <p>
+          Dodemy does not use an Android advertising ID, IMEI or Android ID as Neon Exit's game
+          identity. Google Mobile Ads may process advertising and app information under Google's
+          own policies and the consent choices available in your region.
+        </p>
+      </div>
+
+      <div class="layout">
+        <aside class="toc" aria-label="Contents">
+          <h2>On this page</h2>
+          <ol>
+            <li><a href="#controller">Who is responsible</a></li>
+            <li><a href="#data-we-keep">Data we handle</a></li>
+            <li><a href="#how-we-use">How we use it</a></li>
+            <li><a href="#third-parties">Services and sharing</a></li>
+            <li><a href="#retention">Retention and deletion</a></li>
+            <li><a href="#your-choices">Your choices</a></li>
+            <li><a href="#children">Children's privacy</a></li>
+            <li><a href="#changes">Changes</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ol>
+        </aside>
+
+        <article>
+          <section class="section" id="controller">
+            <p class="section-number">01 · Accountability</p>
+            <h2>Who is responsible for this policy?</h2>
+            <p>
+              Neon Exit is provided by <strong>Maduabughichi Achilefu (Dodemy Inc)</strong>.
+              In this policy, “Dodemy,” “we,” “us” and “our” refer to that provider. This policy
+              applies to the Neon Exit Android application and the legal pages linked from it.
+            </p>
+            <p>
+              If you use an ad, Google Play, an email app or another third-party service from
+              Neon Exit, that service may have its own privacy notice and controller. This policy
+              explains Dodemy's handling and does not replace those third-party notices.
+            </p>
+          </section>
+
+          <section class="section" id="data-we-keep">
+            <p class="section-number">02 · Data map</p>
+            <h2>What data does Neon Exit handle?</h2>
+            <p>
+              The exact data flow depends on the features enabled in the build you install. The
+              release design is offline-first: the level pack is bundled with the app, and the
+              normal single-player experience does not require a Dodemy account or game server.
+            </p>
+
+            <div class="data-grid">
+              <div class="data-card">
+                <h3>Game and settings data</h3>
+                <p>
+                  Progress, level results, streaks, daily-challenge results, sessions, settings,
+                  accessibility choices, sound preferences and in-app wallet state are stored in
+                  the app's private Android storage so the game can resume and work offline.
+                </p>
+              </div>
+              <div class="data-card">
+                <h3>Optional player identity</h3>
+                <p>
+                  The leagues feature can create a random, pseudonymous install identifier and an
+                  assigned display name. If you choose a custom name, that name and your scores
+                  can be used for the leaderboard. No email address is required.
+                </p>
+              </div>
+              <div class="data-card">
+                <h3>Country display</h3>
+                <p>
+                  A country code used for a league flag may be inferred on-device from SIM/network
+                  information or the device locale. Neon Exit does not request precise location
+                  permission and does not geolocate you.
+                </p>
+              </div>
+              <div class="data-card">
+                <h3>Purchases and consent</h3>
+                <p>
+                  Google Play processes payment details. Neon Exit receives purchase entitlement
+                  state, such as whether ads are removed, and the advertising consent state needed
+                  to decide whether an ad may be requested. We do not receive your card number.
+                </p>
+              </div>
+              <div class="data-card">
+                <h3>Advertising data</h3>
+                <p>
+                  If the free experience displays ads, Google Mobile Ads may process device,
+                  advertising, network, approximate-location and ad-interaction information under
+                  Google's policies and your consent choices. Dodemy does not control Google's
+                  independent processing.
+                </p>
+              </div>
+              <div class="data-card">
+                <h3>Support information</h3>
+                <p>
+                  If you select “Write us,” the email composer may be pre-filled with the app
+                  version, device model, Android version and the anonymous install identifier.
+                  You can review and remove that information before sending it.
+                </p>
+              </div>
+            </div>
+
+            <h3>Data Neon Exit does not request</h3>
+            <ul>
+              <li>contacts, address books, call history, SMS or calendar data;</li>
+              <li>camera, microphone, photos or broad file-library access;</li>
+              <li>precise GPS location or background location;</li>
+              <li>an account password, date of birth or identity document; or</li>
+              <li>an Android ID, IMEI or advertising ID as the game's own player identifier.</li>
+            </ul>
+          </section>
+
+          <section class="section" id="how-we-use">
+            <p class="section-number">03 · Purpose</p>
+            <h2>How we use information</h2>
+            <p>We use the information described above only as needed to:</p>
+            <ul>
+              <li>run the game, save your progress and remember your preferences;</li>
+              <li>provide optional daily challenges, league standings and name availability checks;</li>
+              <li>deliver, measure and cap advertising where ads are enabled and permitted;</li>
+              <li>complete, restore and secure in-app purchases through Google Play;</li>
+              <li>respond to support requests that you initiate;</li>
+              <li>protect the app, detect failures and maintain service reliability; and</li>
+              <li>comply with legal obligations and enforce the <a href="https://maduoma.github.io/myprofile/terms-of-service.html">Terms of Service</a>.</li>
+            </ul>
+            <p>
+              We do not sell your personal information. We do not use the local game state to
+              build an advertising profile for Dodemy. Google may process information for its own
+              services according to the notices linked in <a href="#third-parties">Services and sharing</a>.
+            </p>
+          </section>
+
+          <section class="section" id="third-parties">
+            <p class="section-number">04 · Providers</p>
+            <h2>Services and sharing</h2>
+            <p>
+              Neon Exit shares information only with the providers needed for a feature you use,
+              and with a configured league service when that optional online feature is enabled.
+              These providers may process data on servers outside your country.
+            </p>
+            <ul>
+              <li>
+                <strong>Google Play:</strong> distributes the app and processes purchases,
+                refunds, account eligibility and purchase restoration. See the
+                <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.
+              </li>
+              <li>
+                <strong>Google Mobile Ads and the User Messaging Platform:</strong> request and
+                display ads, manage consent and report ad delivery or interaction. Read
+                <a href="https://support.google.com/admob/answer/6128543">Google's publisher and app privacy guidance</a>
+                and Google's privacy policy for the applicable details.
+              </li>
+              <li>
+                <strong>Optional league service:</strong> if a build is configured with a live
+                league API, it may receive the random install identifier, display name, country
+                code, weekly score and name-availability requests. The default simulated league
+                is on-device and sends none of this data.
+              </li>
+              <li>
+                <strong>Your chosen apps:</strong> when you open a browser, Play Store or email
+                composer, Android hands control to that app. Its processing is governed by its
+                provider and your relationship with it.
+              </li>
+            </ul>
+            <p>
+              We may disclose information when required by law, to respond to a valid legal
+              process, or to protect users, Dodemy and the security of the app. We do not disclose
+              local game files to other apps as part of normal gameplay.
+            </p>
+          </section>
+
+          <section class="section" id="retention">
+            <p class="section-number">05 · Lifecycle</p>
+            <h2>Retention, storage and deletion</h2>
+            <p>
+              Local game data remains in the app's private storage until you reset it through the
+              app, clear Neon Exit's storage in Android settings, or uninstall the app. Android
+              backups and device migration are controlled by your device and account settings; do
+              not rely on a backup as a permanent archive of progress.
+            </p>
+            <p>
+              If online leagues are enabled, the optional service may retain the pseudonymous
+              league record for as long as needed to operate seasons, prevent abuse and meet legal
+              obligations. Because the record is not tied to an email account, send a deletion
+              request to <a href="mailto:dodemyinc@gmail.com?subject=Neon%20Exit%20Data%20Deletion">dodemyinc@gmail.com</a>
+              with enough information to identify the install record. Do not include passwords or
+              other unnecessary sensitive information.
+            </p>
+            <p>
+              Google controls retention for Google Play, Google Mobile Ads and its consent tools.
+              Use the controls provided by Google or contact Google for requests about data held
+              directly by those services.
+            </p>
+          </section>
+
+          <section class="section" id="your-choices">
+            <p class="section-number">06 · Control</p>
+            <h2>Your choices and rights</h2>
+            <ul>
+              <li>
+                <strong>Play offline:</strong> the bundled puzzle experience can be used without
+                enabling a live league service or sending game data to a Dodemy server.
+              </li>
+              <li>
+                <strong>Manage advertising consent:</strong> open Settings → Privacy options when
+                the control is available. You can also use the consent controls provided by Google.
+              </li>
+              <li>
+                <strong>Review before sending:</strong> the support email is user-initiated; edit
+                or delete pre-filled diagnostics before sending.
+              </li>
+              <li>
+                <strong>Delete local data:</strong> reset progress in the app or clear the app's
+                storage/uninstall it through Android. Clearing storage also removes locally stored
+                preferences and wallet state.
+              </li>
+              <li>
+                <strong>Request help:</strong> email us if you want to ask about access, deletion,
+                correction or a privacy concern. We may need to verify the request before acting.
+              </li>
+            </ul>
+            <p>
+              Depending on where you live, you may have additional rights under privacy law,
+              including access, correction, deletion, restriction, objection or a right to lodge a
+              complaint with a supervisory authority. We will handle valid requests subject to
+              applicable law and the limits imposed by third-party services.
+            </p>
+          </section>
+
+          <section class="section" id="security">
+            <p class="section-number">07 · Safeguards</p>
+            <h2>Security</h2>
+            <p>
+              Neon Exit uses Android private storage for local state, random install identifiers
+              rather than hardware identifiers, and HTTPS for configured network services. The
+              app also validates persisted state and is designed to fall back to local gameplay
+              when an optional service is unavailable.
+            </p>
+            <p>
+              No software or transmission is perfectly secure. Keep Android updated, install the
+              app from a trusted source, protect your device, and avoid sending information by
+              email that you would not want included in a support ticket.
+            </p>
+          </section>
+
+          <section class="section" id="children">
+            <p class="section-number">08 · Age</p>
+            <h2>Children's privacy</h2>
+            <p>
+              Neon Exit is not directed to children under 13, and you must meet the minimum age
+              required to use digital services in your country. We do not knowingly collect a
+              child's personal information. If you believe a child has provided information to us,
+              contact us so we can review and delete it where required.
+            </p>
+          </section>
+
+          <section class="section" id="changes">
+            <p class="section-number">09 · Revisions</p>
+            <h2>Changes to this policy</h2>
+            <p>
+              We may update this policy when the app, its providers, security practices or legal
+              requirements change. The “Last updated” date at the top will change with a revision.
+              If a change is material, we will provide additional notice when required by law.
+              Continuing to use Neon Exit after an updated policy takes effect means the updated
+              policy applies, subject to any rights that cannot legally be waived.
+            </p>
+          </section>
+
+          <section class="section" id="contact">
+            <p class="section-number">10 · Reach us</p>
+            <h2>Contact</h2>
+            <p>
+              Questions, privacy requests and deletion requests can be sent to:
+            </p>
+            <div class="contact-card">
+              <div>
+                <p><strong>Maduabughichi Achilefu (Dodemy Inc)</strong></p>
+                <p class="muted">Privacy contact · Neon Exit</p>
+              </div>
+              <a href="mailto:dodemyinc@gmail.com?subject=Neon%20Exit%20Privacy">dodemyinc@gmail.com</a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-row">
+        <span>© 2026 Dodemy Inc · Neon Exit</span>
+        <nav class="footer-links" aria-label="Legal links">
+          <a href="https://maduoma.github.io/myprofile/neon-exit-privacy-policy.html" aria-current="page">Privacy</a>
+          <a href="https://maduoma.github.io/myprofile/terms-of-service.html">Terms</a>
+          <a href="mailto:dodemyinc@gmail.com">Support</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

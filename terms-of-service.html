@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#05070c">
+  <meta name="description" content="Terms of Service for Neon Exit and the shared Dodemy app legal document hub.">
+  <meta name="robots" content="index, follow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'none'; style-src 'unsafe-inline'; upgrade-insecure-requests">
+  <link rel="canonical" href="https://maduoma.github.io/myprofile/terms-of-service.html">
+  <title>Terms of Service · Neon Exit</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --canvas: #edf1f7;
+      --surface: #ffffff;
+      --surface-raised: #f7f9fc;
+      --ink: #10141c;
+      --muted: #5a6577;
+      --line: #d3dbe6;
+      --accent: #0b6fd1;
+      --accent-strong: #0759a8;
+      --accent-soft: #e1efff;
+      --cyan: #00778c;
+      --pink: #b01560;
+      --yellow: #9a5600;
+      --green: #2a7a16;
+      --hero: #05070c;
+      --hero-raised: #151b2a;
+      --hero-ink: #edf2fa;
+      --hero-muted: #b6c1d4;
+      --shadow: 0 24px 70px rgba(16, 20, 28, 0.12);
+      --shadow-small: 0 10px 28px rgba(16, 20, 28, 0.08);
+      --radius-large: 2rem;
+      --radius-medium: 1.2rem;
+      --radius-small: 0.8rem;
+      --content: 74rem;
+      --display: "Aptos Display", "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
+      --body: Aptos, "Segoe UI Variable", "Trebuchet MS", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --canvas: #05070c;
+        --surface: #0c111c;
+        --surface-raised: #151b2a;
+        --ink: #edf2fa;
+        --muted: #aab6ca;
+        --line: #2a3550;
+        --accent: #3df5ff;
+        --accent-strong: #8df9ff;
+        --accent-soft: #123b46;
+        --cyan: #3df5ff;
+        --pink: #ff77b7;
+        --yellow: #ffc23d;
+        --green: #7cff4d;
+        --hero: #0c111c;
+        --hero-raised: #151b2a;
+        --hero-ink: #edf2fa;
+        --hero-muted: #b6c1d4;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+        --shadow-small: 0 12px 30px rgba(0, 0, 0, 0.24);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 1.5rem;
+    }
+
+    body {
+      min-width: 18rem;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 92% 2%, rgba(61, 245, 255, 0.12), transparent 26rem),
+        radial-gradient(circle at 4% 46%, rgba(255, 77, 157, 0.07), transparent 24rem),
+        var(--canvas);
+      font-family: var(--body);
+      font-size: 1rem;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--accent-strong);
+      font-weight: 700;
+      text-underline-offset: 0.18em;
+      text-decoration-thickness: 0.08em;
+    }
+
+    a:hover {
+      color: var(--cyan);
+    }
+
+    a:focus-visible,
+    summary:focus-visible,
+    .skip-link:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 4px;
+      border-radius: 0.35rem;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.7rem 1rem;
+      color: #05070c;
+      background: var(--yellow);
+      border-radius: 999px;
+      font-weight: 800;
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      width: min(calc(100% - 2rem), var(--content));
+      margin-inline: auto;
+    }
+
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      margin-top: 1rem;
+      padding: clamp(2rem, 6vw, 5.5rem);
+      color: var(--hero-ink);
+      background:
+        linear-gradient(135deg, rgba(5, 7, 12, 0.98), rgba(21, 27, 42, 0.98)),
+        var(--hero);
+      border: 1px solid rgba(61, 245, 255, 0.22);
+      border-radius: var(--radius-large);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      content: "";
+      border: 1px solid rgba(61, 245, 255, 0.26);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 32rem;
+      height: 32rem;
+      top: -17rem;
+      right: -9rem;
+      box-shadow: 0 0 0 4rem rgba(255, 77, 157, 0.04), 0 0 0 8rem rgba(61, 245, 255, 0.035);
+    }
+
+    .hero::after {
+      width: 15rem;
+      height: 15rem;
+      right: 13%;
+      bottom: -11rem;
+      border-color: rgba(255, 194, 61, 0.25);
+    }
+
+    .brand-row,
+    .document-meta,
+    .hero-grid,
+    .legal-nav,
+    .summary-grid,
+    .product-options,
+    .contact-card,
+    .footer-row {
+      display: flex;
+    }
+
+    .brand-row {
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: clamp(2rem, 7vw, 5rem);
+      color: var(--hero-muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 2.5rem;
+      height: 2.5rem;
+      place-items: center;
+      color: #05070c;
+      background: linear-gradient(135deg, #3df5ff, #ff4d9d);
+      border-radius: 0.8rem;
+      box-shadow: 0 0 2rem rgba(61, 245, 255, 0.28);
+      font-size: 0.75rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-grid {
+      align-items: end;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .hero-copy {
+      max-width: 48rem;
+    }
+
+    .kicker,
+    .section-number,
+    .eyebrow {
+      margin: 0 0 0.65rem;
+      color: var(--cyan);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--display);
+      line-height: 1.1;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      letter-spacing: -0.065em;
+    }
+
+    .lead {
+      max-width: 46rem;
+      margin: 1.5rem 0 0;
+      color: var(--hero-muted);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+    }
+
+    .document-meta {
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      color: var(--hero-muted);
+      font-size: 0.9rem;
+    }
+
+    .document-meta span {
+      padding: 0.45rem 0.75rem;
+      border: 1px solid rgba(237, 242, 250, 0.16);
+      border-radius: 999px;
+    }
+
+    .hero-signal {
+      flex: 0 0 13rem;
+      padding: 1.2rem;
+      background: rgba(12, 17, 28, 0.78);
+      border: 1px solid rgba(255, 194, 61, 0.3);
+      border-radius: var(--radius-medium);
+      box-shadow: var(--shadow-small);
+    }
+
+    .hero-signal strong {
+      display: block;
+      color: var(--yellow);
+      font-size: 1.55rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-signal span {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--hero-muted);
+      font-size: 0.86rem;
+    }
+
+    .legal-nav {
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0 2.5rem;
+      padding: 0.55rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: var(--shadow-small);
+    }
+
+    .legal-nav a {
+      padding: 0.65rem 1rem;
+      color: var(--muted);
+      border-radius: 999px;
+      text-decoration: none;
+    }
+
+    .legal-nav a:hover,
+    .legal-nav a[aria-current="page"] {
+      color: var(--ink);
+      background: var(--accent-soft);
+    }
+
+    .legal-nav a[aria-current="page"] {
+      color: var(--accent-strong);
+    }
+
+    main {
+      padding-bottom: 3rem;
+    }
+
+    .summary-card,
+    .callout,
+    .contact-card,
+    .product-picker {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-small);
+    }
+
+    .summary-card {
+      margin-bottom: 2rem;
+      padding: clamp(1.3rem, 4vw, 2.2rem);
+      border-radius: var(--radius-medium);
+    }
+
+    .summary-card h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      letter-spacing: -0.04em;
+    }
+
+    .summary-card > p {
+      max-width: 58rem;
+      margin: 0.8rem 0 0;
+      color: var(--muted);
+    }
+
+    .summary-grid {
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin: 1.4rem 0 0;
+    }
+
+    .summary-grid span {
+      padding: 0.6rem 0.8rem;
+      color: var(--muted);
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .summary-grid strong {
+      color: var(--ink);
+    }
+
+    .product-picker {
+      margin: 0 0 2rem;
+      border-radius: var(--radius-medium);
+      overflow: hidden;
+    }
+
+    .product-picker summary {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-height: 4.5rem;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .product-picker summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .product-picker summary::after {
+      margin-left: auto;
+      color: var(--accent-strong);
+      content: "⌄";
+      font-size: 1.35rem;
+      line-height: 1;
+      transition: transform 160ms ease;
+    }
+
+    .product-picker[open] summary::after {
+      transform: rotate(180deg);
+    }
+
+    .picker-label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .picker-current {
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .picker-action {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .product-options {
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+    }
+
+    .product-option {
+      display: flex;
+      flex: 1 1 16rem;
+      min-width: 0;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 1rem 1.25rem;
+      color: var(--muted);
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      text-decoration: none;
+    }
+
+    .product-option:last-child {
+      border-right: 0;
+    }
+
+    .product-option:hover,
+    .product-option.current {
+      color: var(--ink);
+      background: var(--accent-soft);
+    }
+
+    .product-option strong {
+      color: var(--ink);
+    }
+
+    .product-option span {
+      font-size: 0.85rem;
+    }
+
+    .product-option.upcoming {
+      background: var(--surface-raised);
+    }
+
+    .callout {
+      margin: 2rem 0;
+      padding: 1.2rem 1.35rem;
+      border-left: 4px solid var(--pink);
+      border-radius: 0 var(--radius-small) var(--radius-small) 0;
+    }
+
+    .callout strong {
+      color: var(--ink);
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(12rem, 17rem) minmax(0, 1fr);
+      gap: clamp(2rem, 5vw, 4.5rem);
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 1rem;
+      padding: 1.15rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-medium);
+      box-shadow: var(--shadow-small);
+    }
+
+    .toc h2 {
+      margin: 0 0 0.8rem;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .toc ol {
+      display: grid;
+      gap: 0.35rem;
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .toc a {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .toc a:hover {
+      color: var(--accent-strong);
+    }
+
+    article {
+      min-width: 0;
+    }
+
+    .section {
+      padding: 0 0 2.4rem;
+      margin: 0 0 2.4rem;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 1.5rem;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: clamp(1.65rem, 3vw, 2.45rem);
+      letter-spacing: -0.045em;
+    }
+
+    .section h3 {
+      margin: 1.5rem 0 0.35rem;
+      font-size: 1.15rem;
+      letter-spacing: -0.025em;
+    }
+
+    .section p,
+    .section ul,
+    .section ol {
+      color: var(--muted);
+    }
+
+    .section p {
+      margin: 0.95rem 0 0;
+    }
+
+    .section ul,
+    .section ol {
+      margin: 1rem 0 0;
+      padding-left: 1.35rem;
+    }
+
+    .section li + li {
+      margin-top: 0.55rem;
+    }
+
+    .section strong {
+      color: var(--ink);
+    }
+
+    .contact-card {
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.2rem;
+      padding: 1.2rem;
+      border-radius: var(--radius-medium);
+    }
+
+    .contact-card p {
+      margin: 0;
+    }
+
+    .contact-card .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer {
+      padding: 2rem 0 3rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-row {
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+    }
+
+    @media (max-width: 50rem) {
+      .hero-grid {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .hero-signal {
+        max-width: 22rem;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .toc {
+        position: static;
+        margin-bottom: 2.5rem;
+      }
+
+      .toc ol {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 34rem) {
+      .page-shell {
+        width: min(calc(100% - 1rem), var(--content));
+      }
+
+      .hero {
+        margin-top: 0.5rem;
+        padding: 1.5rem;
+        border-radius: 1.35rem;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 16vw, 4.2rem);
+      }
+
+      .legal-nav {
+        border-radius: var(--radius-medium);
+      }
+
+      .legal-nav a {
+        flex: 1 1 8rem;
+        text-align: center;
+      }
+
+      .toc ol {
+        grid-template-columns: 1fr;
+      }
+
+      .picker-action {
+        display: none;
+      }
+
+      .product-option {
+        flex-basis: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .product-option:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    @media print {
+      :root {
+        --canvas: #ffffff;
+        --surface: #ffffff;
+        --surface-raised: #ffffff;
+        --ink: #000000;
+        --muted: #222222;
+        --line: #bbbbbb;
+      }
+
+      body {
+        background: #ffffff;
+        font-size: 10.5pt;
+      }
+
+      .skip-link,
+      .legal-nav,
+      .toc,
+      .product-picker,
+      footer {
+        display: none;
+      }
+
+      .hero {
+        margin-top: 0;
+        color: #000000;
+        background: #ffffff;
+        border: 2px solid #000000;
+        box-shadow: none;
+      }
+
+      .hero::before,
+      .hero::after,
+      .brand-mark,
+      .hero-signal {
+        display: none;
+      }
+
+      .hero-grid,
+      .layout {
+        display: block;
+      }
+
+      .lead,
+      .document-meta,
+      .hero-signal span,
+      .hero-signal strong,
+      .kicker,
+      .section-number {
+        color: #000000;
+      }
+
+      a {
+        color: #000000;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to terms content</a>
+
+  <div class="page-shell">
+    <header class="hero" aria-labelledby="page-title">
+      <div class="brand-row">
+        <span class="brand-mark" aria-hidden="true">NE</span>
+        <span>Dodemy · Legal documents</span>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="kicker">Neon Exit · Terms</p>
+          <h1 id="page-title">Clear terms for a fair puzzle.</h1>
+          <p class="lead">
+            These Terms of Service govern your use of Neon Exit. They explain the game license,
+            optional ads and purchases, online league features, third-party services and the rules
+            that keep the experience safe for everyone.
+          </p>
+          <div class="document-meta" aria-label="Document details">
+            <span>Last updated: August 3, 2026</span>
+            <span>Effective: August 3, 2026</span>
+          </div>
+        </div>
+
+        <div class="hero-signal" aria-label="Terms summary">
+          <strong>Play your way</strong>
+          <span>The core puzzle experience is offline-first; optional services and purchases are
+            described below.</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="legal-nav" aria-label="Legal documents">
+      <a href="https://maduoma.github.io/myprofile/neon-exit-privacy-policy.html">Privacy policy</a>
+      <a href="https://maduoma.github.io/myprofile/terms-of-service.html#neon-exit" aria-current="page">Terms of service</a>
+      <a href="mailto:dodemyinc@gmail.com?subject=Neon%20Exit%20Terms">Contact</a>
+    </nav>
+
+    <main id="content">
+      <section class="summary-card" aria-labelledby="at-a-glance">
+        <p class="eyebrow">At a glance</p>
+        <h2 id="at-a-glance">One shared legal address, product-specific clarity.</h2>
+        <p>
+          This stable <strong>terms-of-service.html</strong> address is designed as a shared Dodemy
+          legal hub. Use the product picker below to keep each app's terms discoverable as the
+          portfolio grows.
+        </p>
+        <div class="summary-grid" aria-label="Key terms facts">
+          <span><strong>No account</strong> is required for core play</span>
+          <span><strong>Offline-first</strong> puzzle experience</span>
+          <span><strong>Google Play</strong> rules apply to purchases</span>
+          <span><strong>Scores have no cash value</strong></span>
+        </div>
+      </section>
+
+      <details class="product-picker" open>
+        <summary>
+          <span class="picker-label">Viewing terms for</span>
+          <span class="picker-current">Neon Exit</span>
+          <span class="picker-action">Change app</span>
+        </summary>
+        <div class="product-options" aria-label="Choose a Dodemy app">
+          <a class="product-option current" href="https://maduoma.github.io/myprofile/terms-of-service.html#neon-exit" aria-current="page">
+            <strong>Neon Exit</strong>
+            <span>Offline-first puzzle game · current document</span>
+          </a>
+          <a class="product-option" href="https://maduoma.github.io/myprofile/terms-of-service-policy.html">
+            <strong>Status Saver - Status Downloader</strong>
+            <span>Open the existing product-specific terms</span>
+          </a>
+          <span class="product-option upcoming">
+            <strong>Future Dodemy apps</strong>
+            <span>Add each product here with its stable document target as it launches.</span>
+          </span>
+        </div>
+      </details>
+
+      <div class="callout" role="note">
+        <strong>Why a dropdown instead of tabs?</strong>
+        <p>
+          A disclosure menu remains readable and keyboard-friendly when there are many apps. Each
+          app can be added as a product entry without redesigning this page or changing the legal
+          URL already shipped in an installed app. The terms below apply to the currently selected
+          Neon Exit entry.
+        </p>
+      </div>
+
+      <div class="layout">
+        <aside class="toc" aria-label="Contents">
+          <h2>On this page</h2>
+          <ol>
+            <li><a href="#neon-exit">Product covered</a></li>
+            <li><a href="#acceptance">Acceptance</a></li>
+            <li><a href="#the-game">The game</a></li>
+            <li><a href="#eligibility">Eligibility</a></li>
+            <li><a href="#license">License</a></li>
+            <li><a href="#your-content">Names and content</a></li>
+            <li><a href="#acceptable-use">Acceptable use</a></li>
+            <li><a href="#ads-purchases">Ads and purchases</a></li>
+            <li><a href="#third-parties">Third parties</a></li>
+            <li><a href="#privacy">Privacy</a></li>
+            <li><a href="#ownership">Ownership</a></li>
+            <li><a href="#availability">Availability</a></li>
+            <li><a href="#termination">Ending use</a></li>
+            <li><a href="#disclaimers">Disclaimers</a></li>
+            <li><a href="#liability">Liability</a></li>
+            <li><a href="#changes">Changes</a></li>
+            <li><a href="#general">General terms</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ol>
+        </aside>
+
+        <article>
+          <section class="section" id="neon-exit">
+            <p class="section-number">01 · Product</p>
+            <h2>Terms for Neon Exit</h2>
+            <p>
+              These Terms apply to <strong>Neon Exit</strong>, an Android puzzle game provided by
+              <strong>Maduabughichi Achilefu (Dodemy Inc)</strong>. In these Terms, “Neon Exit,”
+              “the App,” “we,” “us” and “our” refer to that product and provider.
+            </p>
+            <p>
+              If you select another app in the product picker, read the product-specific terms
+              identified by that entry. App-store terms, mandatory consumer protections and any
+              product-specific notice that cannot legally be excluded continue to apply.
+            </p>
+          </section>
+
+          <section class="section" id="acceptance">
+            <p class="section-number">02 · Agreement</p>
+            <h2>Accepting these Terms</h2>
+            <p>
+              By installing, accessing or using Neon Exit, you agree to these Terms and the
+              <a href="https://maduoma.github.io/myprofile/neon-exit-privacy-policy.html">Neon Exit Privacy Policy</a>,
+              which is incorporated into these Terms by reference. If you do not agree, do not
+              install or use the App.
+            </p>
+            <p>
+              If you use Neon Exit for an organisation, you confirm that you have authority to
+              accept these Terms for that organisation. “You” then includes the organisation.
+            </p>
+          </section>
+
+          <section class="section" id="the-game">
+            <p class="section-number">03 · Experience</p>
+            <h2>What the App provides</h2>
+            <p>
+              Neon Exit is an offline-first puzzle game with bundled levels, daily challenges,
+              local progress, optional accessibility settings, and optional league features. The
+              default simulated league is generated on-device. A build may also be configured to
+              use a live league service; when it is, the Privacy Policy explains the limited
+              pseudonymous information involved.
+            </p>
+            <p>
+              The App is entertainment software. Leaderboard positions, scores, seasons and
+              simulated opponents are not guaranteed to be permanent, accurate, uninterrupted or
+              suitable for competitions with prizes. Do not rely on the App as a storage service or
+              as the sole copy of anything important.
+            </p>
+          </section>
+
+          <section class="section" id="eligibility">
+            <p class="section-number">04 · Capacity</p>
+            <h2>Eligibility and responsible use</h2>
+            <p>
+              You must be at least 13 years old and meet the minimum age required to consent to
+              digital services in your country. If you are below the age of legal majority, use the
+              App only with permission and supervision from a parent or legal guardian who accepts
+              these Terms.
+            </p>
+            <p>
+              You may not use the App if applicable law, a court order or an app-store rule
+              prohibits you from receiving or using it.
+            </p>
+          </section>
+
+          <section class="section" id="license">
+            <p class="section-number">05 · Permission</p>
+            <h2>Limited App license</h2>
+            <p>
+              Subject to these Terms, Dodemy grants you a limited, personal, revocable,
+              non-exclusive, non-transferable and non-sublicensable license to install and use the
+              App on devices you own or control for lawful personal entertainment. This is a
+              license, not a sale. All rights not expressly granted remain with Dodemy and its
+              licensors.
+            </p>
+            <p>
+              Your download and use through Google Play is also subject to the
+              <a href="https://play.google.com/about/play-terms/">Google Play Terms of Service</a>
+              and applicable device, payment and app-store rules.
+            </p>
+          </section>
+
+          <section class="section" id="your-content">
+            <p class="section-number">06 · Participation</p>
+            <h2>Names and information you provide</h2>
+            <p>
+              You may choose a display name for optional league features. You are responsible for
+              choosing a name that is lawful, available and not misleading or abusive. Do not use
+              another person's name or identity in a way that could deceive, harass or harm them.
+            </p>
+            <p>
+              You are responsible for information you send to support and for reviewing the
+              pre-filled diagnostics before sending an email. Do not send passwords, payment
+              details or sensitive information that is not necessary to resolve your request.
+            </p>
+          </section>
+
+          <section class="section" id="acceptable-use">
+            <p class="section-number">07 · Guardrails</p>
+            <h2>Acceptable use</h2>
+            <p>You must not use the App to:</p>
+            <ul>
+              <li>violate any law, regulation, court order, contract or third-party right;</li>
+              <li>harass, threaten, stalk, exploit, impersonate, deceive, defame or spam anyone;</li>
+              <li>submit unlawful, hateful, sexually exploitative or abusive display names or content;</li>
+              <li>introduce malware, harmful code, excessive load or interference;</li>
+              <li>bypass consent prompts, purchase checks, advertising controls or security features;</li>
+              <li>scrape, automate or operate the App at a scale inconsistent with normal personal use;</li>
+              <li>reverse engineer, decompile or disassemble the App except where the restriction is prohibited by law;</li>
+              <li>rent, lease, sell, sublicense, redistribute or commercially exploit the App without written permission; or</li>
+              <li>misrepresent an affiliation with Dodemy, Google, Google Play or another provider.</li>
+            </ul>
+          </section>
+
+          <section class="section" id="ads-purchases">
+            <p class="section-number">08 · Monetisation</p>
+            <h2>Advertising, purchases and virtual items</h2>
+            <h3>Advertising</h3>
+            <p>
+              The free experience may display advertising supplied by Google Mobile Ads. Ad
+              availability, selection, measurement and personalisation are managed by Google,
+              subject to applicable consent settings and Google's policies. Ads may link to
+              third-party sites or products; Dodemy does not control or endorse every advertiser.
+            </p>
+            <h3>Purchases</h3>
+            <p>
+              The App may offer one-time in-app products such as an ad-removal entitlement or
+              booster items. The price, currency, taxes, availability and purchase terms shown by
+              Google Play at checkout control. Google Play processes payment and may require an
+              eligible Google account.
+            </p>
+            <ul>
+              <li>an ad-removal entitlement affects ads requested by Neon Exit, not third-party apps or websites;</li>
+              <li>booster items, if offered, are for use in the App, have no cash value and cannot be transferred or redeemed for money;</li>
+              <li>the App may provide a restore function for eligible purchases, subject to Google Play connectivity and account eligibility; and</li>
+              <li>refunds, chargebacks and payment disputes are governed by Google Play's rules and mandatory consumer law.</li>
+            </ul>
+            <p>
+              We may correct a pricing or product-description error before purchase. Nothing in
+              these Terms removes a consumer right that cannot legally be waived.
+            </p>
+          </section>
+
+          <section class="section" id="third-parties">
+            <p class="section-number">09 · Dependencies</p>
+            <h2>Third-party services</h2>
+            <p>
+              Neon Exit may interact with Android, Google Play, Google Mobile Ads, Google consent
+              tools, a browser, an email app and an optional league service. Those products are
+              controlled by their respective providers and governed by their own terms, policies,
+              availability and technical requirements.
+            </p>
+            <p>
+              Dodemy is not responsible for third-party content, conduct, outages, account
+              restrictions, security or policy decisions. Your third-party accounts remain subject
+              to the rules of those providers.
+            </p>
+          </section>
+
+          <section class="section" id="privacy">
+            <p class="section-number">10 · Data</p>
+            <h2>Privacy</h2>
+            <p>
+              The <a href="https://maduoma.github.io/myprofile/neon-exit-privacy-policy.html">Privacy Policy</a>
+              explains local storage, optional league data, advertising and consent providers,
+              purchases, retention, deletion, security and your choices. It is part of these Terms.
+            </p>
+            <p>
+              You must not use the App to collect, store or disclose another person's information
+              unlawfully, or to submit personal information about another person without a lawful
+              basis and any consent required by law.
+            </p>
+          </section>
+
+          <section class="section" id="ownership">
+            <p class="section-number">11 · Rights</p>
+            <h2>Dodemy intellectual property</h2>
+            <p>
+              The App, including its software, original interface, visual design, text, branding,
+              puzzle presentation and documentation, is owned by Dodemy or its licensors and is
+              protected by applicable intellectual-property laws. These Terms do not grant you a
+              right to use Dodemy names, logos or marks except as necessary to identify the
+              unmodified App.
+            </p>
+            <p>
+              If you send feedback, you grant Dodemy a worldwide, perpetual, irrevocable,
+              royalty-free right to use it to improve products and services without an obligation
+              to compensate you. Do not send confidential information as feedback.
+            </p>
+          </section>
+
+          <section class="section" id="availability">
+            <p class="section-number">12 · Evolution</p>
+            <h2>Updates, compatibility and availability</h2>
+            <p>
+              We may add, change, suspend or discontinue features to improve security, comply with
+              law, respond to platform changes or operate the product. Android versions, device
+              vendors, Google services and optional league infrastructure can change without our
+              control.
+            </p>
+            <p>
+              You may need to install updates for continued compatibility or security. We do not
+              guarantee uninterrupted or error-free operation, a particular feature, a particular
+              score, a particular opponent, or permanent availability of the App.
+            </p>
+          </section>
+
+          <section class="section" id="termination">
+            <p class="section-number">13 · Ending use</p>
+            <h2>Suspension and termination</h2>
+            <p>
+              You may end this agreement at any time by stopping use and uninstalling the App.
+              Dodemy may suspend or terminate the license if you materially breach these Terms, if
+              required by law or a platform provider, or if the App is discontinued.
+            </p>
+            <p>
+              When the license ends, your right to use the App ends. Provisions that by their
+              nature should survive—including ownership, privacy, disclaimers, liability limits,
+              indemnity and general terms—survive. Files and backups already on your device are
+              not automatically deleted when you uninstall the App.
+            </p>
+          </section>
+
+          <section class="section" id="disclaimers">
+            <p class="section-number">14 · Risk</p>
+            <h2>Disclaimers</h2>
+            <p>
+              <strong>
+                To the maximum extent permitted by law, the App and its optional services are
+                provided “as is” and “as available,” without warranties of any kind, whether
+                express, implied or statutory, including warranties of merchantability, fitness
+                for a particular purpose, title, non-infringement, availability, accuracy or
+                security.
+              </strong>
+            </p>
+            <p>
+              We do not warrant that the App will be uninterrupted, error-free, secure, compatible
+              with every device or free of harmful material, or that saved progress, league
+              standings or purchases will always be available. Some jurisdictions do not allow
+              certain exclusions, so those exclusions apply only to the extent permitted there.
+            </p>
+          </section>
+
+          <section class="section" id="liability">
+            <p class="section-number">15 · Allocation</p>
+            <h2>Limitation of liability</h2>
+            <p>
+              To the maximum extent permitted by law, Dodemy and its affiliates, personnel and
+              licensors will not be liable for indirect, incidental, special, consequential,
+              exemplary or punitive damages; loss of data, progress, profits, goodwill or
+              opportunity; account restrictions; third-party claims; or damage arising from your
+              use of the App or content you submit.
+            </p>
+            <p>
+              To the maximum extent permitted by law, Dodemy's aggregate liability arising from
+              the App or these Terms will not exceed the greater of the amount you paid Dodemy
+              through Google Play for the App during the twelve months before the event giving rise
+              to the claim or the minimum amount required by applicable law.
+            </p>
+            <p>
+              Nothing in these Terms excludes liability that cannot lawfully be excluded, including
+              liability for fraud, fraudulent misrepresentation or other non-waivable rights.
+            </p>
+          </section>
+
+          <section class="section" id="indemnity">
+            <p class="section-number">16 · Claims</p>
+            <h2>Indemnity</h2>
+            <p>
+              To the extent permitted by law, you agree to defend, indemnify and hold Dodemy
+              harmless from third-party claims, losses, liabilities and reasonable costs arising
+              from your unlawful use of the App, your violation of another person's rights, your
+              submitted content or your material breach of these Terms. This does not apply where
+              prohibited by consumer law or to the extent a claim resulted from Dodemy's own
+              wrongful conduct.
+            </p>
+          </section>
+
+          <section class="section" id="changes">
+            <p class="section-number">17 · Revision</p>
+            <h2>Changes to these Terms</h2>
+            <p>
+              We may revise these Terms for legal, security, operational or product reasons. We
+              will post the updated version at this URL and change the “Last updated” date. If a
+              revision is material, we will provide additional notice when required by law.
+              Continued use after the effective date means the revised Terms apply, except where
+              applicable law requires express consent.
+            </p>
+          </section>
+
+          <section class="section" id="law">
+            <p class="section-number">18 · Resolution</p>
+            <h2>Applicable law and disputes</h2>
+            <p>
+              These Terms are governed by the laws applicable to Dodemy's provision of the App,
+              without overriding mandatory consumer protections that apply where you live.
+              Conflict-of-law rules apply only where legally required.
+            </p>
+            <p>
+              Before filing a formal claim, please email us with a clear description of the issue
+              and the relief requested so both sides can attempt an informal resolution. You may
+              bring a claim in any court or forum available under mandatory applicable law, and
+              nothing here limits a right to contact a regulator, consumer authority or small-
+              claims court where permitted.
+            </p>
+          </section>
+
+          <section class="section" id="general">
+            <p class="section-number">19 · Framework</p>
+            <h2>General terms</h2>
+            <ul>
+              <li><strong>Entire agreement:</strong> these Terms and the Privacy Policy are the entire agreement about Neon Exit, except for app-store terms and mandatory law.</li>
+              <li><strong>Severability:</strong> if a provision is unenforceable, it will be modified to the minimum extent necessary and the remaining provisions will remain effective.</li>
+              <li><strong>No waiver:</strong> a delay in enforcing a provision is not a waiver.</li>
+              <li><strong>Assignment:</strong> you may not transfer these Terms without written consent. We may transfer them as part of a reorganisation, financing, merger, acquisition or sale, subject to law.</li>
+              <li><strong>No third-party beneficiaries:</strong> these Terms do not create enforceable rights for third parties unless applicable law requires otherwise.</li>
+              <li><strong>Electronic communications:</strong> notices and records may be provided electronically where legally permitted.</li>
+            </ul>
+          </section>
+
+          <section class="section" id="contact">
+            <p class="section-number">20 · Support</p>
+            <h2>Contact us</h2>
+            <p>
+              Questions about Neon Exit or these Terms can be sent to:
+            </p>
+            <div class="contact-card">
+              <div>
+                <p><strong>Maduabughichi Achilefu (Dodemy Inc)</strong></p>
+                <p class="muted">Terms contact · Neon Exit</p>
+              </div>
+              <a href="mailto:dodemyinc@gmail.com?subject=Neon%20Exit%20Terms">dodemyinc@gmail.com</a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-row">
+        <span>© 2026 Dodemy Inc · Shared app terms</span>
+        <nav class="footer-links" aria-label="Legal links">
+          <a href="https://maduoma.github.io/myprofile/neon-exit-privacy-policy.html">Privacy</a>
+          <a href="https://maduoma.github.io/myprofile/terms-of-service.html#neon-exit" aria-current="page">Terms</a>
+          <a href="mailto:dodemyinc@gmail.com">Support</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

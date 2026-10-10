@@ -1,0 +1,1493 @@
+<!doctype html>
+<html lang="en" class="no-js" data-theme="light">
+<head>
+<meta charset="utf-8">
+<!--
+  Security notes
+  - The CSP below is enforced via a meta tag. It allows ONLY this file's own inline stylesheet and inline script
+    (pinned by SHA-256 hash), data: images for the favicon, and nothing else (no network, fonts, frames or plugins).
+  - If you edit the CSS or JavaScript code, the hashes change and the browser will block them.
+    Re-generate the hashes (the browser console prints the expected value) or re-run the build step.
+  - Editing plain HTML text (policy wording, e-mail address, dates) does NOT affect the CSP.
+  - Directives that only work as HTTP headers (frame-ancestors, HSTS, X-Content-Type-Options, Permissions-Policy)
+    should be set on your host. Recommended response headers:
+      Content-Security-Policy: <same value as the meta tag below> + "; frame-ancestors 'none'"
+      Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+      X-Content-Type-Options: nosniff
+      Referrer-Policy: no-referrer
+      Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()
+      Cross-Origin-Opener-Policy: same-origin
+-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-smD+A+ACEPnfqO3fYpo9/B4uqG3Vh+mbWA30f7hSrxM='; style-src 'sha256-y6pLhQWw60EMK93Nm9P8yOKvEfhutnrsdNpB7Z9Wl00='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy &amp; Support · Sacred Songs &amp; Solos</title>
+<meta name="description" content="Privacy Policy and Support for the Sacred Songs &amp; Solos app on iPhone, iPad and Android: how ads and your data work, your choices, answers to common questions, and how to contact us.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#f6f4ee">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232c3c94'/%3E%3Cpath d='M12 21V10L22 8V19' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='9.5' cy='21.5' r='3' fill='white'/%3E%3Ccircle cx='19.5' cy='19.5' r='3' fill='white'/%3E%3C/svg%3E">
+<style>
+/* ==========================================================================
+   1. Design tokens — light (default) and dark
+   ========================================================================== */
+:root {
+  color-scheme: light;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+
+  --bg: #f6f4ee;
+  --surface: #ffffff;
+  --surface-2: #efece3;
+  --text: #1a1f2e;
+  --muted: #535d72;
+  --border: #ddd7c7;
+  --border-strong: #bdb6a1;
+
+  --primary: #2c3c94;
+  --primary-hover: #222f78;
+  --on-primary: #ffffff;
+  --primary-soft: #e8ebfb;
+  --accent: #b6852c;
+  --accent-soft: #f7edd6;
+  --success: #1b6a42;
+  --success-soft: #e1f3e9;
+  --danger: #b3261e;
+  --danger-soft: #fbe9e7;
+
+  --hero-from: #e6e9fb;
+  --hero-to: #f6f4ee;
+  --staff: rgba(44, 60, 148, 0.12);
+
+  --shadow-1: 0 1px 2px rgba(26, 31, 46, 0.06), 0 1px 1px rgba(26, 31, 46, 0.04);
+  --shadow-2: 0 10px 28px rgba(26, 31, 46, 0.10), 0 2px 6px rgba(26, 31, 46, 0.06);
+
+  --radius-s: 0.5rem;
+  --radius-m: 0.875rem;
+  --radius-l: 1.375rem;
+  --header-h: 0.5rem;
+  --measure: 70ch;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1120;
+  --surface: #151a2e;
+  --surface-2: #1c2340;
+  --text: #e9ebf5;
+  --muted: #a4adc6;
+  --border: #2a3354;
+  --border-strong: #41507a;
+
+  --primary: #a9b8ff;
+  --primary-hover: #c3ceff;
+  --on-primary: #0d1120;
+  --primary-soft: #222b55;
+  --accent: #e3b95e;
+  --accent-soft: #2c2a22;
+  --success: #6fd3a0;
+  --success-soft: #14301f;
+  --danger: #ff9a90;
+  --danger-soft: #3a1c1a;
+
+  --hero-from: #1a2250;
+  --hero-to: #0d1120;
+  --staff: rgba(169, 184, 255, 0.12);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   2. Base
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 1rem/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+main { flex: 1 0 auto; }
+main:focus, [tabindex="-1"]:focus { outline: none; }
+
+h1, h2, h3 { line-height: 1.2; margin: 0; text-wrap: balance; }
+p { margin: 0 0 1rem; }
+a { color: var(--primary); text-underline-offset: 0.18em; text-decoration-thickness: 0.08em; }
+a:hover { color: var(--primary-hover); }
+ul, ol { margin: 0 0 1rem; padding-inline-start: 1.25rem; }
+li + li { margin-top: 0.35rem; }
+strong { font-weight: 650; }
+
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; border-radius: 4px; }
+
+[hidden] { display: none !important; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.icon {
+  width: 1.25em; height: 1.25em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.container { width: min(72rem, 100% - 2rem); margin-inline: auto; }
+
+.skip-link {
+  position: absolute; inset-inline-start: 1rem; top: -4rem; z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--primary); color: var(--on-primary);
+  border-radius: var(--radius-s);
+  font-weight: 600; text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus { top: 1rem; color: var(--on-primary); }
+
+/* ==========================================================================
+   3. Header & navigation
+   ========================================================================== */
+.site-header {
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header__inner {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.75rem 1rem;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  margin-inline-end: auto;
+  color: var(--text); text-decoration: none;
+}
+.brand:hover { color: var(--text); }
+.brand__mark { width: 2.5rem; height: 2.5rem; flex: none; }
+.brand__mark rect { fill: var(--primary); }
+.brand__mark path { fill: none; stroke: var(--on-primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.brand__mark circle { fill: var(--on-primary); }
+.brand__text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand__name { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; letter-spacing: 0.005em; }
+.brand__sub { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+
+.nav { display: flex; gap: 0.25rem; padding: 0.25rem; background: var(--surface-2); border-radius: 999px; order: 3; width: 100%; }
+.nav__link {
+  flex: 1; text-align: center;
+  padding: 0.55rem 1rem; min-height: 2.5rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  color: var(--muted); font-weight: 600; font-size: 0.95rem; text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.nav__link:hover { color: var(--text); }
+.nav__link[aria-current="page"] { background: var(--surface); color: var(--primary); box-shadow: var(--shadow-1); }
+
+.icon-btn {
+  display: inline-grid; place-items: center;
+  width: 2.75rem; height: 2.75rem;
+  border: 1px solid var(--border); border-radius: 50%;
+  background: var(--surface); color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn .icon--sun { display: none; }
+:root[data-theme="dark"] .icon-btn .icon--sun { display: inline-block; }
+:root[data-theme="dark"] .icon-btn .icon--moon { display: none; }
+
+@media (min-width: 40rem) {
+  :root { --header-h: 4.5rem; }
+  .site-header { position: sticky; top: 0; }
+  .nav { order: 0; width: auto; }
+  .nav__link { flex: none; }
+}
+
+/* ==========================================================================
+   4. Hero
+   ========================================================================== */
+.page-hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(160deg, var(--hero-from), var(--hero-to) 72%);
+  border-bottom: 1px solid var(--border);
+}
+.page-hero::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(to bottom, var(--staff) 0 1px, transparent 1px 13px);
+  mask-image: linear-gradient(to left, #000, transparent 65%);
+  pointer-events: none;
+}
+.page-hero .container { position: relative; padding-block: clamp(2.5rem, 7vw, 4.5rem); }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 1rem; padding: 0.3rem 0.8rem;
+  background: var(--accent-soft); color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 999px;
+  font-size: 0.78rem; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.page-hero h1 { font-family: var(--font-display); font-size: clamp(2.25rem, 6vw, 3.75rem); font-weight: 700; letter-spacing: -0.01em; }
+.lede { max-width: 60ch; margin: 1rem 0 0; font-size: clamp(1.05rem, 2.2vw, 1.2rem); color: var(--muted); }
+.hero__meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin: 1.5rem 0 0; font-size: 0.9rem; color: var(--muted); }
+.hero__meta strong { color: var(--text); }
+
+/* ==========================================================================
+   5. Buttons, cards, notices
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 2.75rem; padding: 0.65rem 1.2rem;
+  border: 1px solid transparent; border-radius: var(--radius-s);
+  font: inherit; font-weight: 650; text-decoration: none; line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-1); }
+.btn--primary:hover { background: var(--primary-hover); color: var(--on-primary); box-shadow: var(--shadow-2); }
+.btn--secondary { background: var(--surface); color: var(--primary); border-color: var(--border-strong); }
+.btn--secondary:hover { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+.btn--ghost { background: transparent; color: var(--muted); border-color: var(--border); }
+.btn--ghost:hover { color: var(--text); border-color: var(--border-strong); }
+.btn--sm { min-height: 2.25rem; padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+
+.surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-1);
+}
+
+.grid { display: grid; gap: 1rem; }
+.grid--cards { grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); }
+
+.tile {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  padding: 1.1rem 1.15rem;
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-m);
+  color: var(--text); text-decoration: none;
+}
+.tile h3 { font-size: 1.02rem; }
+.tile p { margin: 0; font-size: 0.93rem; color: var(--muted); }
+.tile__icon {
+  display: inline-grid; place-items: center;
+  width: 2.5rem; height: 2.5rem;
+  background: var(--primary-soft); color: var(--primary);
+  border-radius: 0.7rem;
+}
+.tile__icon .icon { width: 1.35rem; height: 1.35rem; }
+a.tile { transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+a.tile:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow-2); color: var(--text); }
+
+.notice {
+  max-width: var(--measure);
+  padding: 0.9rem 1.1rem;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-inline-start-width: 4px;
+  border-radius: var(--radius-s);
+}
+.notice > :last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   6. Policy layout
+   ========================================================================== */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; padding-block: 2rem 4rem; }
+
+.toc__title { margin: 0 0 0.5rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.toc ol {
+  display: flex; gap: 0.5rem;
+  margin: 0; padding: 0 0 0.5rem;
+  list-style: none; overflow-x: auto;
+  scrollbar-width: thin;
+}
+.toc li { margin: 0; flex: none; }
+.toc a {
+  display: block; padding: 0.4rem 0.85rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  color: var(--muted); font-size: 0.9rem; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.toc a:hover { color: var(--text); border-color: var(--border-strong); }
+.toc a[aria-current="location"] { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+
+.prose { padding: clamp(1.25rem, 4vw, 2.5rem); }
+.prose > section + section { margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+.prose h2 { margin-bottom: 0.9rem; font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 1.75rem); font-weight: 700; }
+.prose h3 { margin: 1.5rem 0 0.5rem; font-size: 1.05rem; }
+.prose p, .prose ul, .prose ol { max-width: var(--measure); }
+.prose .grid { max-width: none; margin-block: 1.25rem 0; }
+.prose .notice { margin-block: 1.25rem; }
+
+.checklist { list-style: none; padding: 0; }
+.checklist li { position: relative; padding-inline-start: 1.75rem; }
+.checklist li::before {
+  content: ""; position: absolute; inset-inline-start: 0.15rem; top: 0.45em;
+  width: 0.5rem; height: 0.85rem;
+  border: solid var(--success); border-width: 0 2.5px 2.5px 0;
+  transform: rotate(40deg);
+}
+
+@media (min-width: 60rem) {
+  .layout--policy { grid-template-columns: 15rem minmax(0, 1fr); align-items: start; gap: 2rem; }
+  .toc { position: sticky; top: calc(var(--header-h) + 1.5rem); max-height: calc(100dvh - var(--header-h) - 3rem); overflow-y: auto; }
+  .toc ol { flex-direction: column; gap: 0.15rem; overflow: visible; padding: 0; }
+  .toc a { background: transparent; border: 0; border-inline-start: 2px solid var(--border); border-radius: 0; padding: 0.4rem 0.9rem; white-space: normal; }
+  .toc a[aria-current="location"] { background: var(--primary-soft); border-inline-start-color: var(--primary); }
+}
+
+/* ==========================================================================
+   6b. Data table (stacks into cards on narrow screens)
+   ========================================================================== */
+.data-table { width: 100%; margin-block: 1.25rem; border-collapse: collapse; font-size: 0.93rem; }
+.data-table caption { margin-bottom: 0.6rem; text-align: start; font-weight: 650; }
+.data-table th, .data-table td { padding: 0.75rem 0.9rem; text-align: start; vertical-align: top; border-bottom: 1px solid var(--border); }
+.data-table thead th { background: var(--surface-2); color: var(--muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.data-table tbody th { width: 22%; font-weight: 650; }
+.data-table td { color: var(--muted); }
+
+@media (max-width: 47.99rem) {
+  .data-table, .data-table caption, .data-table tbody, .data-table tr, .data-table th, .data-table td { display: block; width: auto; }
+  .data-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .data-table tr { margin-bottom: 0.75rem; padding: 0.4rem 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-m); }
+  .data-table th, .data-table td { padding: 0.35rem 1rem; border: 0; }
+  .data-table tbody th { width: auto; font-size: 1rem; }
+  .data-table td::before { content: attr(data-label); display: block; color: var(--text); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+}
+
+/* ==========================================================================
+   7. Support: FAQ & contact
+   ========================================================================== */
+.section-head { max-width: var(--measure); margin-bottom: 1.25rem; }
+.section-head h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 700; }
+.section-head p { margin: 0.5rem 0 0; color: var(--muted); }
+.support > section { padding-block: 2.25rem 0; }
+.support > section:last-child { padding-bottom: 4rem; }
+
+.search { position: relative; max-width: 32rem; margin-bottom: 0.75rem; }
+.search .icon { position: absolute; inset-inline-start: 0.9rem; top: 50%; translate: 0 -50%; color: var(--muted); pointer-events: none; }
+.search .control { padding-inline-start: 2.6rem; }
+.faq__status { min-height: 1.5rem; margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--muted); }
+
+.faq { display: grid; gap: 0.6rem; }
+.faq__item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-m); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.faq__item[open] { border-color: var(--border-strong); box-shadow: var(--shadow-1); }
+.faq__item summary {
+  position: relative; display: block; cursor: pointer;
+  padding: 1rem 3rem 1rem 1.15rem;
+  font-weight: 650; list-style: none; border-radius: var(--radius-m);
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: ""; position: absolute; inset-inline-end: 1.2rem; top: 50%;
+  width: 0.55rem; height: 0.55rem; margin-top: -0.4rem;
+  border: solid var(--muted); border-width: 0 2px 2px 0;
+  transform: rotate(45deg); transition: transform 0.2s ease;
+}
+.faq__item[open] summary::after { transform: rotate(-135deg); margin-top: -0.1rem; }
+.faq__body { padding: 0 1.15rem 1.1rem; color: var(--muted); }
+.faq__body > :last-child { margin-bottom: 0; }
+.faq__body strong { color: var(--text); }
+.faq__platform { margin: 1rem 0 0.35rem; color: var(--text); font-weight: 700; }
+.faq__empty { padding: 1.5rem; text-align: center; background: var(--surface); border: 1px dashed var(--border-strong); border-radius: var(--radius-m); }
+.faq__empty p { margin-bottom: 0.75rem; }
+
+.contact { display: grid; gap: 1.25rem; }
+.contact__form, .contact__info { padding: clamp(1.25rem, 3.5vw, 2rem); }
+.contact__info h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.contact__info h3:not(:first-child) { margin-top: 1.5rem; }
+.email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-bottom: 0.5rem; }
+.email-row a { font-weight: 650; overflow-wrap: anywhere; }
+
+@media (min-width: 60rem) {
+  .contact { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+}
+
+.form { display: grid; gap: 1.1rem; }
+.form__row { display: grid; gap: 1.1rem; }
+@media (min-width: 40rem) { .form__row { grid-template-columns: 1fr 1fr; } }
+.field label { display: block; margin-bottom: 0.35rem; font-weight: 650; font-size: 0.95rem; }
+.field .optional { font-weight: 400; color: var(--muted); }
+
+.control {
+  width: 100%; min-height: 2.75rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-s);
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+textarea.control { min-height: 9rem; resize: vertical; line-height: 1.5; }
+.control:hover { border-color: var(--primary); }
+.control:focus-visible { outline: 3px solid var(--primary); outline-offset: 1px; border-radius: var(--radius-s); }
+.control[aria-invalid="true"] { border-color: var(--danger); background: var(--danger-soft); }
+
+.field__meta { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+.field__error { margin: 0.4rem 0 0; font-size: 0.9rem; font-weight: 600; color: var(--danger); }
+
+.form__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.form__status { min-height: 1.5rem; margin: 0; font-size: 0.95rem; font-weight: 600; }
+.form__status[data-kind="success"] { color: var(--success); }
+.form__status[data-kind="error"] { color: var(--danger); }
+
+/* ==========================================================================
+   8. Footer
+   ========================================================================== */
+.site-footer { margin-top: auto; padding-block: 2rem; background: var(--surface-2); border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+.site-footer .container { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem 2rem; }
+.site-footer p { margin: 0; }
+.site-footer nav { display: flex; gap: 1.25rem; }
+
+/* ==========================================================================
+   9. No-JS fallbacks, motion, print
+   ========================================================================== */
+.no-js #theme-toggle, .no-js #contact-form, .no-js .search, .no-js .faq__status { display: none; }
+.no-js .view + .view { border-top: 8px solid var(--surface-2); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.js .view { animation: rise 0.35s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+@media print {
+  :root, :root[data-theme="dark"] { --bg: #fff; --surface: #fff; --text: #000; --muted: #333; --border: #bbb; }
+  body { background: #fff; color: #000; }
+  .site-header, .skip-link, .toc, .page-hero::before, .search, .faq__status, .contact, .grid--cards a.tile, .site-footer nav { display: none !important; }
+  .surface { box-shadow: none; border: 0; }
+  .page-hero { background: none; border: 0; }
+  a { color: #000; }
+  .faq__item, .data-table tr { break-inside: avoid; }
+}
+</style>
+<script>
+document.documentElement.classList.replace('no-js', 'js');
+
+(() => {
+  'use strict';
+
+  /* ------------------------------------------------------------------------
+     Constants
+     ------------------------------------------------------------------------ */
+  const THEME_KEY = 'sss.theme';
+  const THEMES = Object.freeze(['light', 'dark']);
+  const DEFAULT_THEME = 'light';
+  const DEFAULT_VIEW = 'privacy';
+  const FLASH_MS = 2200;
+  const PLACEHOLDER_DOMAIN = 'your-domain.example';
+  const EMAIL_PATTERN = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
+  const LIMITS = Object.freeze({ messageMin: 10, messageMax: 1200, field: 80, mailto: 1900 });
+
+  const root = document.documentElement;
+  const $ = (selector, scope = document) => scope.querySelector(selector);
+  const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
+
+  /* ------------------------------------------------------------------------
+     Shared utilities
+     ------------------------------------------------------------------------ */
+  const storage = {
+    get(key) {
+      try { return window.localStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { window.localStorage.setItem(key, value); } catch { /* storage unavailable: ignore */ }
+    },
+  };
+
+  const normalize = (text) => text.toLocaleLowerCase().normalize('NFKD').replace(/\p{M}/gu, '');
+
+  const focusElement = (element) => {
+    if (!element) return;
+    if (!element.hasAttribute('tabindex')) element.setAttribute('tabindex', '-1');
+    element.focus({ preventScroll: true });
+  };
+
+  const launch = (url, { newTab = false } = {}) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.rel = 'noopener noreferrer';
+    if (newTab) link.target = '_blank';
+    document.body.append(link);
+    link.click();
+    link.remove();
+  };
+
+  const copyText = async (text) => {
+    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') return false;
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const flashTimers = new WeakMap();
+  const flash = (button, label) => {
+    const target = $('.btn__label', button) ?? button;
+    const original = button.dataset.originalLabel ?? target.textContent;
+    button.dataset.originalLabel = original;
+    target.textContent = label;
+    window.clearTimeout(flashTimers.get(button));
+    flashTimers.set(button, window.setTimeout(() => { target.textContent = original; }, FLASH_MS));
+  };
+
+  const getSupportEmail = () => {
+    const source = $('[data-support-email]');
+    const email = source ? source.textContent.trim() : '';
+    if (!EMAIL_PATTERN.test(email)) return '';
+    if (email.endsWith(PLACEHOLDER_DOMAIN)) {
+      console.warn('[Sacred Songs & Solos] Support e-mail is still the placeholder. Replace it before publishing.');
+    }
+    return email;
+  };
+
+  /* ------------------------------------------------------------------------
+     Theme (applied immediately to avoid a flash of the wrong theme)
+     ------------------------------------------------------------------------ */
+  const theme = {
+    apply(name) {
+      const next = THEMES.includes(name) ? name : DEFAULT_THEME;
+      root.dataset.theme = next;
+      const color = getComputedStyle(root).getPropertyValue('--bg').trim();
+      const meta = $('meta[name="theme-color"]');
+      if (meta && color) meta.setAttribute('content', color);
+      return next;
+    },
+    toggle() {
+      return this.apply(root.dataset.theme === 'dark' ? 'light' : 'dark');
+    },
+  };
+
+  theme.apply(storage.get(THEME_KEY));
+
+  const initThemeToggle = () => {
+    const button = $('#theme-toggle');
+    if (!button) return;
+    const sync = () => {
+      button.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    };
+    sync();
+    button.addEventListener('click', () => {
+      storage.set(THEME_KEY, theme.toggle());
+      sync();
+    });
+  };
+
+  /* ------------------------------------------------------------------------
+     Router: #privacy, #support, or #<section-id> inside either view
+     ------------------------------------------------------------------------ */
+  const initRouter = () => {
+    const panels = $$('[data-view]');
+    const navLinks = $$('[data-nav]');
+    let currentView = null;
+
+    const readHash = () => {
+      try { return decodeURIComponent(window.location.hash.slice(1)); } catch { return ''; }
+    };
+
+    const showView = (name) => {
+      const active = panels.find((panel) => panel.dataset.view === name) ?? panels[0];
+      panels.forEach((panel) => { panel.hidden = panel !== active; });
+      navLinks.forEach((link) => {
+        if (link.dataset.nav === active.dataset.view) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+      if (active.dataset.title) document.title = active.dataset.title;
+      currentView = active.dataset.view;
+      return active;
+    };
+
+    const route = (userInitiated) => {
+      const id = readHash();
+      const target = id ? document.getElementById(id) : null;
+      const panel = target ? target.closest('[data-view]') : null;
+
+      if (target && !panel) {
+        if (!currentView) showView(DEFAULT_VIEW);
+        if (userInitiated) focusElement(target);
+        return;
+      }
+
+      const active = showView(panel ? panel.dataset.view : DEFAULT_VIEW);
+      if (target && target !== active) {
+        target.scrollIntoView();
+        if (userInitiated) focusElement($('h2, h3', target) ?? target);
+      } else {
+        window.scrollTo({ top: 0 });
+        if (userInitiated) focusElement($('h1', active));
+      }
+    };
+
+    window.addEventListener('hashchange', () => route(true));
+    route(false);
+  };
+
+  /* ------------------------------------------------------------------------
+     Table of contents: highlight the section being read
+     ------------------------------------------------------------------------ */
+  const initScrollSpy = () => {
+    if (!('IntersectionObserver' in window)) return;
+    const links = $$('.toc a[href^="#"]');
+    const entries = links
+      .map((link) => ({ link, section: document.getElementById(link.getAttribute('href').slice(1)) }))
+      .filter((entry) => entry.section);
+    if (!entries.length) return;
+
+    const visible = new Set();
+    let active = entries[0];
+
+    const update = () => {
+      const current = [...entries].reverse().find((entry) => visible.has(entry.section));
+      if (current) active = current;
+      else if (entries[0].section.getBoundingClientRect().top > window.innerHeight * 0.2) active = entries[0];
+      entries.forEach((entry) => {
+        if (entry === active) entry.link.setAttribute('aria-current', 'location');
+        else entry.link.removeAttribute('aria-current');
+      });
+    };
+
+    // A thin "reading line" near the top of the viewport decides which section is current.
+    const observer = new IntersectionObserver((changes) => {
+      changes.forEach((change) => {
+        if (change.isIntersecting) visible.add(change.target);
+        else visible.delete(change.target);
+      });
+      update();
+    }, { rootMargin: '-15% 0px -80% 0px' });
+
+    update();
+    entries.forEach((entry) => observer.observe(entry.section));
+  };
+
+  /* ------------------------------------------------------------------------
+     FAQ search
+     ------------------------------------------------------------------------ */
+  const initFaq = () => {
+    const input = $('#faq-search');
+    const list = $('#faq-list');
+    if (!input || !list) return;
+
+    const status = $('#faq-status');
+    const empty = $('#faq-empty');
+    const clear = $('#faq-clear');
+    const items = $$('[data-faq]', list).map((element) => ({ element, text: normalize(element.textContent) }));
+
+    const filter = () => {
+      const tokens = normalize(input.value).split(/\s+/).filter(Boolean);
+      let count = 0;
+      items.forEach(({ element, text }) => {
+        const match = tokens.every((token) => text.includes(token));
+        element.hidden = !match;
+        if (match) count += 1;
+      });
+      empty.hidden = count > 0;
+      status.textContent = tokens.length
+        ? `${count} ${count === 1 ? 'answer' : 'answers'} found`
+        : '';
+    };
+
+    input.addEventListener('input', filter);
+    clear.addEventListener('click', () => {
+      input.value = '';
+      filter();
+      input.focus();
+    });
+  };
+
+  /* ------------------------------------------------------------------------
+     Contact form (opens the visitor's own e-mail app; nothing is sent by this page)
+     ------------------------------------------------------------------------ */
+  const initContact = () => {
+    const form = $('#contact-form');
+    if (!form) return;
+
+    const email = getSupportEmail();
+    const appName = document.body.dataset.appName ?? document.title;
+    const fields = {
+      topic: $('#f-topic', form),
+      version: $('#f-version', form),
+      device: $('#f-device', form),
+      message: $('#f-message', form),
+    };
+    const counter = $('#f-message-count', form);
+    const status = $('#form-status', form);
+    const fallback = $('#f-fallback', form);
+    const fallbackWrap = $('#f-fallback-wrap', form);
+
+    const singleLine = (value) => value.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, LIMITS.field);
+    const multiLine = (value) => value
+      .replace(/\r\n?/g, '\n')
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+      .trim()
+      .slice(0, LIMITS.messageMax);
+
+    const setStatus = (text, kind = '') => {
+      status.textContent = text;
+      if (kind) status.dataset.kind = kind; else delete status.dataset.kind;
+    };
+
+    const setError = (field, message) => {
+      const error = $(`#${field.id}-error`, form);
+      if (!error) return;
+      error.textContent = message;
+      error.hidden = !message;
+      if (message) field.setAttribute('aria-invalid', 'true'); else field.removeAttribute('aria-invalid');
+    };
+
+    const validate = () => {
+      const errors = [];
+      const topicValid = fields.topic.value !== '' && fields.topic.selectedOptions.length > 0;
+      setError(fields.topic, topicValid ? '' : 'Please choose a topic.');
+      if (!topicValid) errors.push(fields.topic);
+
+      const length = multiLine(fields.message.value).length;
+      let messageError = '';
+      if (length < LIMITS.messageMin) messageError = `Please write at least ${LIMITS.messageMin} characters so we can help.`;
+      setError(fields.message, messageError);
+      if (messageError) errors.push(fields.message);
+
+      return errors;
+    };
+
+    const compose = () => {
+      const option = fields.topic.selectedOptions[0];
+      const subject = `[${appName}] ${option.dataset.subject ?? option.textContent.trim()}`;
+      const body = [
+        `Topic: ${option.textContent.trim()}`,
+        `App version: ${singleLine(fields.version.value) || 'Not provided'}`,
+        `Device and OS version: ${singleLine(fields.device.value) || 'Not provided'}`,
+        '',
+        'Message:',
+        multiLine(fields.message.value),
+      ].join('\r\n');
+      return { subject, body };
+    };
+
+    const prepare = () => {
+      if (!email) {
+        setStatus('The support e-mail address is not configured on this page.', 'error');
+        return null;
+      }
+      const errors = validate();
+      if (errors.length) {
+        errors[0].focus();
+        setStatus('Please fix the highlighted fields.', 'error');
+        return null;
+      }
+      setStatus('');
+      fallbackWrap.hidden = true;
+      return compose();
+    };
+
+    const mailtoUrl = ({ subject, body }) =>
+      `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    const gmailUrl = ({ subject, body }) => {
+      const url = new URL('https://mail.google.com/mail/');
+      url.searchParams.set('view', 'cm');
+      url.searchParams.set('fs', '1');
+      url.searchParams.set('to', email);
+      url.searchParams.set('su', subject);
+      url.searchParams.set('body', body);
+      return url.toString();
+    };
+
+    fields.message.addEventListener('input', () => {
+      counter.textContent = `${multiLine(fields.message.value).length} / ${LIMITS.messageMax}`;
+      if (fields.message.hasAttribute('aria-invalid')) validate();
+    });
+    fields.topic.addEventListener('change', () => {
+      if (fields.topic.hasAttribute('aria-invalid')) validate();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const draft = prepare();
+      if (!draft) return;
+      const url = mailtoUrl(draft);
+      if (url.length > LIMITS.mailto) {
+        setStatus('Your message is too long for an e-mail link. Use "Copy message" and paste it into your e-mail app.', 'error');
+        return;
+      }
+      launch(url);
+      setStatus('Opening your e-mail app… If nothing happens, use "Open in Gmail" or "Copy message".', 'success');
+    });
+
+    $('#open-gmail', form).addEventListener('click', () => {
+      const draft = prepare();
+      if (!draft) return;
+      launch(gmailUrl(draft), { newTab: true });
+      setStatus('Opening Gmail in a new tab…', 'success');
+    });
+
+    $('#copy-message', form).addEventListener('click', async (event) => {
+      const draft = prepare();
+      if (!draft) return;
+      const text = `To: ${email}\nSubject: ${draft.subject}\n\n${draft.body.replace(/\r\n/g, '\n')}`;
+      if (await copyText(text)) {
+        flash(event.currentTarget, 'Copied');
+        setStatus('Message copied. Paste it into a new e-mail to us.', 'success');
+      } else {
+        fallback.value = text;
+        fallbackWrap.hidden = false;
+        fallback.focus();
+        fallback.select();
+        setStatus('Copying is not available here. Select the text below and copy it manually.', 'error');
+      }
+    });
+
+    form.addEventListener('reset', () => {
+      window.setTimeout(() => {
+        [fields.topic, fields.message].forEach((field) => setError(field, ''));
+        counter.textContent = `0 / ${LIMITS.messageMax}`;
+        fallbackWrap.hidden = true;
+        setStatus('');
+      }, 0);
+    });
+  };
+
+  /* ------------------------------------------------------------------------
+     Small enhancements
+     ------------------------------------------------------------------------ */
+  const initQuickHelp = () => {
+    const topic = $('#f-topic');
+    if (!topic) return;
+    $$('[data-topic]').forEach((link) => {
+      link.addEventListener('click', () => {
+        const wanted = link.dataset.topic;
+        if ($$('option', topic).some((option) => option.value === wanted)) topic.value = wanted;
+      });
+    });
+  };
+
+  const initCopyEmail = () => {
+    $$('[data-copy-email]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const email = getSupportEmail();
+        if (email && await copyText(email)) flash(button, 'Copied');
+        else flash(button, 'Copy failed');
+      });
+    });
+  };
+
+  const setYear = () => {
+    $$('[data-year]').forEach((element) => { element.textContent = String(new Date().getFullYear()); });
+  };
+
+  /* ------------------------------------------------------------------------
+     Boot
+     ------------------------------------------------------------------------ */
+  document.addEventListener('DOMContentLoaded', () => {
+    initThemeToggle();
+    initRouter();
+    initScrollSpy();
+    initFaq();
+    initContact();
+    initQuickHelp();
+    initCopyEmail();
+    setYear();
+  });
+})();
+</script>
+</head>
+<body data-app-name="Sacred Songs &amp; Solos">
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.75"/><path d="M4.5 20.5v-1a5.5 5.5 0 0 1 5.5-5.5h4a5.5 5.5 0 0 1 5.5 5.5v1"/></symbol>
+  <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h3l8 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M18.5 9.5a4 4 0 0 1 0 5"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+  <symbol id="i-device" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a6.7 6.7 0 0 0 10 10z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3L10.5 13.5M21 3l-6.5 18-4-7.5L3 9.5 21 3z"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="#privacy" aria-label="Sacred Songs &amp; Solos, home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="9"/>
+        <path d="M12 21V10L22 8V19"/>
+        <circle cx="9.5" cy="21.5" r="3"/>
+        <circle cx="19.5" cy="19.5" r="3"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Sacred Songs &amp; Solos</span>
+        <span class="brand__sub">Privacy &amp; Support</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a class="nav__link" href="#privacy" data-nav="privacy">Privacy Policy</a>
+      <a class="nav__link" href="#support" data-nav="support">Support</a>
+    </nav>
+
+    <button type="button" id="theme-toggle" class="icon-btn" aria-label="Switch to dark theme">
+      <svg class="icon icon--moon" aria-hidden="true" focusable="false"><use href="#i-moon"/></svg>
+      <svg class="icon icon--sun" aria-hidden="true" focusable="false"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+  <!-- ====================================================================
+       PRIVACY POLICY
+       ==================================================================== -->
+  <section id="privacy" class="view" data-view="privacy" data-title="Privacy Policy · Sacred Songs &amp; Solos" aria-labelledby="privacy-title">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Sacred Songs &amp; Solos · iPhone, iPad &amp; Android</p>
+        <h1 id="privacy-title">Privacy Policy</h1>
+        <p class="lede">There is no account and we don’t ask who you are. The app shows ads, and our ad provider collects limited device data to show them. Here is exactly what that means, and how to control it.</p>
+        <p class="hero__meta">
+          <span><strong>Effective:</strong> <time datetime="2026-10-10">October 10, 2026</time></span>
+          <span><strong>Publisher:</strong> Dodemy Inc</span>
+          <span><strong>Apps:</strong> App Store &amp; Google Play</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="container layout layout--policy">
+      <aside class="toc">
+        <nav aria-label="On this page">
+          <p class="toc__title">On this page</p>
+          <ol>
+            <li><a href="#summary">Summary</a></li>
+            <li><a href="#scope">About this policy</a></li>
+            <li><a href="#information-we-collect">Information we collect</a></li>
+            <li><a href="#advertising">Ads and your data</a></li>
+            <li><a href="#your-choices">Your ad choices</a></li>
+            <li><a href="#on-device-data">Data on your device</a></li>
+            <li><a href="#permissions">Permissions</a></li>
+            <li><a href="#third-parties">Sharing &amp; third parties</a></li>
+            <li><a href="#children">Children</a></li>
+            <li><a href="#retention-deletion">Retention &amp; deletion</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#your-rights">Your rights</a></li>
+            <li><a href="#policy-changes">Changes</a></li>
+            <li><a href="#privacy-contact">Contact</a></li>
+          </ol>
+        </nav>
+      </aside>
+
+      <article class="prose surface">
+        <section id="summary">
+          <h2>Summary</h2>
+          <p>Sacred Songs &amp; Solos (the “app”) is a songbook companion for worship, devotion and music, published by Dodemy Inc (“Dodemy”, “we”, “us”). You don’t need an account and we don’t ask for your name, e-mail address or other personal details. The app is supported by ads from Google AdMob, which collects some limited data from your device to show and measure those ads.</p>
+          <div class="grid grid--cards">
+            <div class="tile">
+              <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-user"/></svg></span>
+              <h3>No account</h3>
+              <p>Use the app without signing up or logging in.</p>
+            </div>
+            <div class="tile">
+              <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg></span>
+              <h3>Contains ads</h3>
+              <p>Ads are served by Google AdMob, which collects limited device and usage data.</p>
+            </div>
+            <div class="tile">
+              <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sliders"/></svg></span>
+              <h3>You choose</h3>
+              <p>Decline tracking, reset your advertising ID or opt out of personalized ads.</p>
+            </div>
+            <div class="tile">
+              <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-device"/></svg></span>
+              <h3>Saved items stay local</h3>
+              <p>Your preferences and anything you save remain on your device.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="scope">
+          <h2>About this policy</h2>
+          <p>This policy covers the app on iPhone and iPad (Apple App Store) and on Android devices (Google Play), and this support website. Where something works differently on one platform, we say so. It does not cover the services of Apple, Google or other companies, which have their own privacy policies.</p>
+        </section>
+
+        <section id="information-we-collect">
+          <h2>Information we collect</h2>
+          <h3>What we do not collect</h3>
+          <p>We do not ask for, and the app does not collect on our behalf:</p>
+          <ul class="checklist">
+            <li>your name, e-mail address, phone number or postal address, or any account;</li>
+            <li>your precise location (GPS);</li>
+            <li>your contacts, photos, files, camera or microphone data;</li>
+            <li>health or financial information.</li>
+          </ul>
+          <h3>What our ad provider collects automatically</h3>
+          <p>Because the app shows ads, the ad software inside it collects a small set of technical data from your device, such as an advertising identifier and your IP address. We list it in full, with the reasons, under <a href="#advertising">Ads and your data</a>. We do not receive this data ourselves, only aggregated ad reports that do not identify you.</p>
+          <h3>Information you choose to send us</h3>
+          <p>If you contact us by e-mail (for example from the Support page), we receive your e-mail address and whatever you write or attach. We use it only to reply to you and to improve the app. We do not sell it, rent it or share it for marketing, and we keep it only as long as needed to resolve your request and keep a reasonable record of it.</p>
+        </section>
+
+        <section id="advertising">
+          <h2>Ads and your data</h2>
+          <p>The app displays ads served by Google AdMob, a service of Google. To show, measure and protect those ads, the Google Mobile Ads software inside the app collects the data below and shares it with Google, which may use it together with its advertising partners. Google and its partners decide how that data is used under their own privacy policies; we do not receive it.</p>
+
+          <table class="data-table" role="table">
+            <caption>Data collected automatically by the ad software</caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th role="columnheader" scope="col">Data</th>
+                <th role="columnheader" scope="col">Examples</th>
+                <th role="columnheader" scope="col">Why it is used</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              <tr role="row">
+                <th role="rowheader" scope="row">Device identifiers</th>
+                <td role="cell" data-label="Examples">Android: advertising ID and app set ID. iPhone and iPad: the advertising identifier (IDFA) only if you allow tracking, plus other app-specific identifiers.</td>
+                <td role="cell" data-label="Why it is used">Show and measure ads, limit how often you see the same ad, prevent fraud, and personalize ads where you allow it.</td>
+              </tr>
+              <tr role="row">
+                <th role="rowheader" scope="row">IP address and approximate location</th>
+                <td role="cell" data-label="Examples">Your IP address, which can reveal your general area (such as city or region). It is not your precise GPS location.</td>
+                <td role="cell" data-label="Why it is used">Show ads relevant to your region, detect fraud and apply local legal rules.</td>
+              </tr>
+              <tr role="row">
+                <th role="rowheader" scope="row">Ads and app interactions</th>
+                <td role="cell" data-label="Examples">Ads shown, taps, video views and app launches.</td>
+                <td role="cell" data-label="Why it is used">Measure ad performance and cap how often ads appear.</td>
+              </tr>
+              <tr role="row">
+                <th role="rowheader" scope="row">Diagnostics and performance</th>
+                <td role="cell" data-label="Examples">Crash logs, app launch time, hang rate and energy use.</td>
+                <td role="cell" data-label="Why it is used">Keep ads and the ad software stable and secure.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Personalized and non-personalized ads</h3>
+          <p>With your permission, where the law or your device requires it, ads can be personalized using your advertising ID and interests inferred from your activity in other apps. If you decline, you will still see ads, but they will not be based on a profile of you. Ad providers may still use limited data for things such as limiting how often an ad appears, measuring ads and preventing fraud.</p>
+          <h3>What we receive</h3>
+          <p>We receive aggregated reports from our ad provider, such as the number of ads shown and estimated earnings. These reports do not identify you.</p>
+          <p>Learn more in Google’s <a href="https://policies.google.com/technologies/partner-sites" rel="noopener noreferrer" target="_blank">explanation of how it uses information from apps that use its services</a>.</p>
+        </section>
+
+        <section id="your-choices">
+          <h2>Your ad choices</h2>
+          <p>You decide how much of your data is used for ads. These controls work on your device, whether or not you contact us.</p>
+
+          <h3>iPhone and iPad</h3>
+          <ul>
+            <li>When the app asks whether it may <strong>track your activity across other companies’ apps and websites</strong>, choose <strong>Ask App Not to Track</strong> to decline.</li>
+            <li>Change your answer at any time in <strong>Settings › Privacy &amp; Security › Tracking</strong>.</li>
+          </ul>
+
+          <h3>Android</h3>
+          <ul>
+            <li>Open <strong>Settings › Privacy › Ads</strong> (the path varies by device, and may be under <strong>Google</strong>).</li>
+            <li>Choose <strong>Delete advertising ID</strong> or <strong>Reset advertising ID</strong>, or turn off ad personalization.</li>
+          </ul>
+
+          <h3>Europe, the UK and Switzerland</h3>
+          <p>Where the law requires it, the app shows a consent message, provided by Google’s User Messaging Platform, before ad partners use your device data. If you do not consent, you will see limited, non-personalized ads. You can review or change your choice at any time from the privacy or ad-choices option in the app’s settings.</p>
+
+          <h3>United States</h3>
+          <p>Some state privacy laws let you opt out of the “sale” or “sharing” of personal information, or of targeted advertising (see <a href="#third-parties">Sharing &amp; third parties</a>). The tracking and advertising-ID controls above are the most effective way to opt out, because we cannot identify you from the app. You can also e-mail us and we will help.</p>
+
+          <h3>Google account settings</h3>
+          <p>If you use a Google account, you can also manage ad personalization at <a href="https://adssettings.google.com" rel="noopener noreferrer" target="_blank">adssettings.google.com</a>.</p>
+        </section>
+
+        <section id="on-device-data">
+          <h2>Data stored on your device</h2>
+          <p>The app keeps a small amount of data locally, such as your display preferences and items you choose to save. This data lives in the app’s private storage on your device, is protected by the operating system’s app sandbox, and is never sent to us. The ad software may also keep identifiers and settings on your device, such as your consent choice.</p>
+        </section>
+
+        <section id="permissions">
+          <h2>Permissions</h2>
+          <h3>Android</h3>
+          <p>The app uses network access to load ads, and the advertising ID permission so the ad provider can use your advertising ID. You can reset or delete that ID in your device settings at any time. The app does not request location, contacts, camera, microphone, photos or files.</p>
+          <h3>iPhone and iPad</h3>
+          <p>The app asks for one permission: tracking, which lets the ad provider use your advertising identifier. You can decline it, and the app works the same. The app does not request location, contacts, camera, microphone, photos or files.</p>
+        </section>
+
+        <section id="third-parties">
+          <h2>Sharing and third parties</h2>
+          <p>We do not sell your personal information for money, and we do not share it with anyone for their own marketing. We use the following third parties:</p>
+          <ul>
+            <li><strong>Google AdMob</strong> serves and measures the ads in the app, as described above. See the <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google Privacy Policy</a>.</li>
+            <li><strong>Apple App Store</strong> and <strong>Google Play</strong> distribute the app and handle your purchases and downloads. See the <a href="https://www.apple.com/legal/privacy/" rel="noopener noreferrer" target="_blank">Apple Privacy Policy</a> and the Google Privacy Policy. If you have opted in on your device, they may give us aggregated crash and usage statistics that do not identify you.</li>
+          </ul>
+
+          <h3>“Sale” and “sharing” under US state laws</h3>
+          <p>Allowing an ad provider to collect identifiers and ad interactions to show personalized ads can count as “sharing” for cross-context behavioral advertising, or as a “sale”, under laws such as the California Consumer Privacy Act (CCPA/CPRA). In the past 12 months, the categories disclosed this way were:</p>
+          <ul>
+            <li><strong>Identifiers</strong>, such as the advertising ID and IP address;</li>
+            <li><strong>Internet or app activity</strong>, such as ad views and taps;</li>
+            <li><strong>Approximate location</strong>, derived from the IP address.</li>
+          </ul>
+          <p>You can opt out as described in <a href="#your-choices">Your ad choices</a>. We do not knowingly sell or share the personal information of people under 16.</p>
+
+          <h3>International transfers</h3>
+          <p>Our ad provider processes data in the United States and other countries. Where the law requires, it uses safeguards such as standard contractual clauses for transfers from Europe and the UK.</p>
+          <h3>Legal reasons</h3>
+          <p>We may disclose information to comply with law or protect people’s safety and rights, but we hold almost none to disclose.</p>
+        </section>
+
+        <section id="children">
+          <h2>Children’s privacy</h2>
+          <p>The app is intended for a general audience and is not directed to children under 13, or under the age of digital consent in your country. We do not knowingly collect personal information from children and we do not knowingly show them personalized ads. If you are a parent or guardian and believe your child has sent us personal information, contact us and we will delete it promptly.</p>
+        </section>
+
+        <section id="retention-deletion">
+          <h2>Retention and deletion</h2>
+          <p>We hold no personal data from the app, so there is nothing for us to delete on our side. Data held by our ad provider is kept under its own policies. Use <a href="#your-choices">Your ad choices</a> to limit it, for example by resetting your advertising ID. To remove what the app stores on your device:</p>
+          <h3>Android</h3>
+          <ol>
+            <li>Open <strong>Settings › Apps › Sacred Songs &amp; Solos</strong>.</li>
+            <li>Choose <strong>Storage</strong>, then <strong>Clear storage</strong> (or <strong>Clear data</strong>) to reset the app, or choose <strong>Uninstall</strong> to remove it.</li>
+          </ol>
+          <h3>iPhone and iPad</h3>
+          <ol>
+            <li>Open <strong>Settings › General › iPhone Storage</strong> (or <strong>iPad Storage</strong>) and choose <strong>Sacred Songs &amp; Solos</strong>.</li>
+            <li>Tap <strong>Delete App</strong> to remove the app and its data.</li>
+          </ol>
+          <p>To have e-mails you sent us deleted, write to us at the address below.</p>
+        </section>
+
+        <section id="security">
+          <h2>Security</h2>
+          <p>We keep the app and its components up to date, request as few permissions as possible and collect as little data as possible. Your saved data is protected by your operating system’s app sandbox and your device’s own security. Google states that data its ad software collects on Android is encrypted in transit. No system is perfectly secure, but collecting little keeps the risk low.</p>
+        </section>
+
+        <section id="your-rights">
+          <h2>Your rights</h2>
+          <p>Depending on where you live, you may have rights over your personal information:</p>
+          <ul>
+            <li><strong>Europe, the UK and Switzerland (GDPR):</strong> access, correction, deletion, restriction, portability, objection, withdrawing consent at any time, and complaining to your data protection authority.</li>
+            <li><strong>California and other US states:</strong> to know what is collected, to delete and correct it, to opt out of “sale”, “sharing” and targeted advertising, and to not be treated unfairly for using these rights.</li>
+            <li><strong>Canada (PIPEDA), Brazil (LGPD), Australia and others:</strong> similar rights under local law.</li>
+          </ul>
+          <p>Since the app holds no information that identifies you, these rights mostly relate to e-mails you have sent us and to the controls on your device. To make a request, contact us. We may need to confirm your identity, and we will reply within the time the law requires (generally 30 to 45 days). For data held by Google, you can also use Google’s own privacy controls.</p>
+        </section>
+
+        <section id="policy-changes">
+          <h2>Changes to this policy</h2>
+          <p>We may update this policy from time to time. The latest version is always on this page with its effective date at the top. If a change is significant, such as a new ad provider or a new permission, we will say so in the store listing or release notes before it reaches you.</p>
+        </section>
+
+        <section id="privacy-contact">
+          <h2>Contact us</h2>
+          <p>Questions about this policy or your data? Dodemy Inc can be reached at <a href="mailto:dodemyinc@gmail.com" data-support-email>dodemyinc@gmail.com</a>, or visit our <a href="#support">Support page</a>.</p>
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       SUPPORT
+       ==================================================================== -->
+  <section id="support" class="view" data-view="support" data-title="Support · Sacred Songs &amp; Solos" aria-labelledby="support-title">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Sacred Songs &amp; Solos · iPhone, iPad &amp; Android</p>
+        <h1 id="support-title">How can we help?</h1>
+        <p class="lede">Find a quick answer, report a problem or an ad, point out a correction to a song, or tell us what you’d love to see next.</p>
+      </div>
+    </div>
+
+    <div class="container support">
+
+      <section id="quick-help" aria-labelledby="quick-help-title">
+        <div class="section-head"><h2 id="quick-help-title">Quick help</h2></div>
+        <div class="grid grid--cards">
+          <a class="tile" href="#faq">
+            <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-lifebuoy"/></svg></span>
+            <h3>Troubleshooting</h3>
+            <p>Fix crashes, display issues and other common problems.</p>
+          </a>
+          <a class="tile" href="#support-contact" data-topic="content">
+            <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-flag"/></svg></span>
+            <h3>Report a correction</h3>
+            <p>Spotted a wrong song number, title or lyric? Tell us.</p>
+          </a>
+          <a class="tile" href="#support-contact" data-topic="feature">
+            <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bulb"/></svg></span>
+            <h3>Suggest a feature</h3>
+            <p>Share an idea that would make the app better for you.</p>
+          </a>
+          <a class="tile" href="#your-choices">
+            <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sliders"/></svg></span>
+            <h3>Ads &amp; privacy choices</h3>
+            <p>Limit ad personalization or decline tracking.</p>
+          </a>
+        </div>
+      </section>
+
+      <section id="faq" aria-labelledby="faq-title">
+        <div class="section-head">
+          <h2 id="faq-title">Frequently asked questions</h2>
+          <p>Search the answers below, or browse them all.</p>
+        </div>
+
+        <div class="search">
+          <label class="visually-hidden" for="faq-search">Search frequently asked questions</label>
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
+          <input id="faq-search" class="control" type="search" placeholder="Search answers, e.g. “crash”" autocomplete="off" spellcheck="false" aria-controls="faq-list">
+        </div>
+        <p id="faq-status" class="faq__status" role="status" aria-live="polite"></p>
+
+        <div id="faq-list" class="faq">
+          <details class="faq__item" data-faq>
+            <summary>The app won’t open or keeps crashing. What can I do?</summary>
+            <div class="faq__body">
+              <p>Restart your phone or tablet first. Then follow the steps for your device.</p>
+              <p class="faq__platform">iPhone and iPad</p>
+              <ol>
+                <li>Open the App Store, tap your profile picture and check <strong>Updates</strong> for a newer version of the app.</li>
+                <li>Make sure your device has free storage space.</li>
+                <li>As a last resort, delete the app and install it again from the App Store. Anything you saved inside the app will be removed.</li>
+              </ol>
+              <p class="faq__platform">Android</p>
+              <ol>
+                <li>Open Google Play, search for <strong>Sacred Songs &amp; Solos</strong> and install any available update.</li>
+                <li>Go to <strong>Settings › Apps › Sacred Songs &amp; Solos › Storage</strong> and tap <strong>Clear cache</strong>.</li>
+                <li>As a last resort, uninstall and reinstall the app. Anything you saved inside the app will be removed.</li>
+              </ol>
+              <p>Still stuck? Tell us your device model, system version and what happens, using the form below.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>Do I need an account, and what data does the app collect?</summary>
+            <div class="faq__body">
+              <p>No account is needed, and we do not ask for personal information. The app shows ads, and our ad provider collects limited device data to show them. The <a href="#advertising">Ads and your data</a> section of our Privacy Policy lists exactly what.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>Where is my saved data kept? Can I move it to a new phone?</summary>
+            <div class="faq__body">
+              <p>Anything you save and your preferences are stored <strong>only on your device</strong>. We do not keep a copy, so we cannot restore it for you.</p>
+              <p><strong>iPhone and iPad:</strong> app data is included in an iCloud backup if backups are on, and moves across when you transfer from your old device while setting up the new one.</p>
+              <p><strong>Android:</strong> depending on your backup settings, Android may restore app data on a new phone. Check <strong>Settings › Google › Backup</strong>.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>I found a mistake in a song. How do I report it?</summary>
+            <div class="faq__body">
+              <p>Please use the form below and choose <strong>Correct a song</strong>. Include the song number, its title, what is wrong and, if you can, what it should say. The more detail you give, the faster we can check and fix it.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>The layout looks wrong on my tablet, iPad or foldable.</summary>
+            <div class="faq__body">
+              <p>Try rotating the device, closing and reopening the app, and updating to the latest version from the App Store or Google Play. If the problem remains, tell us your device model, system version and how the screen is positioned (folded, unfolded, split-screen). A screenshot is very helpful: after your e-mail app opens you can attach it to the message.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>How do I find out which version of the app I have?</summary>
+            <div class="faq__body">
+              <p><strong>iPhone and iPad:</strong> open <strong>Settings › General › iPhone Storage</strong> (or <strong>iPad Storage</strong>) and choose the app. The version is shown under its name.</p>
+              <p><strong>Android:</strong> open <strong>Settings › Apps › Sacred Songs &amp; Solos</strong> and scroll to the bottom, where the version is shown.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>How do I delete my data?</summary>
+            <div class="faq__body">
+              <p><strong>Android:</strong> open <strong>Settings › Apps › Sacred Songs &amp; Solos › Storage</strong> and choose <strong>Clear storage</strong>, or uninstall the app.</p>
+              <p><strong>iPhone and iPad:</strong> open <strong>Settings › General › iPhone Storage</strong>, choose the app and tap <strong>Delete App</strong>.</p>
+              <p>Nothing is stored on our servers. To limit data held by the ad provider, see <a href="#your-choices">Your ad choices</a>. To have e-mails you sent us deleted, <a href="#support-contact" data-topic="privacy">contact us</a>.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>How can I suggest a new feature?</summary>
+            <div class="faq__body">
+              <p>We would love to hear it. Use the form below, choose <strong>Suggest a feature</strong> and describe what you would like to do and why it would help.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>Why does the app show ads?</summary>
+            <div class="faq__body">
+              <p>Ads help fund the app’s development and upkeep. They are served by Google AdMob. To show them, it collects limited device data such as an advertising ID and your IP address. The <a href="#advertising">Ads and your data</a> section of our Privacy Policy explains what and why.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>How do I limit ad personalization or stop tracking?</summary>
+            <div class="faq__body">
+              <p class="faq__platform">iPhone and iPad</p>
+              <p>Choose <strong>Ask App Not to Track</strong> when the app asks, or change it later in <strong>Settings › Privacy &amp; Security › Tracking</strong>.</p>
+              <p class="faq__platform">Android</p>
+              <p>Open <strong>Settings › Privacy › Ads</strong> (the path varies by device) and delete or reset your advertising ID, or turn off ad personalization.</p>
+              <p class="faq__platform">Europe, the UK and Switzerland</p>
+              <p>The app shows a consent message before ad partners use your data. You can change your choice from the privacy or ad-choices option in the app’s settings. You will still see ads, but they will not be personalized.</p>
+              <p>More detail is in <a href="#your-choices">Your ad choices</a>.</p>
+            </div>
+          </details>
+
+          <details class="faq__item" data-faq>
+            <summary>An ad is inappropriate, misleading, broken or covers a button. What can I do?</summary>
+            <div class="faq__body">
+              <p>Many ads have an AdChoices or info icon you can tap to report the ad directly. You can also tell us: choose <strong>Report an ad or ad problem</strong> in the form below, and say roughly when you saw the ad, what it was for and what went wrong. A screenshot helps, and you can attach one once your e-mail app opens. We review every report and pass it to our ad provider.</p>
+            </div>
+          </details>
+        </div>
+
+        <div id="faq-empty" class="faq__empty" hidden>
+          <p><strong>No matching answers.</strong> Try a different word, or ask us directly below.</p>
+          <button type="button" id="faq-clear" class="btn btn--secondary btn--sm">Clear search</button>
+        </div>
+      </section>
+
+      <section id="support-contact" aria-labelledby="contact-title">
+        <div class="section-head">
+          <h2 id="contact-title">Contact support</h2>
+          <p>We read every message and reply as soon as we can.</p>
+        </div>
+
+        <div class="contact">
+          <div class="contact__form surface">
+            <noscript>
+              <p class="notice">The contact form needs JavaScript. Please e-mail us directly at <a href="mailto:dodemyinc@gmail.com" data-support-email>dodemyinc@gmail.com</a>.</p>
+            </noscript>
+
+            <form id="contact-form" class="form" novalidate>
+              <div class="field">
+                <label for="f-topic">Topic</label>
+                <select id="f-topic" class="control" name="topic" required aria-describedby="f-topic-error">
+                  <option value="" data-subject="">Choose a topic…</option>
+                  <option value="bug" data-subject="Problem report">Report a problem (bug or crash)</option>
+                  <option value="ads" data-subject="Ad report">Report an ad or ad problem</option>
+                  <option value="content" data-subject="Song correction">Correct a song (number, title or lyrics)</option>
+                  <option value="feature" data-subject="Feature request">Suggest a feature</option>
+                  <option value="privacy" data-subject="Privacy question">Privacy question or request</option>
+                  <option value="other" data-subject="General enquiry">Something else</option>
+                </select>
+                <p id="f-topic-error" class="field__error" hidden></p>
+              </div>
+
+              <div class="form__row">
+                <div class="field">
+                  <label for="f-version">App version <span class="optional">(optional)</span></label>
+                  <input id="f-version" class="control" name="version" type="text" maxlength="80" autocomplete="off" placeholder="For example 2.1.0">
+                </div>
+                <div class="field">
+                  <label for="f-device">Device &amp; OS version <span class="optional">(optional)</span></label>
+                  <input id="f-device" class="control" name="device" type="text" maxlength="80" autocomplete="off" placeholder="Model and Android or iOS version">
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="f-message">Message</label>
+                <textarea id="f-message" class="control" name="message" rows="7" maxlength="1200" required aria-describedby="f-message-hint f-message-error"></textarea>
+                <div class="field__meta">
+                  <span id="f-message-hint">Please don’t include passwords or sensitive personal details.</span>
+                  <span id="f-message-count" aria-hidden="true">0 / 1200</span>
+                </div>
+                <p id="f-message-error" class="field__error" hidden></p>
+              </div>
+
+              <div class="form__actions">
+                <button type="submit" class="btn btn--primary">
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-send"/></svg>
+                  <span class="btn__label">Open in e-mail app</span>
+                </button>
+                <button type="button" id="open-gmail" class="btn btn--secondary">
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>
+                  <span class="btn__label">Open in Gmail</span>
+                </button>
+                <button type="button" id="copy-message" class="btn btn--secondary">
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-copy"/></svg>
+                  <span class="btn__label">Copy message</span>
+                </button>
+                <button type="reset" class="btn btn--ghost">Clear</button>
+              </div>
+
+              <p id="form-status" class="form__status" role="status" aria-live="polite"></p>
+
+              <div id="f-fallback-wrap" class="field" hidden>
+                <label for="f-fallback">Your message (select all and copy)</label>
+                <textarea id="f-fallback" class="control" rows="8" readonly></textarea>
+              </div>
+            </form>
+          </div>
+
+          <aside class="contact__info surface" aria-label="Other ways to reach us">
+            <h3>E-mail us directly</h3>
+            <div class="email-row">
+              <a href="mailto:dodemyinc@gmail.com" data-support-email>dodemyinc@gmail.com</a>
+              <button type="button" class="btn btn--secondary btn--sm" data-copy-email>
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-copy"/></svg>
+                <span class="btn__label">Copy</span>
+              </button>
+            </div>
+            <p class="faq__status">This form prepares an e-mail in your own e-mail app. Nothing is sent from this page.</p>
+
+            <h3>Help us help you</h3>
+            <ul class="checklist">
+              <li>What you were doing and what happened instead.</li>
+              <li>Your device model and its Android or iOS version.</li>
+              <li>The app version (see the FAQ above).</li>
+              <li>For song corrections: the song number and title.</li>
+              <li>For ads: roughly when you saw it and what it was for.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© <span data-year>2026</span> Dodemy Inc. All rights reserved.</p>
+    <nav aria-label="Footer">
+      <a href="#privacy">Privacy Policy</a>
+      <a href="#support">Support</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

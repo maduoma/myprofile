@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#075e54">
+  <meta name="description" content="Privacy Policy for Status Saver - Status Downloader by Dodemy Inc.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; script-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <link rel="canonical" href="https://maduoma.github.io/myprofile/status-saver-privacy-policy.html">
+  <title>Privacy Policy · Status Saver</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --canvas: #f2f7f3;
+      --surface: rgba(255, 255, 255, 0.9);
+      --surface-strong: #ffffff;
+      --ink: #10231f;
+      --muted: #52645f;
+      --line: #cedbd6;
+      --brand: #075e54;
+      --brand-strong: #05473f;
+      --accent: #25d366;
+      --accent-soft: #d9f8e4;
+      --warm: #f2c14e;
+      --shadow: 0 24px 70px rgba(7, 63, 55, 0.12);
+      --radius-large: 28px;
+      --radius-medium: 18px;
+      --content: 76rem;
+      --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      --body: Aptos, "Segoe UI Variable", "Trebuchet MS", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --canvas: #071512;
+        --surface: rgba(13, 35, 30, 0.9);
+        --surface-strong: #0e211d;
+        --ink: #edf8f3;
+        --muted: #b1c5bd;
+        --line: #29443c;
+        --brand: #72e3b1;
+        --brand-strong: #a0f3ce;
+        --accent: #38dc79;
+        --accent-soft: #123e2a;
+        --warm: #f3cf6a;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 2rem;
+    }
+
+    body {
+      min-width: 18rem;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 2%, color-mix(in srgb, var(--accent) 17%, transparent) 0, transparent 28rem),
+        radial-gradient(circle at 4% 42%, color-mix(in srgb, var(--warm) 12%, transparent) 0, transparent 24rem),
+        var(--canvas);
+      font-family: var(--body);
+      font-size: 1rem;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--brand);
+      font-weight: 700;
+      text-underline-offset: 0.18em;
+      text-decoration-thickness: 0.08em;
+    }
+
+    a:hover {
+      color: var(--brand-strong);
+    }
+
+    a:focus-visible,
+    .skip-link:focus-visible {
+      outline: 3px solid var(--warm);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.7rem 1rem;
+      color: #071512;
+      background: var(--warm);
+      border-radius: 999px;
+      font-weight: 800;
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      width: min(calc(100% - 2rem), var(--content));
+      margin-inline: auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+      padding: clamp(2rem, 6vw, 5.5rem);
+      color: #f7fffb;
+      background:
+        linear-gradient(122deg, rgba(7, 94, 84, 0.97), rgba(5, 71, 63, 0.97)),
+        #075e54;
+      border-radius: var(--radius-large);
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      content: "";
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 50%;
+    }
+
+    .hero::before {
+      width: 23rem;
+      height: 23rem;
+      right: -8rem;
+      top: -11rem;
+    }
+
+    .hero::after {
+      width: 13rem;
+      height: 13rem;
+      right: 5rem;
+      bottom: -8rem;
+      background: rgba(37, 211, 102, 0.13);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: clamp(2rem, 7vw, 5rem);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      width: 2.3rem;
+      height: 2.3rem;
+      place-items: center;
+      color: #073f37;
+      background: #7ef0b5;
+      border-radius: 0.75rem;
+      font-family: var(--body);
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.65rem;
+      color: #aaf7cb;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--display);
+      line-height: 1.12;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      font-size: clamp(2.7rem, 9vw, 6.8rem);
+      font-weight: 600;
+      letter-spacing: -0.055em;
+    }
+
+    .hero-summary {
+      max-width: 43rem;
+      margin: 1.4rem 0 0;
+      color: rgba(247, 255, 251, 0.84);
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .pill {
+      padding: 0.45rem 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      color: #f7fffb;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+      gap: clamp(1.5rem, 4vw, 4rem);
+      align-items: start;
+      padding-block: clamp(2.5rem, 7vw, 5.5rem);
+    }
+
+    .toc {
+      position: sticky;
+      top: 1.5rem;
+      padding: 1.15rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-medium);
+      backdrop-filter: blur(14px);
+    }
+
+    .toc-title {
+      margin: 0 0 0.65rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .toc ol {
+      display: grid;
+      gap: 0.2rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: toc;
+    }
+
+    .toc li {
+      counter-increment: toc;
+    }
+
+    .toc a {
+      display: grid;
+      grid-template-columns: 1.6rem 1fr;
+      gap: 0.25rem;
+      padding: 0.38rem 0.35rem;
+      color: var(--muted);
+      border-radius: 0.55rem;
+      font-size: 0.84rem;
+      font-weight: 650;
+      line-height: 1.3;
+      text-decoration: none;
+    }
+
+    .toc a::before {
+      color: var(--brand);
+      content: counter(toc, decimal-leading-zero);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .toc a:hover {
+      color: var(--ink);
+      background: var(--accent-soft);
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    .notice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      padding: clamp(1.15rem, 3vw, 1.6rem);
+      background: var(--accent-soft);
+      border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+      border-radius: var(--radius-medium);
+    }
+
+    .notice-icon {
+      display: grid;
+      width: 2.5rem;
+      height: 2.5rem;
+      place-items: center;
+      color: var(--brand-strong);
+      background: color-mix(in srgb, var(--accent) 28%, var(--surface-strong));
+      border-radius: 50%;
+      font-weight: 900;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .notice p {
+      margin: 0;
+    }
+
+    .section {
+      margin-bottom: 1.2rem;
+      padding: clamp(1.35rem, 4vw, 2.4rem);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-medium);
+      box-shadow: 0 12px 34px rgba(7, 63, 55, 0.045);
+      backdrop-filter: blur(12px);
+    }
+
+    .section-number {
+      display: inline-block;
+      margin-bottom: 0.45rem;
+      color: var(--brand);
+      font-size: 0.75rem;
+      font-weight: 850;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: clamp(1.65rem, 4vw, 2.45rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      margin: 1.7rem 0 0.55rem;
+      font-size: 1.18rem;
+      font-weight: 650;
+    }
+
+    p,
+    ul {
+      margin-top: 0.7rem;
+      margin-bottom: 0.7rem;
+    }
+
+    ul {
+      padding-left: 1.25rem;
+    }
+
+    li + li {
+      margin-top: 0.5rem;
+    }
+
+    .data-list {
+      display: grid;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .data-item {
+      padding: 1rem;
+      background: color-mix(in srgb, var(--canvas) 72%, var(--surface-strong));
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+    }
+
+    .data-item strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      color: var(--ink);
+    }
+
+    .data-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+
+    th,
+    td {
+      padding: 0.85rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: var(--ink);
+      background: var(--accent-soft);
+      font-size: 0.77rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .contact-card {
+      display: grid;
+      gap: 0.4rem;
+      padding: 1.1rem;
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 0.9rem 0.9rem 0;
+    }
+
+    .contact-card p {
+      margin: 0;
+    }
+
+    footer {
+      padding: 1.7rem 0 3.5rem;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .footer-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    @media (max-width: 52rem) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+
+      .toc ol {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 36rem) {
+      .page-shell {
+        width: min(calc(100% - 1rem), var(--content));
+      }
+
+      .hero {
+        margin-top: 0.5rem;
+        border-radius: 1.4rem;
+      }
+
+      .toc ol {
+        grid-template-columns: 1fr;
+      }
+
+      .notice {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        font-size: 10.5pt;
+      }
+
+      .page-shell {
+        width: 100%;
+      }
+
+      .hero {
+        padding: 2rem;
+        color: #000;
+        background: #fff;
+        border: 2px solid #000;
+        box-shadow: none;
+      }
+
+      .hero-summary,
+      .eyebrow,
+      .pill {
+        color: #000;
+      }
+
+      .toc {
+        display: none;
+      }
+
+      .content-grid {
+        display: block;
+      }
+
+      .section,
+      .notice {
+        break-inside: avoid;
+        background: #fff;
+        border: 1px solid #bbb;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to policy</a>
+
+  <header class="page-shell hero">
+    <div class="brand-row">
+      <span class="brand-mark" aria-hidden="true">↓</span>
+      <span>Dodemy · Privacy Policy</span>
+    </div>
+    <p class="eyebrow">Status Saver - Status Downloader</p>
+    <h1>Privacy, made clear.</h1>
+    <p class="hero-summary">
+      This policy explains what stays on your device, what Google services process,
+      and the controls available to you.
+    </p>
+    <div class="hero-meta" aria-label="Policy dates">
+      <span class="pill">Effective July 25, 2026</span>
+      <span class="pill">Last updated July 25, 2026</span>
+    </div>
+  </header>
+
+  <div class="page-shell content-grid">
+    <nav class="toc" aria-label="Privacy Policy contents">
+      <p class="toc-title">On this page</p>
+      <ol>
+        <li><a href="#scope">Scope and controller</a></li>
+        <li><a href="#summary">At a glance</a></li>
+        <li><a href="#local-data">Data used locally</a></li>
+        <li><a href="#third-parties">Third-party processing</a></li>
+        <li><a href="#purposes">How data is used</a></li>
+        <li><a href="#permissions">App permissions</a></li>
+        <li><a href="#sharing">Sharing and disclosure</a></li>
+        <li><a href="#retention">Retention and deletion</a></li>
+        <li><a href="#choices">Your choices</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#international">International processing</a></li>
+        <li><a href="#children">Children</a></li>
+        <li><a href="#changes">Policy changes</a></li>
+        <li><a href="#contact">Contact us</a></li>
+      </ol>
+    </nav>
+
+    <main id="main-content">
+      <aside class="notice" aria-label="Important privacy summary">
+        <span class="notice-icon" aria-hidden="true">✓</span>
+        <div>
+          <strong>Your status media is processed locally.</strong>
+          <p>
+            Dodemy does not operate an app backend that receives your WhatsApp status
+            media, Direct Chat phone number, or Direct Chat message.
+          </p>
+        </div>
+      </aside>
+
+      <section class="section" id="scope">
+        <span class="section-number">01 · Foundation</span>
+        <h2>Scope and controller</h2>
+        <p>
+          This Privacy Policy applies to <strong>Status Saver - Status Downloader</strong>
+          for Android (the “App”), published under the package name
+          <strong>com.dodemy.statussaver_statusdownloader</strong>.
+        </p>
+        <p>
+          The App is provided by <strong>Maduabughichi Achilefu (Dodemy Inc)</strong>
+          (“Dodemy,” “we,” “us,” or “our”). For information handled directly by the App,
+          Dodemy is the responsible developer. Google and other third parties described
+          below process information under their own terms and privacy policies.
+        </p>
+        <p>
+          By using the App, you acknowledge the practices described in this policy.
+          The App’s use is also governed by our
+          <a href="https://maduoma.github.io/myprofile/terms-of-service-policy.html">Terms of Service</a>.
+        </p>
+      </section>
+
+      <section class="section" id="summary">
+        <span class="section-number">02 · Summary</span>
+        <h2>At a glance</h2>
+        <div class="data-list">
+          <div class="data-item">
+            <strong>No Dodemy account or media server</strong>
+            <p>
+              The App does not require you to create an account. Status discovery,
+              preview, saving, and the saved-media index run on your device.
+            </p>
+          </div>
+          <div class="data-item">
+            <strong>You control folder access</strong>
+            <p>
+              On supported Android versions, you choose a media folder through Android’s
+              system folder picker. The App retains read access only after you grant it.
+            </p>
+          </div>
+          <div class="data-item">
+            <strong>Google services process limited data</strong>
+            <p>
+              The free experience may use Google Mobile Ads and Google’s consent platform.
+              Optional purchases are processed through Google Play Billing.
+            </p>
+          </div>
+          <div class="data-item">
+            <strong>You can remove local data</strong>
+            <p>
+              Clear the App’s storage or uninstall it to remove its local database and
+              preferences. Files you saved to your gallery remain until you delete them.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="local-data">
+        <span class="section-number">03 · On-device data</span>
+        <h2>Information used locally on your device</h2>
+        <p>
+          The following information is accessed or stored to provide App features. It is
+          not uploaded to a Dodemy-operated server.
+        </p>
+
+        <h3>Status media and folder access</h3>
+        <p>
+          When you select the WhatsApp or WhatsApp Business media folder, the App receives
+          a system-issued folder URI and persistent read permission. It scans image and
+          video files in the selected status folders so you can preview, filter, save,
+          share, or repost them. A copy is created in your device’s media collection only
+          when you save an item or enable Auto Save.
+        </p>
+
+        <h3>Saved-media index</h3>
+        <p>
+          A local Room database records the saved file URI, source URI, file name, MIME
+          type, whether the item is a video, and the saved timestamp. This index powers
+          the Saved screen and helps prevent duplicate saves.
+        </p>
+
+        <h3>Preferences and entitlement</h3>
+        <p>
+          Android DataStore stores your selected language, onboarding completion,
+          Auto Save setting, notification setting, share-link setting, selected media
+          folder URI, and whether an eligible remove-ads purchase is active.
+        </p>
+
+        <h3>Direct Chat</h3>
+        <p>
+          A phone number and optional message entered in Direct Chat remain in temporary
+          on-screen state while you use that screen. The App formats them into a
+          <strong>wa.me</strong> link and sends that link to WhatsApp, WhatsApp Business,
+          or another app you choose only when you initiate the action. Dodemy does not
+          store or receive the number or message.
+        </p>
+
+        <h3>Local diagnostics</h3>
+        <p>
+          Development builds may write feature events and error details to the device’s
+          Android debug log for testing. This logger is disabled in production builds and
+          does not transmit logs to Dodemy.
+        </p>
+      </section>
+
+      <section class="section" id="third-parties">
+        <span class="section-number">04 · Service providers</span>
+        <h2>Information processed by third-party services</h2>
+        <p>
+          Some App functions communicate with services supplied by Google or with apps
+          you deliberately open. Their processing is governed by their own policies.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">Information and purpose</th>
+                <th scope="col">When it applies</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Google Mobile Ads (AdMob)</strong></td>
+                <td>
+                  Google states that its SDK may automatically collect and share IP
+                  address, user interactions, diagnostic information, and device or
+                  account identifiers for advertising, analytics, and fraud prevention.
+                  Google states that data is encrypted in transit.
+                </td>
+                <td>
+                  When ads are enabled, you do not have an active remove-ads entitlement,
+                  and the applicable consent state permits ad requests.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Google User Messaging Platform</strong></td>
+                <td>
+                  Requests and records privacy or advertising choices needed to determine
+                  whether Google ads may be requested in your region.
+                </td>
+                <td>
+                  When a consent update or form is required or available.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Google Play Billing</strong></td>
+                <td>
+                  Processes product details, purchase status, transaction information,
+                  acknowledgement, and restoration for the optional one-time remove-ads
+                  purchase. Dodemy does not receive your full payment-card details.
+                </td>
+                <td>
+                  When the App connects to Google Play to display, buy, verify, or restore
+                  the remove-ads product.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>WhatsApp or another chosen app</strong></td>
+                <td>
+                  Receives media, a Direct Chat link, or an app-share link only after you
+                  choose to open, share, or repost it.
+                </td>
+                <td>Only when you initiate the relevant external action.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Learn more in the
+          <a href="https://policies.google.com/privacy">Google Privacy Policy</a>,
+          <a href="https://policies.google.com/technologies/partner-sites">Google’s explanation of data from partner apps</a>,
+          and the
+          <a href="https://www.whatsapp.com/legal/privacy-policy">WhatsApp Privacy Policy</a>.
+        </p>
+      </section>
+
+      <section class="section" id="purposes">
+        <span class="section-number">05 · Purpose</span>
+        <h2>How information is used</h2>
+        <p>Information is processed only as reasonably necessary to:</p>
+        <ul>
+          <li>locate and display status media you have authorized the App to read;</li>
+          <li>save, index, find, share, repost, and delete media at your direction;</li>
+          <li>remember settings and maintain optional Auto Save and notification features;</li>
+          <li>create a Direct Chat link and hand it to the app you select;</li>
+          <li>show ads in the free experience, subject to applicable consent controls;</li>
+          <li>offer, verify, acknowledge, and restore the remove-ads purchase;</li>
+          <li>protect ad and purchase systems against fraud and abuse; and</li>
+          <li>diagnose issues during development without running Dodemy analytics in production.</li>
+        </ul>
+      </section>
+
+      <section class="section" id="permissions">
+        <span class="section-number">06 · Android access</span>
+        <h2>App permissions</h2>
+        <div class="data-list">
+          <div class="data-item">
+            <strong>Photos, videos, and storage</strong>
+            <p>
+              Used to discover and save status media. Depending on your Android version,
+              the App uses Android’s system folder picker or legacy storage permissions
+              limited to older Android versions.
+            </p>
+          </div>
+          <div class="data-item">
+            <strong>Notifications</strong>
+            <p>
+              Used to show optional local notifications for App activity, including
+              Auto Save results. Android asks for this permission on supported versions,
+              and you may deny or revoke it.
+            </p>
+          </div>
+          <div class="data-item">
+            <strong>Internet and network state</strong>
+            <p>
+              Used by Google Mobile Ads, consent management, Google Play Billing, and
+              opening web content you request. Status media is not uploaded to Dodemy.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sharing">
+        <span class="section-number">07 · Disclosure</span>
+        <h2>Sharing and disclosure</h2>
+        <p>
+          Dodemy does not sell your status media, Direct Chat phone number, or Direct Chat
+          message. Information may be disclosed only in these circumstances:
+        </p>
+        <ul>
+          <li>
+            <strong>At your direction:</strong> to WhatsApp, WhatsApp Business, or another
+            app when you open, share, or repost content.
+          </li>
+          <li>
+            <strong>To service providers:</strong> Google processes the advertising,
+            consent, and billing data described above under its own terms.
+          </li>
+          <li>
+            <strong>For legal and safety reasons:</strong> if reasonably necessary to
+            comply with applicable law, enforce legal rights, or protect users and the
+            public. Because Dodemy does not receive your local media or Direct Chat input,
+            we generally cannot disclose content we do not possess.
+          </li>
+          <li>
+            <strong>Business changes:</strong> information under our control may be
+            transferred as part of a merger, acquisition, financing, or sale of assets,
+            subject to applicable law and this policy.
+          </li>
+        </ul>
+      </section>
+
+      <section class="section" id="retention">
+        <span class="section-number">08 · Lifecycle</span>
+        <h2>Retention and deletion</h2>
+        <h3>App records</h3>
+        <p>
+          The local saved-media index and preferences remain on your device until you
+          remove individual saved items where supported, clear the App’s storage in
+          Android settings, or uninstall the App. These records are excluded from the
+          App’s Android cloud backup and device-transfer configuration.
+        </p>
+
+        <h3>Saved files</h3>
+        <p>
+          Media copied to your device’s gallery remains there until you delete it from
+          the App, your gallery, or a file manager. Clearing App storage or uninstalling
+          the App does not necessarily delete those media copies.
+        </p>
+
+        <h3>Folder access</h3>
+        <p>
+          You can connect a different folder from the App. You can also remove the App’s
+          storage access through Android system settings or by clearing App storage.
+        </p>
+
+        <h3>Provider records</h3>
+        <p>
+          Google and apps you choose may retain information according to their own
+          policies and legal obligations. Requests concerning those records should be
+          directed to the relevant provider. You may also email Dodemy for help
+          identifying the appropriate control.
+        </p>
+      </section>
+
+      <section class="section" id="choices">
+        <span class="section-number">09 · Control</span>
+        <h2>Your choices and rights</h2>
+        <p>Depending on your device, region, and applicable law, you can:</p>
+        <ul>
+          <li>decline, revoke, or reconnect media-folder access;</li>
+          <li>disable Auto Save, notifications, or share-link behavior in App settings;</li>
+          <li>manage notification permission in Android settings;</li>
+          <li>use Google’s consent form when presented to manage eligible ad choices;</li>
+          <li>purchase the optional remove-ads product or continue using the ad-supported version;</li>
+          <li>delete saved media and local App data as described above; and</li>
+          <li>request access, correction, deletion, restriction, objection, or portability
+            where those rights apply to information controlled by Dodemy.</li>
+        </ul>
+        <p>
+          Because the App has no Dodemy account and does not upload your status media or
+          Direct Chat input to us, Dodemy cannot retrieve or delete those local items
+          remotely. We may need reasonable information to verify and respond to a privacy
+          request, and we will not discriminate against you for exercising applicable
+          rights.
+        </p>
+      </section>
+
+      <section class="section" id="security">
+        <span class="section-number">10 · Safeguards</span>
+        <h2>Security</h2>
+        <p>
+          The App uses Android-scoped content access, read-only persistent folder grants,
+          URI-based sharing, release-disabled diagnostic logging, and backup exclusions
+          for its local database and preferences. Google states that Mobile Ads SDK data
+          is encrypted in transit.
+        </p>
+        <p>
+          No storage or transmission method is completely secure. You are responsible for
+          securing your device, screen lock, Google account, WhatsApp account, and saved
+          media. Please install updates from trusted stores and do not grant access to
+          folders you do not want the App to read.
+        </p>
+      </section>
+
+      <section class="section" id="international">
+        <span class="section-number">11 · Global services</span>
+        <h2>International processing</h2>
+        <p>
+          Google and other third-party providers may process information on servers
+          located outside your country. Their privacy policies describe the safeguards
+          they use. Dodemy’s own App functionality keeps the media and local records
+          described in Section 3 on your device.
+        </p>
+      </section>
+
+      <section class="section" id="children">
+        <span class="section-number">12 · Age</span>
+        <h2>Children’s privacy</h2>
+        <p>
+          The App is a general-audience utility and is not directed to children under 13
+          or the minimum digital-consent age in their country. We do not knowingly ask a
+          child to provide personal information to Dodemy. If you believe a child has
+          provided information to us, contact us so we can investigate and take
+          appropriate action.
+        </p>
+        <p>
+          A parent or guardian should supervise a minor’s use of the App and ensure that
+          any saving, sharing, or reposting of media is lawful and respectful of others’
+          privacy.
+        </p>
+      </section>
+
+      <section class="section" id="changes">
+        <span class="section-number">13 · Updates</span>
+        <h2>Changes to this policy</h2>
+        <p>
+          We may update this policy when App features, providers, or legal requirements
+          change. We will post the revised policy at this URL and update the “Last
+          updated” date. If a change is material, we will provide additional notice in
+          the App or by another reasonable method when required by law.
+        </p>
+      </section>
+
+      <section class="section" id="contact">
+        <span class="section-number">14 · Contact</span>
+        <h2>Contact us</h2>
+        <p>
+          Questions, privacy requests, and complaints can be sent to:
+        </p>
+        <div class="contact-card">
+          <p><strong>Maduabughichi Achilefu (Dodemy Inc)</strong></p>
+          <p>
+            Email:
+            <a href="mailto:dodemyinc@gmail.com?subject=Status%20Saver%20Privacy">dodemyinc@gmail.com</a>
+          </p>
+          <p class="muted">Subject suggestion: “Status Saver Privacy”</p>
+        </div>
+        <p>
+          We will respond within the period required by applicable law. You may also have
+          the right to complain to your local data-protection authority.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="page-shell footer-row">
+      <span>© 2026 Dodemy Inc · Status Saver</span>
+      <nav class="footer-links" aria-label="Legal links">
+        <a href="https://maduoma.github.io/myprofile/status-saver-privacy-policy.html" aria-current="page">Privacy</a>
+        <a href="https://maduoma.github.io/myprofile/terms-of-service-policy.html">Terms</a>
+        <a href="mailto:dodemyinc@gmail.com">Support</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

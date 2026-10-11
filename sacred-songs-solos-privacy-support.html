@@ -18,14 +18,14 @@
       Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()
       Cross-Origin-Opener-Policy: same-origin
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-smD+A+ACEPnfqO3fYpo9/B4uqG3Vh+mbWA30f7hSrxM='; style-src 'sha256-y6pLhQWw60EMK93Nm9P8yOKvEfhutnrsdNpB7Z9Wl00='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-aWE5YR7ENwTDQNq0m3KCs5/ksvluCjgxEwo6dIFamXc='; style-src 'sha256-GCIegv8Bgz4CS7lDBtGQvwUdqFUH1AS4kkVxGOztJgE='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy Policy &amp; Support · Sacred Songs &amp; Solos</title>
 <meta name="description" content="Privacy Policy and Support for the Sacred Songs &amp; Solos app on iPhone, iPad and Android: how ads and your data work, your choices, answers to common questions, and how to contact us.">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#f6f4ee">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232c3c94'/%3E%3Cpath d='M12 21V10L22 8V19' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='9.5' cy='21.5' r='3' fill='white'/%3E%3Ccircle cx='19.5' cy='19.5' r='3' fill='white'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#b71c1c">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23b71c1c'/%3E%3Cpath d='M12 21V10L22 8V19' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='9.5' cy='21.5' r='3' fill='white'/%3E%3Ccircle cx='19.5' cy='19.5' r='3' fill='white'/%3E%3C/svg%3E">
 <style>
 /* ==========================================================================
    1. Design tokens — light (default) and dark
@@ -33,33 +33,31 @@
 :root {
   color-scheme: light;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-display: var(--font-sans);
 
-  --bg: #f6f4ee;
+  --bg: #f2f2f7;
   --surface: #ffffff;
-  --surface-2: #efece3;
-  --text: #1a1f2e;
-  --muted: #535d72;
-  --border: #ddd7c7;
-  --border-strong: #bdb6a1;
+  --surface-2: #e5e5ea;
+  --text: #000000;
+  --muted: #595959;
+  --border: #d1d1d6;
+  --border-strong: #8e8e93;
 
-  --primary: #2c3c94;
-  --primary-hover: #222f78;
+  --brand: #b71c1c; /* Android BrandRed and Theme.brand */
+  --brand-hover: #a3141a;
+  --primary: #a3141a; /* Theme.accent in light appearance */
+  --primary-hover: #b71c1c;
   --on-primary: #ffffff;
-  --primary-soft: #e8ebfb;
-  --accent: #b6852c;
-  --accent-soft: #f7edd6;
+  --primary-soft: #fbe9e7;
+  --accent: var(--primary);
+  --accent-soft: var(--primary-soft);
   --success: #1b6a42;
   --success-soft: #e1f3e9;
   --danger: #b3261e;
   --danger-soft: #fbe9e7;
 
-  --hero-from: #e6e9fb;
-  --hero-to: #f6f4ee;
-  --staff: rgba(44, 60, 148, 0.12);
-
-  --shadow-1: 0 1px 2px rgba(26, 31, 46, 0.06), 0 1px 1px rgba(26, 31, 46, 0.04);
-  --shadow-2: 0 10px 28px rgba(26, 31, 46, 0.10), 0 2px 6px rgba(26, 31, 46, 0.06);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 1px rgba(0, 0, 0, 0.04);
+  --shadow-2: 0 10px 28px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.06);
 
   --radius-s: 0.5rem;
   --radius-m: 0.875rem;
@@ -70,28 +68,24 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0d1120;
-  --surface: #151a2e;
-  --surface-2: #1c2340;
-  --text: #e9ebf5;
-  --muted: #a4adc6;
-  --border: #2a3354;
-  --border-strong: #41507a;
+  --bg: #000000;
+  --surface: #1c1c1e;
+  --surface-2: #2c2c2e;
+  --text: #ffffff;
+  --muted: #c7c7c7;
+  --border: #38383a;
+  --border-strong: #8e8e93;
 
-  --primary: #a9b8ff;
-  --primary-hover: #c3ceff;
-  --on-primary: #0d1120;
-  --primary-soft: #222b55;
-  --accent: #e3b95e;
-  --accent-soft: #2c2a22;
+  --primary: #ff7a75; /* Theme.accent in dark appearance */
+  --primary-hover: #ff9a90;
+  --on-primary: #ffffff;
+  --primary-soft: #3a1c1a;
+  --accent: var(--primary);
+  --accent-soft: var(--primary-soft);
   --success: #6fd3a0;
   --success-soft: #14301f;
   --danger: #ff9a90;
   --danger-soft: #3a1c1a;
-
-  --hero-from: #1a2250;
-  --hero-to: #0d1120;
-  --staff: rgba(169, 184, 255, 0.12);
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -163,7 +157,7 @@ strong { font-weight: 650; }
 .skip-link {
   position: absolute; inset-inline-start: 1rem; top: -4rem; z-index: 100;
   padding: 0.75rem 1rem;
-  background: var(--primary); color: var(--on-primary);
+  background: var(--brand); color: var(--on-primary);
   border-radius: var(--radius-s);
   font-weight: 600; text-decoration: none;
   transition: top 0.15s ease;
@@ -175,10 +169,8 @@ strong { font-weight: 650; }
    ========================================================================== */
 .site-header {
   z-index: 50;
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
-  -webkit-backdrop-filter: saturate(1.4) blur(14px);
-  backdrop-filter: saturate(1.4) blur(14px);
-  border-bottom: 1px solid var(--border);
+  background: var(--brand);
+  color: var(--on-primary);
 }
 
 .site-header__inner {
@@ -190,28 +182,28 @@ strong { font-weight: 650; }
 .brand {
   display: inline-flex; align-items: center; gap: 0.75rem;
   margin-inline-end: auto;
-  color: var(--text); text-decoration: none;
+  color: var(--on-primary); text-decoration: none;
 }
-.brand:hover { color: var(--text); }
+.brand:hover { color: var(--on-primary); }
 .brand__mark { width: 2.5rem; height: 2.5rem; flex: none; }
-.brand__mark rect { fill: var(--primary); }
-.brand__mark path { fill: none; stroke: var(--on-primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.brand__mark circle { fill: var(--on-primary); }
+.brand__mark rect { fill: var(--on-primary); }
+.brand__mark path { fill: none; stroke: var(--brand); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.brand__mark circle { fill: var(--brand); }
 .brand__text { display: flex; flex-direction: column; line-height: 1.15; }
 .brand__name { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; letter-spacing: 0.005em; }
-.brand__sub { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.brand__sub { font-size: 0.78rem; color: var(--on-primary); letter-spacing: 0.04em; text-transform: uppercase; }
 
-.nav { display: flex; gap: 0.25rem; padding: 0.25rem; background: var(--surface-2); border-radius: 999px; order: 3; width: 100%; }
+.nav { display: flex; gap: 0.25rem; padding: 0.25rem; background: rgba(255, 255, 255, 0.12); border-radius: 999px; order: 3; width: 100%; }
 .nav__link {
   flex: 1; text-align: center;
   padding: 0.55rem 1rem; min-height: 2.5rem;
   display: inline-flex; align-items: center; justify-content: center;
   border-radius: 999px;
-  color: var(--muted); font-weight: 600; font-size: 0.95rem; text-decoration: none;
+  color: var(--on-primary); font-weight: 600; font-size: 0.95rem; text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
-.nav__link:hover { color: var(--text); }
-.nav__link[aria-current="page"] { background: var(--surface); color: var(--primary); box-shadow: var(--shadow-1); }
+.nav__link:hover { color: var(--on-primary); background: rgba(255, 255, 255, 0.12); }
+.nav__link[aria-current="page"] { background: var(--on-primary); color: var(--brand); box-shadow: var(--shadow-1); }
 
 .icon-btn {
   display: inline-grid; place-items: center;
@@ -239,14 +231,8 @@ strong { font-weight: 650; }
    ========================================================================== */
 .page-hero {
   position: relative; overflow: hidden;
-  background: linear-gradient(160deg, var(--hero-from), var(--hero-to) 72%);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
-}
-.page-hero::before {
-  content: ""; position: absolute; inset: 0;
-  background: repeating-linear-gradient(to bottom, var(--staff) 0 1px, transparent 1px 13px);
-  mask-image: linear-gradient(to left, #000, transparent 65%);
-  pointer-events: none;
 }
 .page-hero .container { position: relative; padding-block: clamp(2.5rem, 7vw, 4.5rem); }
 .eyebrow {
@@ -274,8 +260,8 @@ strong { font-weight: 650; }
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 .btn:active { transform: translateY(1px); }
-.btn--primary { background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-1); }
-.btn--primary:hover { background: var(--primary-hover); color: var(--on-primary); box-shadow: var(--shadow-2); }
+.btn--primary { background: var(--brand); color: var(--on-primary); box-shadow: var(--shadow-1); }
+.btn--primary:hover { background: var(--brand-hover); color: var(--on-primary); box-shadow: var(--shadow-2); }
 .btn--secondary { background: var(--surface); color: var(--primary); border-color: var(--border-strong); }
 .btn--secondary:hover { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
 .btn--ghost { background: transparent; color: var(--muted); border-color: var(--border); }
@@ -504,7 +490,9 @@ document.documentElement.classList.replace('no-js', 'js');
      ------------------------------------------------------------------------ */
   const THEME_KEY = 'sss.theme';
   const THEMES = Object.freeze(['light', 'dark']);
-  const DEFAULT_THEME = 'light';
+  const systemAppearance = window.matchMedia('(prefers-color-scheme: dark)');
+  const embedded = window.location.protocol === 'file:';
+  const systemTheme = () => systemAppearance.matches ? 'dark' : 'light';
   const DEFAULT_VIEW = 'privacy';
   const FLASH_MS = 2200;
   const PLACEHOLDER_DOMAIN = 'your-domain.example';
@@ -580,9 +568,9 @@ document.documentElement.classList.replace('no-js', 'js');
      ------------------------------------------------------------------------ */
   const theme = {
     apply(name) {
-      const next = THEMES.includes(name) ? name : DEFAULT_THEME;
+      const next = THEMES.includes(name) ? name : systemTheme();
       root.dataset.theme = next;
-      const color = getComputedStyle(root).getPropertyValue('--bg').trim();
+      const color = getComputedStyle(root).getPropertyValue('--brand').trim();
       const meta = $('meta[name="theme-color"]');
       if (meta && color) meta.setAttribute('content', color);
       return next;
@@ -592,11 +580,16 @@ document.documentElement.classList.replace('no-js', 'js');
     },
   };
 
-  theme.apply(storage.get(THEME_KEY));
+  theme.apply(embedded ? systemTheme() : storage.get(THEME_KEY));
+  // Embedded pages follow the same device appearance as native Settings.
+  systemAppearance.addEventListener('change', () => {
+    if (embedded || !storage.get(THEME_KEY)) theme.apply(systemTheme());
+  });
 
   const initThemeToggle = () => {
     const button = $('#theme-toggle');
     if (!button) return;
+    if (embedded) { button.hidden = true; return; }
     const sync = () => {
       button.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
     };
@@ -633,7 +626,10 @@ document.documentElement.classList.replace('no-js', 'js');
 
     const route = (userInitiated) => {
       const id = readHash();
-      const target = id ? document.getElementById(id) : null;
+      // Route names intentionally differ from element IDs so WebKit's initial
+      // fragment jump cannot scroll the shared header out of view after routing.
+      const page = panels.find((panel) => panel.dataset.view === id);
+      const target = page ?? (id ? document.getElementById(id) : null);
       const panel = target ? target.closest('[data-view]') : null;
 
       if (target && !panel) {
@@ -976,12 +972,12 @@ document.documentElement.classList.replace('no-js', 'js');
   <!-- ====================================================================
        PRIVACY POLICY
        ==================================================================== -->
-  <section id="privacy" class="view" data-view="privacy" data-title="Privacy Policy · Sacred Songs &amp; Solos" aria-labelledby="privacy-title">
+  <section id="privacy-page" class="view" data-view="privacy" data-title="Privacy Policy · Sacred Songs &amp; Solos" aria-labelledby="privacy-title">
     <div class="page-hero">
       <div class="container">
         <p class="eyebrow">Sacred Songs &amp; Solos · iPhone, iPad &amp; Android</p>
         <h1 id="privacy-title">Privacy Policy</h1>
-        <p class="lede">There is no account and we don’t ask who you are. The app shows ads, and our ad provider collects limited device data to show them. Here is exactly what that means, and how to control it.</p>
+        <p class="lede">No account is required. Google AdMob processes device and ad data, and Firebase provides usage and crash reporting. On iPhone and iPad, app diagnostics are optional and off by default. This page explains the platform differences and your choices.</p>
         <p class="hero__meta">
           <span><strong>Effective:</strong> <time datetime="2026-10-10">October 10, 2026</time></span>
           <span><strong>Publisher:</strong> Dodemy Inc</span>
@@ -1031,12 +1027,12 @@ document.documentElement.classList.replace('no-js', 'js');
             <div class="tile">
               <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sliders"/></svg></span>
               <h3>You choose</h3>
-              <p>Decline tracking, reset your advertising ID or opt out of personalized ads.</p>
+              <p>Review available advertising privacy choices and, on iPhone and iPad, control optional usage and crash reports.</p>
             </div>
             <div class="tile">
               <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-device"/></svg></span>
               <h3>Saved items stay local</h3>
-              <p>Your preferences and anything you save remain on your device.</p>
+              <p>Your hymn edits, favourites and compositions are saved on your device. Device backups may also contain this data.</p>
             </div>
           </div>
         </section>
@@ -1057,7 +1053,12 @@ document.documentElement.classList.replace('no-js', 'js');
             <li>health or financial information.</li>
           </ul>
           <h3>What our ad provider collects automatically</h3>
-          <p>Because the app shows ads, the ad software inside it collects a small set of technical data from your device, such as an advertising identifier and your IP address. We list it in full, with the reasons, under <a href="#advertising">Ads and your data</a>. We do not receive this data ourselves, only aggregated ad reports that do not identify you.</p>
+          <p>Because the app shows ads, the ad software inside it collects a small set of technical data from your device, such as an advertising identifier and your IP address. Examples and purposes are described under <a href="#advertising">Ads and your data</a>. We do not receive this data ourselves, only aggregated ad reports that do not identify you.</p>
+          <h3>Usage and crash reports</h3>
+          <p>We use Google Firebase Analytics and Crashlytics to understand app usage and diagnose failures. Depending on the service and configuration, reports can include app-instance or installation identifiers, device and operating-system information, usage events and crash diagnostics. This processing is separate from AdMob advertising.</p>
+          <p><strong>iPhone and iPad:</strong> these app diagnostics are off by default. You can enable or disable them in <strong>Settings › Privacy › Share usage and crash reports</strong>. When configured and enabled in the released app, our custom events contain published hymn numbers, not search text, song titles or composed lyrics. Turning the option off stops future collection; it does not by itself delete reports already sent.</p>
+          <p><strong>Android:</strong> the release implementation uses Firebase Analytics and Crashlytics. Analytics events can include app opens, hymn numbers and titles, searches, favourites and sharing actions. The iOS diagnostics switch described above is not an Android control.</p>
+          <p>See <a href="https://firebase.google.com/support/privacy" rel="noopener noreferrer" target="_blank">Firebase’s privacy and security information</a> for service-specific processing and retention.</p>
           <h3>Information you choose to send us</h3>
           <p>If you contact us by e-mail (for example from the Support page), we receive your e-mail address and whatever you write or attach. We use it only to reply to you and to improve the app. We do not sell it, rent it or share it for marketing, and we keep it only as long as needed to resolve your request and keep a reasonable record of it.</p>
         </section>
@@ -1078,7 +1079,7 @@ document.documentElement.classList.replace('no-js', 'js');
             <tbody role="rowgroup">
               <tr role="row">
                 <th role="rowheader" scope="row">Device identifiers</th>
-                <td role="cell" data-label="Examples">Android: advertising ID and app set ID. iPhone and iPad: the advertising identifier (IDFA) only if you allow tracking, plus other app-specific identifiers.</td>
+                <td role="cell" data-label="Examples">Android: advertising ID and app set ID, subject to platform settings. The current iPhone and iPad version does not request tracking authorization or access to IDFA. Other app-specific identifiers may still be processed by the ad SDK.</td>
                 <td role="cell" data-label="Why it is used">Show and measure ads, limit how often you see the same ad, prevent fraud, and personalize ads where you allow it.</td>
               </tr>
               <tr role="row">
@@ -1100,7 +1101,7 @@ document.documentElement.classList.replace('no-js', 'js');
           </table>
 
           <h3>Personalized and non-personalized ads</h3>
-          <p>With your permission, where the law or your device requires it, ads can be personalized using your advertising ID and interests inferred from your activity in other apps. If you decline, you will still see ads, but they will not be based on a profile of you. Ad providers may still use limited data for things such as limiting how often an ad appears, measuring ads and preventing fraud.</p>
+          <p>The current iPhone and iPad version requests non-personalized ads and does not request Apple tracking authorization. Android ad personalization depends on the release configuration, your consent and device settings. Non-personalized ads can still involve data processing for measurement, frequency limits, security and fraud prevention. Whether an ad can be shown depends on the applicable consent outcome and ad availability.</p>
           <h3>What we receive</h3>
           <p>We receive aggregated reports from our ad provider, such as the number of ads shown and estimated earnings. These reports do not identify you.</p>
           <p>Learn more in Google’s <a href="https://policies.google.com/technologies/partner-sites" rel="noopener noreferrer" target="_blank">explanation of how it uses information from apps that use its services</a>.</p>
@@ -1112,8 +1113,8 @@ document.documentElement.classList.replace('no-js', 'js');
 
           <h3>iPhone and iPad</h3>
           <ul>
-            <li>When the app asks whether it may <strong>track your activity across other companies’ apps and websites</strong>, choose <strong>Ask App Not to Track</strong> to decline.</li>
-            <li>Change your answer at any time in <strong>Settings › Privacy &amp; Security › Tracking</strong>.</li>
+            <li>The current version does not show an Apple tracking-permission prompt and requests non-personalized ads.</li>
+            <li>Open the app’s <strong>Settings › Privacy</strong>. When Google requires it, <strong>Advertising privacy choices</strong> lets you reopen its privacy form. <strong>Share usage and crash reports</strong> separately controls optional app diagnostics.</li>
           </ul>
 
           <h3>Android</h3>
@@ -1123,10 +1124,10 @@ document.documentElement.classList.replace('no-js', 'js');
           </ul>
 
           <h3>Europe, the UK and Switzerland</h3>
-          <p>Where the law requires it, the app shows a consent message, provided by Google’s User Messaging Platform, before ad partners use your device data. If you do not consent, you will see limited, non-personalized ads. You can review or change your choice at any time from the privacy or ad-choices option in the app’s settings.</p>
+          <p>Where the law requires it, the app shows a consent message, provided by Google’s User Messaging Platform, before ad partners use your device data. Your consent outcome determines whether ads can be requested and what type can be shown; ads may be unavailable. When required, the privacy or ad-choices option in the app’s settings lets you review your choice.</p>
 
           <h3>United States</h3>
-          <p>Some state privacy laws let you opt out of the “sale” or “sharing” of personal information, or of targeted advertising (see <a href="#third-parties">Sharing &amp; third parties</a>). The tracking and advertising-ID controls above are the most effective way to opt out, because we cannot identify you from the app. You can also e-mail us and we will help.</p>
+          <p>Some state privacy laws let you opt out of the “sale” or “sharing” of personal information, or of targeted advertising (see <a href="#third-parties">Sharing &amp; third parties</a>). Use the available advertising privacy choices and platform controls described above. You can also e-mail us and we will help.</p>
 
           <h3>Google account settings</h3>
           <p>If you use a Google account, you can also manage ad personalization at <a href="https://adssettings.google.com" rel="noopener noreferrer" target="_blank">adssettings.google.com</a>.</p>
@@ -1134,7 +1135,7 @@ document.documentElement.classList.replace('no-js', 'js');
 
         <section id="on-device-data">
           <h2>Data stored on your device</h2>
-          <p>The app keeps a small amount of data locally, such as your display preferences and items you choose to save. This data lives in the app’s private storage on your device, is protected by the operating system’s app sandbox, and is never sent to us. The ad software may also keep identifiers and settings on your device, such as your consent choice.</p>
+          <p>The app saves display preferences, favourites, hymn edits and composed songs in its private storage. The operating system’s app sandbox protects this storage. There is no app-managed cloud sync; operating-system backups or device transfers may include it. Usage events described above are separate from the saved song database. The ad software may also keep identifiers and settings on your device, such as your consent choice.</p>
         </section>
 
         <section id="permissions">
@@ -1142,7 +1143,7 @@ document.documentElement.classList.replace('no-js', 'js');
           <h3>Android</h3>
           <p>The app uses network access to load ads, and the advertising ID permission so the ad provider can use your advertising ID. You can reset or delete that ID in your device settings at any time. The app does not request location, contacts, camera, microphone, photos or files.</p>
           <h3>iPhone and iPad</h3>
-          <p>The app asks for one permission: tracking, which lets the ad provider use your advertising identifier. You can decline it, and the app works the same. The app does not request location, contacts, camera, microphone, photos or files.</p>
+          <p>The current iPhone and iPad version does not request tracking authorization. It does not request location, contacts, camera, microphone, photos or files. Advertising consent and the optional diagnostics switch are handled separately inside the app.</p>
         </section>
 
         <section id="third-parties">
@@ -1150,6 +1151,7 @@ document.documentElement.classList.replace('no-js', 'js');
           <p>We do not sell your personal information for money, and we do not share it with anyone for their own marketing. We use the following third parties:</p>
           <ul>
             <li><strong>Google AdMob</strong> serves and measures the ads in the app, as described above. See the <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google Privacy Policy</a>.</li>
+            <li><strong>Google Firebase Analytics and Crashlytics</strong> process usage and crash reports as described in <a href="#information-we-collect">Information we collect</a>. We can access reports through these services.</li>
             <li><strong>Apple App Store</strong> and <strong>Google Play</strong> distribute the app and handle your purchases and downloads. See the <a href="https://www.apple.com/legal/privacy/" rel="noopener noreferrer" target="_blank">Apple Privacy Policy</a> and the Google Privacy Policy. If you have opted in on your device, they may give us aggregated crash and usage statistics that do not identify you.</li>
           </ul>
 
@@ -1175,7 +1177,7 @@ document.documentElement.classList.replace('no-js', 'js');
 
         <section id="retention-deletion">
           <h2>Retention and deletion</h2>
-          <p>We hold no personal data from the app, so there is nothing for us to delete on our side. Data held by our ad provider is kept under its own policies. Use <a href="#your-choices">Your ad choices</a> to limit it, for example by resetting your advertising ID. To remove what the app stores on your device:</p>
+          <p>Advertising data and Firebase reports are retained according to the services’ policies and our service configuration. Contact us about reports or support messages; disabling collection or deleting the app does not automatically delete data already sent to those services. Use <a href="#your-choices">Your ad choices</a> to limit it, for example by resetting your advertising ID. To remove what the app stores on your device:</p>
           <h3>Android</h3>
           <ol>
             <li>Open <strong>Settings › Apps › Sacred Songs &amp; Solos</strong>.</li>
@@ -1202,7 +1204,7 @@ document.documentElement.classList.replace('no-js', 'js');
             <li><strong>California and other US states:</strong> to know what is collected, to delete and correct it, to opt out of “sale”, “sharing” and targeted advertising, and to not be treated unfairly for using these rights.</li>
             <li><strong>Canada (PIPEDA), Brazil (LGPD), Australia and others:</strong> similar rights under local law.</li>
           </ul>
-          <p>Since the app holds no information that identifies you, these rights mostly relate to e-mails you have sent us and to the controls on your device. To make a request, contact us. We may need to confirm your identity, and we will reply within the time the law requires (generally 30 to 45 days). For data held by Google, you can also use Google’s own privacy controls.</p>
+          <p>Requests may concern support e-mails or data processed through our service providers. We may not be able to associate a particular device or app-instance report with your identity. To make a request, contact us. We may need to confirm your identity, and we will reply within the time the law requires (generally 30 to 45 days). For data held by Google, you can also use Google’s own privacy controls.</p>
         </section>
 
         <section id="policy-changes">
@@ -1221,7 +1223,7 @@ document.documentElement.classList.replace('no-js', 'js');
   <!-- ====================================================================
        SUPPORT
        ==================================================================== -->
-  <section id="support" class="view" data-view="support" data-title="Support · Sacred Songs &amp; Solos" aria-labelledby="support-title">
+  <section id="support-page" class="view" data-view="support" data-title="Support · Sacred Songs &amp; Solos" aria-labelledby="support-title">
     <div class="page-hero">
       <div class="container">
         <p class="eyebrow">Sacred Songs &amp; Solos · iPhone, iPad &amp; Android</p>
@@ -1253,7 +1255,7 @@ document.documentElement.classList.replace('no-js', 'js');
           <a class="tile" href="#your-choices">
             <span class="tile__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sliders"/></svg></span>
             <h3>Ads &amp; privacy choices</h3>
-            <p>Limit ad personalization or decline tracking.</p>
+            <p>Review advertising choices and optional app diagnostics.</p>
           </a>
         </div>
       </section>
@@ -1295,7 +1297,7 @@ document.documentElement.classList.replace('no-js', 'js');
           <details class="faq__item" data-faq>
             <summary>Do I need an account, and what data does the app collect?</summary>
             <div class="faq__body">
-              <p>No account is needed, and we do not ask for personal information. The app shows ads, and our ad provider collects limited device data to show them. The <a href="#advertising">Ads and your data</a> section of our Privacy Policy lists exactly what.</p>
+              <p>No account is needed. Google AdMob processes advertising data, and Firebase provides usage and crash reports. On iPhone and iPad, app diagnostics are off by default and controlled in Settings. See <a href="#information-we-collect">Information we collect</a> and <a href="#advertising">Ads and your data</a> for platform-specific details.</p>
             </div>
           </details>
 
@@ -1335,7 +1337,7 @@ document.documentElement.classList.replace('no-js', 'js');
             <div class="faq__body">
               <p><strong>Android:</strong> open <strong>Settings › Apps › Sacred Songs &amp; Solos › Storage</strong> and choose <strong>Clear storage</strong>, or uninstall the app.</p>
               <p><strong>iPhone and iPad:</strong> open <strong>Settings › General › iPhone Storage</strong>, choose the app and tap <strong>Delete App</strong>.</p>
-              <p>Nothing is stored on our servers. To limit data held by the ad provider, see <a href="#your-choices">Your ad choices</a>. To have e-mails you sent us deleted, <a href="#support-contact" data-topic="privacy">contact us</a>.</p>
+              <p>Deleting the app removes its local data, but not reports or data already sent to service providers, support e-mails, or separate device backups. To review advertising controls, see <a href="#your-choices">Your ad choices</a>. To have e-mails you sent us deleted, <a href="#support-contact" data-topic="privacy">contact us</a>.</p>
             </div>
           </details>
 
@@ -1357,11 +1359,11 @@ document.documentElement.classList.replace('no-js', 'js');
             <summary>How do I limit ad personalization or stop tracking?</summary>
             <div class="faq__body">
               <p class="faq__platform">iPhone and iPad</p>
-              <p>Choose <strong>Ask App Not to Track</strong> when the app asks, or change it later in <strong>Settings › Privacy &amp; Security › Tracking</strong>.</p>
+              <p>The current version requests non-personalized ads and does not ask for tracking permission. Open the app’s <strong>Settings › Privacy</strong> for <strong>Advertising privacy choices</strong> when available, and the separate <strong>Share usage and crash reports</strong> switch.</p>
               <p class="faq__platform">Android</p>
               <p>Open <strong>Settings › Privacy › Ads</strong> (the path varies by device) and delete or reset your advertising ID, or turn off ad personalization.</p>
               <p class="faq__platform">Europe, the UK and Switzerland</p>
-              <p>The app shows a consent message before ad partners use your data. You can change your choice from the privacy or ad-choices option in the app’s settings. You will still see ads, but they will not be personalized.</p>
+              <p>The app shows a consent message before ad partners use your data. You can change your choice from the privacy or ad-choices option in the app’s settings. Your choice affects ad eligibility and the types of ads that can be shown; ads may be unavailable.</p>
               <p>More detail is in <a href="#your-choices">Your ad choices</a>.</p>
             </div>
           </details>

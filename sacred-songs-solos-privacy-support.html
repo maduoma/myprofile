@@ -18,7 +18,7 @@
       Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()
       Cross-Origin-Opener-Policy: same-origin
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-aWE5YR7ENwTDQNq0m3KCs5/ksvluCjgxEwo6dIFamXc='; style-src 'sha256-GCIegv8Bgz4CS7lDBtGQvwUdqFUH1AS4kkVxGOztJgE='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Y8TuLXgBWd9ky07IT9sPNWGnnFjkcgKxoePyIIXMjuk='; style-src 'sha256-eDCAQnj052kZuOR+BDzFxus1QVGMk4nfAw+Uu0qfoH0='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy Policy &amp; Support · Sacred Songs &amp; Solos</title>
@@ -384,7 +384,7 @@ a.tile:hover { transform: translateY(-3px); border-color: var(--primary); box-sh
 .search { position: relative; max-width: 32rem; margin-bottom: 0.75rem; }
 .search .icon { position: absolute; inset-inline-start: 0.9rem; top: 50%; translate: 0 -50%; color: var(--muted); pointer-events: none; }
 .search .control { padding-inline-start: 2.6rem; }
-.faq__status { min-height: 1.5rem; margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--muted); }
+.faq__status { display: block; min-height: 1.5rem; margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--muted); }
 
 .faq { display: grid; gap: 0.6rem; }
 .faq__item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-m); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
@@ -443,7 +443,7 @@ textarea.control { min-height: 9rem; resize: vertical; line-height: 1.5; }
 .field__error { margin: 0.4rem 0 0; font-size: 0.9rem; font-weight: 600; color: var(--danger); }
 
 .form__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-.form__status { min-height: 1.5rem; margin: 0; font-size: 0.95rem; font-weight: 600; }
+.form__status { display: block; min-height: 1.5rem; margin: 0; font-size: 0.95rem; font-weight: 600; }
 .form__status[data-kind="success"] { color: var(--success); }
 .form__status[data-kind="error"] { color: var(--danger); }
 
@@ -496,7 +496,6 @@ document.documentElement.classList.replace('no-js', 'js');
   const DEFAULT_VIEW = 'privacy';
   const FLASH_MS = 2200;
   const PLACEHOLDER_DOMAIN = 'your-domain.example';
-  const EMAIL_PATTERN = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
   const LIMITS = Object.freeze({ messageMin: 10, messageMax: 1200, field: 80, mailto: 1900 });
 
   const root = document.documentElement;
@@ -515,7 +514,7 @@ document.documentElement.classList.replace('no-js', 'js');
     },
   };
 
-  const normalize = (text) => text.toLocaleLowerCase().normalize('NFKD').replace(/\p{M}/gu, '');
+  const normalize = (text) => text.toLocaleLowerCase().normalize('NFKD').replaceAll(/\p{M}/gu, '');
 
   const focusElement = (element) => {
     if (!element) return;
@@ -553,10 +552,20 @@ document.documentElement.classList.replace('no-js', 'js');
     flashTimers.set(button, window.setTimeout(() => { target.textContent = original; }, FLASH_MS));
   };
 
+  const isSupportEmail = (email) => {
+    // Bounded, single-pass checks avoid ambiguous quantifiers and backtracking.
+    if (email.length > 254 || /[\s<>"]/.test(email)) return false;
+    const parts = email.split('@');
+    if (parts.length !== 2 || !parts[0]) return false;
+    const domain = parts[1];
+    const dot = domain.lastIndexOf('.');
+    return dot > 0 && dot < domain.length - 1;
+  };
+
   const getSupportEmail = () => {
     const source = $('[data-support-email]');
     const email = source ? source.textContent.trim() : '';
-    if (!EMAIL_PATTERN.test(email)) return '';
+    if (!isSupportEmail(email)) return '';
     if (email.endsWith(PLACEHOLDER_DOMAIN)) {
       console.warn('[Sacred Songs & Solos] Support e-mail is still the placeholder. Replace it before publishing.');
     }
@@ -642,10 +651,10 @@ document.documentElement.classList.replace('no-js', 'js');
       if (target && target !== active) {
         target.scrollIntoView();
         if (userInitiated) focusElement($('h2, h3', target) ?? target);
-      } else {
-        window.scrollTo({ top: 0 });
-        if (userInitiated) focusElement($('h1', active));
+        return;
       }
+      window.scrollTo({ top: 0 });
+      if (userInitiated) focusElement($('h1', active));
     };
 
     window.addEventListener('hashchange', () => route(true));
@@ -711,9 +720,8 @@ document.documentElement.classList.replace('no-js', 'js');
         if (match) count += 1;
       });
       empty.hidden = count > 0;
-      status.textContent = tokens.length
-        ? `${count} ${count === 1 ? 'answer' : 'answers'} found`
-        : '';
+      const noun = count === 1 ? 'answer' : 'answers';
+      status.textContent = tokens.length ? `${count} ${noun} found` : '';
     };
 
     input.addEventListener('input', filter);
@@ -744,10 +752,10 @@ document.documentElement.classList.replace('no-js', 'js');
     const fallback = $('#f-fallback', form);
     const fallbackWrap = $('#f-fallback-wrap', form);
 
-    const singleLine = (value) => value.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, LIMITS.field);
+    const singleLine = (value) => value.replaceAll(/[\u0000-\u001F\u007F]+/g, ' ').replaceAll(/\s+/g, ' ').trim().slice(0, LIMITS.field);
     const multiLine = (value) => value
-      .replace(/\r\n?/g, '\n')
-      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+      .replaceAll(/\r\n?/g, '\n')
+      .replaceAll(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
       .trim()
       .slice(0, LIMITS.messageMax);
 
@@ -853,7 +861,7 @@ document.documentElement.classList.replace('no-js', 'js');
     $('#copy-message', form).addEventListener('click', async (event) => {
       const draft = prepare();
       if (!draft) return;
-      const text = `To: ${email}\nSubject: ${draft.subject}\n\n${draft.body.replace(/\r\n/g, '\n')}`;
+      const text = `To: ${email}\nSubject: ${draft.subject}\n\n${draft.body.replaceAll('\r\n', '\n')}`;
       if (await copyText(text)) {
         flash(event.currentTarget, 'Copied');
         setStatus('Message copied. Paste it into a new e-mail to us.', 'success');
@@ -987,7 +995,7 @@ document.documentElement.classList.replace('no-js', 'js');
     </div>
 
     <div class="container layout layout--policy">
-      <aside class="toc">
+      <aside class="toc" aria-label="Privacy policy contents">
         <nav aria-label="On this page">
           <p class="toc__title">On this page</p>
           <ol>
@@ -1069,33 +1077,33 @@ document.documentElement.classList.replace('no-js', 'js');
 
           <table class="data-table" role="table">
             <caption>Data collected automatically by the ad software</caption>
-            <thead role="rowgroup">
+            <thead>
               <tr role="row">
                 <th role="columnheader" scope="col">Data</th>
                 <th role="columnheader" scope="col">Examples</th>
                 <th role="columnheader" scope="col">Why it is used</th>
               </tr>
             </thead>
-            <tbody role="rowgroup">
+            <tbody>
               <tr role="row">
                 <th role="rowheader" scope="row">Device identifiers</th>
-                <td role="cell" data-label="Examples">Android: advertising ID and app set ID, subject to platform settings. The current iPhone and iPad version does not request tracking authorization or access to IDFA. Other app-specific identifiers may still be processed by the ad SDK.</td>
-                <td role="cell" data-label="Why it is used">Show and measure ads, limit how often you see the same ad, prevent fraud, and personalize ads where you allow it.</td>
+                <td data-label="Examples">Android: advertising ID and app set ID, subject to platform settings. The current iPhone and iPad version does not request tracking authorization or access to IDFA. Other app-specific identifiers may still be processed by the ad SDK.</td>
+                <td data-label="Why it is used">Show and measure ads, limit how often you see the same ad, prevent fraud, and personalize ads where you allow it.</td>
               </tr>
               <tr role="row">
                 <th role="rowheader" scope="row">IP address and approximate location</th>
-                <td role="cell" data-label="Examples">Your IP address, which can reveal your general area (such as city or region). It is not your precise GPS location.</td>
-                <td role="cell" data-label="Why it is used">Show ads relevant to your region, detect fraud and apply local legal rules.</td>
+                <td data-label="Examples">Your IP address, which can reveal your general area (such as city or region). It is not your precise GPS location.</td>
+                <td data-label="Why it is used">Show ads relevant to your region, detect fraud and apply local legal rules.</td>
               </tr>
               <tr role="row">
                 <th role="rowheader" scope="row">Ads and app interactions</th>
-                <td role="cell" data-label="Examples">Ads shown, taps, video views and app launches.</td>
-                <td role="cell" data-label="Why it is used">Measure ad performance and cap how often ads appear.</td>
+                <td data-label="Examples">Ads shown, taps, video views and app launches.</td>
+                <td data-label="Why it is used">Measure ad performance and cap how often ads appear.</td>
               </tr>
               <tr role="row">
                 <th role="rowheader" scope="row">Diagnostics and performance</th>
-                <td role="cell" data-label="Examples">Crash logs, app launch time, hang rate and energy use.</td>
-                <td role="cell" data-label="Why it is used">Keep ads and the ad software stable and secure.</td>
+                <td data-label="Examples">Crash logs, app launch time, hang rate and energy use.</td>
+                <td data-label="Why it is used">Keep ads and the ad software stable and secure.</td>
               </tr>
             </tbody>
           </table>
@@ -1271,7 +1279,7 @@ document.documentElement.classList.replace('no-js', 'js');
           <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
           <input id="faq-search" class="control" type="search" placeholder="Search answers, e.g. “crash”" autocomplete="off" spellcheck="false" aria-controls="faq-list">
         </div>
-        <p id="faq-status" class="faq__status" role="status" aria-live="polite"></p>
+        <output id="faq-status" class="faq__status" for="faq-search" aria-live="polite"></output>
 
         <div id="faq-list" class="faq">
           <details class="faq__item" data-faq>
@@ -1446,7 +1454,7 @@ document.documentElement.classList.replace('no-js', 'js');
                 <button type="reset" class="btn btn--ghost">Clear</button>
               </div>
 
-              <p id="form-status" class="form__status" role="status" aria-live="polite"></p>
+              <output id="form-status" class="form__status" for="f-topic f-version f-device f-message" aria-live="polite"></output>
 
               <div id="f-fallback-wrap" class="field" hidden>
                 <label for="f-fallback">Your message (select all and copy)</label>

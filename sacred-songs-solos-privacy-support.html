@@ -18,7 +18,7 @@
       Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()
       Cross-Origin-Opener-Policy: same-origin
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Y8TuLXgBWd9ky07IT9sPNWGnnFjkcgKxoePyIIXMjuk='; style-src 'sha256-eDCAQnj052kZuOR+BDzFxus1QVGMk4nfAw+Uu0qfoH0='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ikorHCKns7ER5EPLK7ddCGgsjECjO7n3X0gY76tPdDU='; style-src 'sha256-eDCAQnj052kZuOR+BDzFxus1QVGMk4nfAw+Uu0qfoH0='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy Policy &amp; Support · Sacred Songs &amp; Solos</title>
@@ -495,7 +495,7 @@ document.documentElement.classList.replace('no-js', 'js');
   const systemTheme = () => systemAppearance.matches ? 'dark' : 'light';
   const DEFAULT_VIEW = 'privacy';
   const FLASH_MS = 2200;
-  const PLACEHOLDER_DOMAIN = 'your-domain.example';
+  const PLACEHOLDER_DOMAIN = '';
   const LIMITS = Object.freeze({ messageMin: 10, messageMax: 1200, field: 80, mailto: 1900 });
 
   const root = document.documentElement;
@@ -566,7 +566,7 @@ document.documentElement.classList.replace('no-js', 'js');
     const source = $('[data-support-email]');
     const email = source ? source.textContent.trim() : '';
     if (!isSupportEmail(email)) return '';
-    if (email.endsWith(PLACEHOLDER_DOMAIN)) {
+    if (PLACEHOLDER_DOMAIN && email.endsWith(PLACEHOLDER_DOMAIN)) {
       console.warn('[Sacred Songs & Solos] Support e-mail is still the placeholder. Replace it before publishing.');
     }
     return email;

@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121316" media="(prefers-color-scheme: dark)">
+<title>Privacy policy and Terms of service</title>
+<!--
+  Tapelet legal page: the privacy policy and the terms of service, in every
+  app language, in one self-contained file (no network requests).
+
+  In the app it is loaded from assets/legal/legal.html; the app replaces the
+  JSON in <script id="legal-config"> with its own values. Hosted on a
+  website, the same file reads ?lang=xx and #privacy / #terms from the URL.
+  Keep the "effective" date below current whenever the text changes.
+-->
+<script id="legal-config" type="application/json">{"embedded":false,"doc":"","lang":"","theme":"","appName":"Tapelet","developer":"Dodemy Inc","email":"dodemyinc@gmail.com"}</script>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #f5f6f8;
+    --text: #1a1c1f;
+    --muted: #5a5f68;
+    --line: #e2e4e8;
+    --accent: #0b5cad;
+    --accent-ink: #ffffff;
+    --focus: #0b5cad;
+    --radius: 12px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --measure: 720px;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Arabic", "Noto Sans Devanagari", "PingFang SC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #121316;
+    --surface: #1c1e22;
+    --text: #e6e7ea;
+    --muted: #a9aeb7;
+    --line: #2e3137;
+    --accent: #8fc1ff;
+    --accent-ink: #0b1b2e;
+    --focus: #8fc1ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #121316;
+      --surface: #1c1e22;
+      --text: #e6e7ea;
+      --muted: #a9aeb7;
+      --line: #2e3137;
+      --accent: #8fc1ff;
+      --accent-ink: #0b1b2e;
+      --focus: #8fc1ff;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 1rem/1.6 var(--font);
+    overflow-wrap: anywhere;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding:
+      calc(var(--space-5) + env(safe-area-inset-top, 0px))
+      calc(var(--space-4) + env(safe-area-inset-right, 0px))
+      calc(var(--space-7) + env(safe-area-inset-bottom, 0px))
+      calc(var(--space-4) + env(safe-area-inset-left, 0px));
+  }
+  .embedded .wrap { padding-top: var(--space-4); }
+  header.top { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; justify-content: space-between; margin-bottom: var(--space-5); }
+  .brand { font-weight: 700; font-size: 1.125rem; }
+  .embedded header.top, .embedded h1.doc-title { display: none; }
+  .tabs { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-5); padding: 0; }
+  .embedded .tabs { display: none; }
+  .tabs button {
+    font: 600 0.9375rem/1.2 var(--font);
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  label.lang { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--muted); font-size: 0.875rem; }
+  select {
+    font: inherit;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    min-height: 44px;
+    padding: 0 var(--space-3);
+  }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 var(--space-2); }
+  h2 { font-size: 1.125rem; line-height: 1.35; margin: var(--space-6) 0 var(--space-2); scroll-margin-top: var(--space-4); }
+  p, ul { margin: 0 0 var(--space-3); }
+  ul { padding-inline-start: var(--space-5); }
+  li { margin-bottom: var(--space-1); }
+  .effective { color: var(--muted); font-size: 0.875rem; margin-bottom: var(--space-5); }
+  .summary { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-4); margin-bottom: var(--space-5); }
+  .summary p:last-child { margin-bottom: 0; }
+  nav.toc { border-block: 1px solid var(--line); padding: var(--space-3) 0; margin-bottom: var(--space-4); }
+  nav.toc ol { margin: 0; padding-inline-start: var(--space-5); columns: 2 220px; column-gap: var(--space-5); }
+  nav.toc li { break-inside: avoid; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible, select:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+  footer { margin-top: var(--space-7); color: var(--muted); font-size: 0.875rem; border-top: 1px solid var(--line); padding-top: var(--space-4); }
+  [hidden] { display: none !important; }
+  noscript p { padding: var(--space-4); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+  @media print {
+    :root { --bg: #fff; --text: #000; --muted: #333; }
+    .tabs, header.top, nav.toc { display: none !important; }
+    section[hidden] { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="brand" id="brand"></span>
+    <label class="lang"><span id="lang-label">Language</span>
+      <select id="lang-select"></select>
+    </label>
+  </header>
+  <div class="tabs" role="tablist" id="tabs">
+    <button type="button" role="tab" id="tab-privacy" aria-controls="doc-privacy" data-doc="privacy"></button>
+    <button type="button" role="tab" id="tab-terms" aria-controls="doc-terms" data-doc="terms"></button>
+  </div>
+  <main>
+    <section id="doc-privacy" role="tabpanel" aria-labelledby="tab-privacy"></section>
+    <section id="doc-terms" role="tabpanel" aria-labelledby="tab-terms" hidden></section>
+  </main>
+  <footer id="footer"></footer>
+  <noscript><p>Please enable JavaScript to read this page.</p></noscript>
+</div>
+<script>
+"use strict";
+var EFFECTIVE_DATE = "2026-11-16";
+var I18N = {};
+I18N.en = {
+  name: "English", dir: "ltr",
+  ui: {
+    language: "Language", documents: "Legal documents", contents: "Contents",
+    privacy: "Privacy policy", terms: "Terms of service",
+    effective: "Effective {date}",
+    noEmail: "the contact details on the app's store page",
+    footer: "Questions about these documents? Contact {developer} at {email}."
+  },
+  privacy: {
+    title: "{app} Privacy policy",
+    summary: [
+      "{app} is published by {developer} (\"we\", \"us\"). This policy explains what information the app handles, why, and the choices you have.",
+      "In short: your recordings stay on your device. We have no servers that receive your audio, and there is no account to create. The free version shows ads from Google, which uses some device data as described below."
+    ],
+    sections: [
+      ["Your recordings",
+        "Audio you record, and the files you edit, are stored only on your device, in the app's private storage. We never upload, access or receive them.",
+        "A recording leaves your device only when you choose to share it, through your device's share sheet, to an app or person you pick. What happens next is governed by that app or person.",
+        "Depending on your device settings, your operating system may include app data in device backups that you control, such as iCloud or a computer backup. Uninstalling the app deletes the recordings stored in it."
+      ],
+      ["Permissions",
+        ["Microphone: used only to record when you start a recording.",
+         "Notifications (Android): used to show recording controls while you record in the background.",
+         "The app does not access your contacts, photos, location or files outside its own storage."]
+      ],
+      ["Settings stored on your device",
+        "Your preferences, such as the file type, theme and language, and whether you bought Pro, are saved on your device so the app works the way you set it. They are not sent to us."
+      ],
+      ["Advertising",
+        "The free version shows banner ads served by Google AdMob. To show, limit and measure ads and to prevent fraud, Google may collect and process your device's advertising identifier, IP address, approximate location derived from it, device and app information, and how you interact with ads.",
+        "Where the law requires it, for example in the European Economic Area, the United Kingdom and Switzerland, we ask for your consent through Google's consent message before personalised ads are shown. You can change your choice at any time in Settings under Ad privacy choices.",
+        "On iPhone and iPad, ads are personalised only if you allow tracking when asked. You can also reset or limit your advertising identifier in your device settings.",
+        "Google's use of this data is described in its policy at https://policies.google.com/technologies/partner-sites. If you buy Pro, the app stops showing ads."
+      ],
+      ["Purchases",
+        "The one-time Pro purchase is processed by Google Play or the Apple App Store. We never receive your payment details. The store only confirms to the app that the purchase is valid, so ads can be removed and restored on your other devices. The store's own privacy policy applies to the payment."
+      ],
+      ["When you contact us",
+        "If you send feedback or email us, we receive your email address, your message and anything you attach. Feedback emails include app and device details (app version, device model, system version and language), which you can read and delete before sending.",
+        "We use this only to reply and to fix problems, and we delete it when it is no longer needed for that."
+      ],
+      ["What we don't do",
+        ["We don't sell or rent your personal information.",
+         "We don't use analytics or tracking tools of our own.",
+         "We don't ask you to create an account or sign in."]
+      ],
+      ["How long data is kept",
+        "Recordings stay until you delete them or uninstall the app. Support emails are kept only as long as needed to handle your request. Advertising data is kept by Google under its own policy."
+      ],
+      ["Your rights",
+        "Depending on where you live, including under the GDPR, the UK GDPR and California law, you may have the right to access, correct, delete or receive a copy of your personal information, to object to or restrict its use, and to withdraw consent at any time.",
+        "Because we don't hold your recordings or an account, most requests concern support emails. To make a request, contact us at {email}. You also have the right to complain to your local data protection authority."
+      ],
+      ["Children",
+        "The app is not directed at children under 13, or under the minimum age required in your country. We do not knowingly collect personal information from children. If you believe a child has sent us personal information, contact us and we will delete it."
+      ],
+      ["Security",
+        "Recordings are kept in the app's private storage, which other apps cannot read. Communication with ad and store services uses encrypted connections. No method of storage or transmission is completely secure, so keep your device protected with a passcode."
+      ],
+      ["Changes to this policy",
+        "If we change this policy, we will update it here and change the effective date above. If a change is significant, we will also tell you in the app or in the store's release notes."
+      ],
+      ["Contact",
+        "{developer}: {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "{app} Terms of service",
+    summary: [
+      "These terms are an agreement between you and {developer} (\"we\", \"us\") about your use of {app}. By installing or using the app, you agree to them. If you don't agree, please don't use the app."
+    ],
+    sections: [
+      ["Using the app",
+        "We grant you a personal, non-exclusive, non-transferable and revocable licence to use the app on devices you own or control, under these terms and the rules of the store you downloaded it from."
+      ],
+      ["Your recordings",
+        "You own the recordings you make. You are responsible for them and for how you use and share them.",
+        "Laws about recording people differ between countries and states. Some require everyone in a conversation to agree before it is recorded. Make sure you have any consent the law requires."
+      ],
+      ["Acceptable use",
+        ["Don't use the app for anything unlawful, or to record people in breach of their rights.",
+         "Don't copy, modify, sell or redistribute the app, or try to extract its source code, except where the law or an open-source licence allows it.",
+         "Don't interfere with the app's ads or purchase systems."]
+      ],
+      ["Pro purchase",
+        "Pro is a one-time, non-consumable purchase that removes ads. It is linked to your store account and can be restored on other devices that use the same account. Payments, refunds and cancellations are handled by Google Play or the Apple App Store under their terms."
+      ],
+      ["Ads",
+        "The free version shows ads from third parties. We are not responsible for the content of ads or for the products and websites they link to."
+      ],
+      ["Open-source software",
+        "The app includes open-source software, including FFmpeg under the LGPL 3.0. Those components are covered by their own licences, which you can read in the app under Settings, About. Nothing in these terms limits your rights under those licences."
+      ],
+      ["Backups and data loss",
+        "Recordings are stored only on your device. You are responsible for keeping copies of recordings that matter to you. We are not responsible for recordings lost because they were deleted, the app was uninstalled, or the device was lost, reset or damaged."
+      ],
+      ["Updates and availability",
+        "We may update, change or stop offering the app or any feature at any time. Some updates may be needed to keep using the app."
+      ],
+      ["Disclaimer",
+        "The app is provided \"as is\" and \"as available\". To the extent the law allows, we make no warranties, express or implied, including that the app will be error-free, uninterrupted or fit for a particular purpose."
+      ],
+      ["Limitation of liability",
+        "To the extent the law allows, we are not liable for any indirect, incidental, special or consequential damages, or for loss of data, profits or revenue. Our total liability for any claim relating to the app is limited to the amount you paid for it in the 12 months before the claim.",
+        "Nothing in these terms excludes or limits liability that cannot be excluded or limited by law, or your rights as a consumer under the law of the country where you live."
+      ],
+      ["Ending these terms",
+        "You can stop using the app at any time by uninstalling it. If you break these terms, your licence to use the app ends."
+      ],
+      ["Apple App Store",
+        "If you downloaded the app from the Apple App Store, these terms are between you and us, not Apple. Apple is not responsible for the app, its content, maintenance, support or any claim about it. Apple and its subsidiaries are third-party beneficiaries of these terms and may enforce them. Apple's Licensed Application End User License Agreement also applies, and where it conflicts with these terms in a way that gives you more rights, it prevails."
+      ],
+      ["Changes to these terms",
+        "We may update these terms. We will post the new version here and change the effective date above. If you keep using the app after a change, you accept the updated terms."
+      ],
+      ["Governing law",
+        "These terms are governed by the laws of the place where {developer} is established, without depriving you of the protection of mandatory consumer laws in the country where you live."
+      ],
+      ["Contact",
+        "{developer}: {email}"
+      ]
+    ]
+  }
+};
+I18N.es = {
+  name: "Español", dir: "ltr",
+  ui: {
+    language: "Idioma", documents: "Documentos legales", contents: "Contenido",
+    privacy: "Política de privacidad", terms: "Términos del servicio",
+    effective: "En vigor desde el {date}",
+    noEmail: "los datos de contacto de la ficha de la app en la tienda",
+    footer: "¿Tienes preguntas sobre estos documentos? Escribe a {developer} a {email}."
+  },
+  privacy: {
+    title: "Política de privacidad de {app}",
+    summary: [
+      "{app} es una app publicada por {developer} (\"nosotros\"). Esta política explica qué información trata la app, para qué y qué opciones tienes.",
+      "En resumen: tus grabaciones se quedan en tu dispositivo. No tenemos servidores que reciban tu audio y no hace falta crear una cuenta. La versión gratuita muestra anuncios de Google, que usa algunos datos del dispositivo como se explica más abajo."
+    ],
+    sections: [
+      ["Tus grabaciones",
+        "El audio que grabas y los archivos que editas se guardan solo en tu dispositivo, en el almacenamiento privado de la app. Nunca los subimos, accedemos a ellos ni los recibimos.",
+        "Una grabación solo sale de tu dispositivo cuando decides compartirla, mediante el menú de compartir del dispositivo, con la app o la persona que elijas. A partir de ahí, se rige por esa app o persona.",
+        "Según los ajustes de tu dispositivo, el sistema operativo puede incluir los datos de la app en copias de seguridad que controlas tú, como iCloud o una copia en tu ordenador. Al desinstalar la app se eliminan las grabaciones guardadas en ella."
+      ],
+      ["Permisos",
+        ["Micrófono: solo se usa para grabar cuando inicias una grabación.",
+         "Notificaciones (Android): se usan para mostrar los controles mientras grabas en segundo plano.",
+         "La app no accede a tus contactos, fotos, ubicación ni a archivos fuera de su propio almacenamiento."]
+      ],
+      ["Ajustes guardados en tu dispositivo",
+        "Tus preferencias, como el tipo de archivo, el tema y el idioma, y si has comprado Pro, se guardan en tu dispositivo para que la app funcione como la configuraste. No se nos envían."
+      ],
+      ["Publicidad",
+        "La versión gratuita muestra banners servidos por Google AdMob. Para mostrar, limitar y medir los anuncios y prevenir el fraude, Google puede recopilar y tratar el identificador de publicidad de tu dispositivo, tu dirección IP, la ubicación aproximada que se deduce de ella, información del dispositivo y de la app, y cómo interactúas con los anuncios.",
+        "Cuando la ley lo exige, por ejemplo en el Espacio Económico Europeo, el Reino Unido y Suiza, te pedimos el consentimiento mediante el mensaje de consentimiento de Google antes de mostrar anuncios personalizados. Puedes cambiar tu elección cuando quieras en Ajustes, en Opciones de privacidad de anuncios.",
+        "En iPhone y iPad, los anuncios solo se personalizan si permites el rastreo cuando se te pregunta. También puedes restablecer o limitar tu identificador de publicidad en los ajustes del dispositivo.",
+        "El uso que hace Google de estos datos se describe en su política: https://policies.google.com/technologies/partner-sites. Si compras Pro, la app deja de mostrar anuncios."
+      ],
+      ["Compras",
+        "La compra única de Pro la procesa Google Play o la App Store de Apple. Nunca recibimos tus datos de pago. La tienda solo confirma a la app que la compra es válida, para quitar los anuncios y restaurarla en tus otros dispositivos. Al pago se aplica la política de privacidad de la tienda."
+      ],
+      ["Cuando nos contactas",
+        "Si nos envías comentarios o un correo, recibimos tu dirección de correo, tu mensaje y lo que adjuntes. Los correos de comentarios incluyen datos de la app y del dispositivo (versión de la app, modelo del dispositivo, versión del sistema e idioma), que puedes leer y borrar antes de enviarlos.",
+        "Solo los usamos para responderte y resolver problemas, y los eliminamos cuando ya no son necesarios para ello."
+      ],
+      ["Lo que no hacemos",
+        ["No vendemos ni alquilamos tu información personal.",
+         "No usamos herramientas propias de analítica ni de seguimiento.",
+         "No te pedimos crear una cuenta ni iniciar sesión."]
+      ],
+      ["Cuánto tiempo se conservan los datos",
+        "Las grabaciones se conservan hasta que las eliminas o desinstalas la app. Los correos de soporte se conservan solo el tiempo necesario para atender tu solicitud. Google conserva los datos publicitarios según su propia política."
+      ],
+      ["Tus derechos",
+        "Según dónde vivas, incluido lo previsto en el RGPD, el RGPD del Reino Unido y la legislación de California, puedes tener derecho a acceder a tu información personal, rectificarla, suprimirla o recibir una copia, a oponerte a su uso o limitarlo, y a retirar tu consentimiento en cualquier momento.",
+        "Como no guardamos tus grabaciones ni una cuenta, la mayoría de las solicitudes se refieren a correos de soporte. Para hacer una solicitud, escríbenos a {email}. También tienes derecho a reclamar ante la autoridad de protección de datos de tu país."
+      ],
+      ["Menores",
+        "La app no está dirigida a menores de 13 años ni de la edad mínima exigida en tu país. No recopilamos a sabiendas información personal de menores. Si crees que un menor nos ha enviado información personal, contáctanos y la eliminaremos."
+      ],
+      ["Seguridad",
+        "Las grabaciones se guardan en el almacenamiento privado de la app, que otras apps no pueden leer. La comunicación con los servicios de anuncios y de la tienda usa conexiones cifradas. Ningún método de almacenamiento o transmisión es totalmente seguro, así que protege tu dispositivo con un código."
+      ],
+      ["Cambios en esta política",
+        "Si cambiamos esta política, la actualizaremos aquí y cambiaremos la fecha de entrada en vigor indicada arriba. Si el cambio es importante, también te avisaremos en la app o en las notas de la versión de la tienda."
+      ],
+      ["Contacto",
+        "{developer}: {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "Términos del servicio de {app}",
+    summary: [
+      "Estos términos son un acuerdo entre tú y {developer} (\"nosotros\") sobre el uso de {app}. Al instalar o usar la app, los aceptas. Si no estás de acuerdo, no uses la app."
+    ],
+    sections: [
+      ["Uso de la app",
+        "Te concedemos una licencia personal, no exclusiva, intransferible y revocable para usar la app en dispositivos que te pertenecen o que controlas, conforme a estos términos y a las normas de la tienda de la que la descargaste."
+      ],
+      ["Tus grabaciones",
+        "Las grabaciones que haces son tuyas. Eres responsable de ellas y de cómo las usas y compartes.",
+        "Las leyes sobre grabar a otras personas varían según el país y la región. Algunas exigen que todos los participantes de una conversación acepten antes de grabarla. Asegúrate de contar con el consentimiento que exija la ley."
+      ],
+      ["Uso aceptable",
+        ["No uses la app para nada ilegal ni para grabar a personas vulnerando sus derechos.",
+         "No copies, modifiques, vendas ni redistribuyas la app, ni intentes extraer su código fuente, salvo cuando lo permitan la ley o una licencia de código abierto.",
+         "No interfieras con los sistemas de anuncios o de compras de la app."]
+      ],
+      ["Compra de Pro",
+        "Pro es una compra única y no consumible que quita los anuncios. Está vinculada a tu cuenta de la tienda y puede restaurarse en otros dispositivos que usen la misma cuenta. Los pagos, reembolsos y cancelaciones los gestiona Google Play o la App Store de Apple según sus condiciones."
+      ],
+      ["Anuncios",
+        "La versión gratuita muestra anuncios de terceros. No somos responsables del contenido de los anuncios ni de los productos y sitios web a los que enlazan."
+      ],
+      ["Software de código abierto",
+        "La app incluye software de código abierto, entre otros FFmpeg con licencia LGPL 3.0. Esos componentes se rigen por sus propias licencias, que puedes leer en la app, en Ajustes, Acerca de. Nada en estos términos limita tus derechos según esas licencias."
+      ],
+      ["Copias de seguridad y pérdida de datos",
+        "Las grabaciones se guardan solo en tu dispositivo. Eres responsable de conservar copias de las grabaciones que te importen. No somos responsables de las grabaciones perdidas porque se eliminaron, se desinstaló la app o el dispositivo se perdió, se restableció o se dañó."
+      ],
+      ["Actualizaciones y disponibilidad",
+        "Podemos actualizar, cambiar o dejar de ofrecer la app o cualquier función en cualquier momento. Algunas actualizaciones pueden ser necesarias para seguir usando la app."
+      ],
+      ["Exención de garantías",
+        "La app se ofrece \"tal cual\" y \"según disponibilidad\". En la medida en que lo permita la ley, no ofrecemos garantías, expresas ni implícitas, incluida la de que la app funcione sin errores ni interrupciones o sea adecuada para un fin concreto."
+      ],
+      ["Limitación de responsabilidad",
+        "En la medida en que lo permita la ley, no somos responsables de daños indirectos, incidentales, especiales o derivados, ni de la pérdida de datos, beneficios o ingresos. Nuestra responsabilidad total por cualquier reclamación relacionada con la app se limita al importe que pagaste por ella en los 12 meses anteriores a la reclamación.",
+        "Nada en estos términos excluye ni limita la responsabilidad que no pueda excluirse o limitarse por ley, ni tus derechos como consumidor según la ley del país donde vives."
+      ],
+      ["Fin de estos términos",
+        "Puedes dejar de usar la app en cualquier momento desinstalándola. Si incumples estos términos, tu licencia de uso termina."
+      ],
+      ["App Store de Apple",
+        "Si descargaste la app de la App Store de Apple, estos términos son un acuerdo entre tú y nosotros, no con Apple. Apple no es responsable de la app, su contenido, su mantenimiento, su soporte ni de ninguna reclamación sobre ella. Apple y sus filiales son terceros beneficiarios de estos términos y pueden hacerlos valer. También se aplica el Contrato de licencia de usuario final de aplicaciones con licencia de Apple, que prevalece cuando entre en conflicto con estos términos de forma que te otorgue más derechos."
+      ],
+      ["Cambios en estos términos",
+        "Podemos actualizar estos términos. Publicaremos la nueva versión aquí y cambiaremos la fecha de entrada en vigor indicada arriba. Si sigues usando la app después de un cambio, aceptas los términos actualizados."
+      ],
+      ["Legislación aplicable",
+        "Estos términos se rigen por las leyes del lugar donde está establecido {developer}, sin privarte de la protección de las leyes imperativas de consumo del país donde vives."
+      ],
+      ["Contacto",
+        "{developer}: {email}"
+      ]
+    ]
+  }
+};
+I18N.fr = {
+  name: "Français", dir: "ltr",
+  ui: {
+    language: "Langue", documents: "Documents juridiques", contents: "Sommaire",
+    privacy: "Politique de confidentialité", terms: "Conditions d'utilisation",
+    effective: "En vigueur depuis le {date}",
+    noEmail: "les coordonnées indiquées sur la page de l'app dans la boutique",
+    footer: "Des questions sur ces documents ? Contactez {developer} à {email}."
+  },
+  privacy: {
+    title: "Politique de confidentialité de {app}",
+    summary: [
+      "{app} est publiée par {developer} (« nous »). Cette politique explique quelles informations l'app traite, pourquoi, et les choix dont vous disposez.",
+      "En bref : vos enregistrements restent sur votre appareil. Nous n'avons aucun serveur qui reçoit votre audio, et il n'y a pas de compte à créer. La version gratuite affiche des publicités de Google, qui utilise certaines données de l'appareil comme décrit ci-dessous."
+    ],
+    sections: [
+      ["Vos enregistrements",
+        "L'audio que vous enregistrez et les fichiers que vous modifiez sont stockés uniquement sur votre appareil, dans le stockage privé de l'app. Nous ne les envoyons, ne les consultons et ne les recevons jamais.",
+        "Un enregistrement ne quitte votre appareil que si vous choisissez de le partager, via le menu de partage de l'appareil, avec l'app ou la personne de votre choix. Ce qui se passe ensuite relève de cette app ou de cette personne.",
+        "Selon les réglages de votre appareil, le système peut inclure les données de l'app dans des sauvegardes que vous contrôlez, comme iCloud ou une sauvegarde sur ordinateur. Désinstaller l'app supprime les enregistrements qu'elle contient."
+      ],
+      ["Autorisations",
+        ["Micro : utilisé uniquement pour enregistrer quand vous lancez un enregistrement.",
+         "Notifications (Android) : utilisées pour afficher les commandes pendant l'enregistrement en arrière-plan.",
+         "L'app n'accède pas à vos contacts, photos, position ni aux fichiers situés hors de son propre stockage."]
+      ],
+      ["Réglages enregistrés sur votre appareil",
+        "Vos préférences, comme le type de fichier, le thème et la langue, ainsi que l'achat éventuel de Pro, sont enregistrées sur votre appareil pour que l'app fonctionne comme vous l'avez réglée. Elles ne nous sont pas envoyées."
+      ],
+      ["Publicité",
+        "La version gratuite affiche des bannières diffusées par Google AdMob. Pour afficher, limiter et mesurer les publicités et prévenir la fraude, Google peut collecter et traiter l'identifiant publicitaire de votre appareil, votre adresse IP, la position approximative qui en découle, des informations sur l'appareil et l'app, ainsi que vos interactions avec les publicités.",
+        "Lorsque la loi l'exige, par exemple dans l'Espace économique européen, au Royaume-Uni et en Suisse, nous vous demandons votre consentement via le message de consentement de Google avant d'afficher des publicités personnalisées. Vous pouvez modifier votre choix à tout moment dans les Réglages, sous Choix de confidentialité des annonces.",
+        "Sur iPhone et iPad, les publicités ne sont personnalisées que si vous autorisez le suivi lorsque la question vous est posée. Vous pouvez aussi réinitialiser ou limiter votre identifiant publicitaire dans les réglages de l'appareil.",
+        "L'utilisation de ces données par Google est décrite dans sa politique : https://policies.google.com/technologies/partner-sites. Si vous achetez Pro, l'app n'affiche plus de publicités."
+      ],
+      ["Achats",
+        "L'achat unique de Pro est traité par Google Play ou l'App Store d'Apple. Nous ne recevons jamais vos informations de paiement. La boutique confirme seulement à l'app que l'achat est valide, afin de supprimer les publicités et de le restaurer sur vos autres appareils. La politique de confidentialité de la boutique s'applique au paiement."
+      ],
+      ["Lorsque vous nous contactez",
+        "Si vous nous envoyez un avis ou un e-mail, nous recevons votre adresse e-mail, votre message et les pièces jointes. Les e-mails d'avis contiennent des informations sur l'app et l'appareil (version de l'app, modèle de l'appareil, version du système et langue), que vous pouvez lire et supprimer avant l'envoi.",
+        "Nous les utilisons uniquement pour vous répondre et corriger les problèmes, et nous les supprimons dès qu'ils ne sont plus nécessaires à cette fin."
+      ],
+      ["Ce que nous ne faisons pas",
+        ["Nous ne vendons ni ne louons vos informations personnelles.",
+         "Nous n'utilisons aucun outil d'analyse ou de suivi qui nous soit propre.",
+         "Nous ne vous demandons pas de créer un compte ni de vous connecter."]
+      ],
+      ["Durée de conservation",
+        "Les enregistrements sont conservés jusqu'à ce que vous les supprimiez ou désinstalliez l'app. Les e-mails d'assistance sont conservés uniquement le temps nécessaire au traitement de votre demande. Les données publicitaires sont conservées par Google selon sa propre politique."
+      ],
+      ["Vos droits",
+        "Selon votre lieu de résidence, notamment en vertu du RGPD, du RGPD britannique et du droit californien, vous pouvez avoir le droit d'accéder à vos informations personnelles, de les rectifier, de les supprimer ou d'en recevoir une copie, de vous opposer à leur utilisation ou de la limiter, et de retirer votre consentement à tout moment.",
+        "Comme nous ne détenons ni vos enregistrements ni de compte, la plupart des demandes concernent les e-mails d'assistance. Pour faire une demande, contactez-nous à {email}. Vous avez aussi le droit de déposer une réclamation auprès de l'autorité de protection des données de votre pays."
+      ],
+      ["Enfants",
+        "L'app ne s'adresse pas aux enfants de moins de 13 ans, ou de moins de l'âge minimum requis dans votre pays. Nous ne collectons pas sciemment d'informations personnelles d'enfants. Si vous pensez qu'un enfant nous a transmis des informations personnelles, contactez-nous et nous les supprimerons."
+      ],
+      ["Sécurité",
+        "Les enregistrements sont conservés dans le stockage privé de l'app, que les autres apps ne peuvent pas lire. Les échanges avec les services de publicité et de la boutique utilisent des connexions chiffrées. Aucune méthode de stockage ou de transmission n'est totalement sûre : protégez votre appareil avec un code."
+      ],
+      ["Modifications de cette politique",
+        "Si nous modifions cette politique, nous la mettrons à jour ici et changerons la date d'entrée en vigueur ci-dessus. Si le changement est important, nous vous en informerons aussi dans l'app ou dans les notes de version de la boutique."
+      ],
+      ["Contact",
+        "{developer} : {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "Conditions d'utilisation de {app}",
+    summary: [
+      "Ces conditions constituent un accord entre vous et {developer} (« nous ») concernant votre utilisation de {app}. En installant ou en utilisant l'app, vous les acceptez. Si vous n'êtes pas d'accord, n'utilisez pas l'app."
+    ],
+    sections: [
+      ["Utilisation de l'app",
+        "Nous vous accordons une licence personnelle, non exclusive, non transférable et révocable pour utiliser l'app sur les appareils que vous possédez ou contrôlez, conformément à ces conditions et aux règles de la boutique où vous l'avez téléchargée."
+      ],
+      ["Vos enregistrements",
+        "Vous êtes propriétaire des enregistrements que vous réalisez. Vous en êtes responsable, ainsi que de la façon dont vous les utilisez et les partagez.",
+        "Les lois sur l'enregistrement de personnes varient selon les pays et les régions. Certaines exigent l'accord de tous les participants avant d'enregistrer une conversation. Assurez-vous d'obtenir tout consentement requis par la loi."
+      ],
+      ["Utilisation acceptable",
+        ["N'utilisez pas l'app à des fins illégales, ni pour enregistrer des personnes en violation de leurs droits.",
+         "Ne copiez, ne modifiez, ne vendez ni ne redistribuez l'app, et ne tentez pas d'en extraire le code source, sauf si la loi ou une licence open source le permet.",
+         "N'interférez pas avec les systèmes de publicité ou d'achat de l'app."]
+      ],
+      ["Achat de Pro",
+        "Pro est un achat unique et non consommable qui supprime les publicités. Il est lié à votre compte de la boutique et peut être restauré sur d'autres appareils utilisant le même compte. Les paiements, remboursements et annulations sont gérés par Google Play ou l'App Store d'Apple selon leurs conditions."
+      ],
+      ["Publicités",
+        "La version gratuite affiche des publicités de tiers. Nous ne sommes pas responsables du contenu des publicités ni des produits et sites vers lesquels elles renvoient."
+      ],
+      ["Logiciels open source",
+        "L'app inclut des logiciels open source, notamment FFmpeg sous licence LGPL 3.0. Ces composants sont régis par leurs propres licences, consultables dans l'app sous Réglages, À propos. Rien dans ces conditions ne limite vos droits au titre de ces licences."
+      ],
+      ["Sauvegardes et perte de données",
+        "Les enregistrements sont stockés uniquement sur votre appareil. Il vous appartient de conserver des copies des enregistrements qui comptent pour vous. Nous ne sommes pas responsables des enregistrements perdus parce qu'ils ont été supprimés, que l'app a été désinstallée ou que l'appareil a été perdu, réinitialisé ou endommagé."
+      ],
+      ["Mises à jour et disponibilité",
+        "Nous pouvons mettre à jour, modifier ou cesser de proposer l'app ou toute fonction à tout moment. Certaines mises à jour peuvent être nécessaires pour continuer à utiliser l'app."
+      ],
+      ["Exclusion de garanties",
+        "L'app est fournie « en l'état » et « selon disponibilité ». Dans la mesure permise par la loi, nous n'accordons aucune garantie, expresse ou implicite, notamment quant à l'absence d'erreurs ou d'interruptions, ou à l'adéquation à un usage particulier."
+      ],
+      ["Limitation de responsabilité",
+        "Dans la mesure permise par la loi, nous ne sommes pas responsables des dommages indirects, accessoires, spéciaux ou consécutifs, ni de la perte de données, de bénéfices ou de revenus. Notre responsabilité totale pour toute réclamation liée à l'app est limitée au montant que vous avez payé pour celle-ci au cours des 12 mois précédant la réclamation.",
+        "Rien dans ces conditions n'exclut ni ne limite une responsabilité qui ne peut l'être en vertu de la loi, ni vos droits de consommateur selon la loi du pays où vous résidez."
+      ],
+      ["Fin de ces conditions",
+        "Vous pouvez cesser d'utiliser l'app à tout moment en la désinstallant. Si vous enfreignez ces conditions, votre licence d'utilisation prend fin."
+      ],
+      ["App Store d'Apple",
+        "Si vous avez téléchargé l'app sur l'App Store d'Apple, ces conditions vous lient à nous, et non à Apple. Apple n'est pas responsable de l'app, de son contenu, de sa maintenance, de son assistance ni d'aucune réclamation la concernant. Apple et ses filiales sont des tiers bénéficiaires de ces conditions et peuvent les faire appliquer. Le contrat de licence utilisateur final des applications sous licence d'Apple s'applique également et prévaut lorsqu'il vous accorde plus de droits que ces conditions."
+      ],
+      ["Modifications de ces conditions",
+        "Nous pouvons mettre à jour ces conditions. Nous publierons la nouvelle version ici et changerons la date d'entrée en vigueur ci-dessus. Si vous continuez à utiliser l'app après une modification, vous acceptez les conditions mises à jour."
+      ],
+      ["Droit applicable",
+        "Ces conditions sont régies par le droit du lieu d'établissement de {developer}, sans vous priver de la protection des lois impératives de protection des consommateurs du pays où vous résidez."
+      ],
+      ["Contact",
+        "{developer} : {email}"
+      ]
+    ]
+  }
+};
+I18N.de = {
+  name: "Deutsch", dir: "ltr",
+  ui: {
+    language: "Sprache", documents: "Rechtliche Dokumente", contents: "Inhalt",
+    privacy: "Datenschutzerklärung", terms: "Nutzungsbedingungen",
+    effective: "Gültig ab {date}",
+    noEmail: "die Kontaktangaben auf der Store-Seite der App",
+    footer: "Fragen zu diesen Dokumenten? Schreib {developer} an {email}."
+  },
+  privacy: {
+    title: "Datenschutzerklärung für {app}",
+    summary: [
+      "{app} wird von {developer} („wir“, „uns“) veröffentlicht. Diese Erklärung beschreibt, welche Informationen die App verarbeitet, warum, und welche Wahlmöglichkeiten du hast.",
+      "Kurz gesagt: Deine Aufnahmen bleiben auf deinem Gerät. Wir haben keine Server, die deinen Ton empfangen, und du musst kein Konto anlegen. Die kostenlose Version zeigt Werbung von Google, die wie unten beschrieben einige Gerätedaten nutzt."
+    ],
+    sections: [
+      ["Deine Aufnahmen",
+        "Ton, den du aufnimmst, und Dateien, die du bearbeitest, werden nur auf deinem Gerät im privaten Speicher der App abgelegt. Wir laden sie nie hoch, greifen nie darauf zu und erhalten sie nie.",
+        "Eine Aufnahme verlässt dein Gerät nur, wenn du sie über das Teilen-Menü deines Geräts an eine App oder Person deiner Wahl weitergibst. Was danach geschieht, liegt bei dieser App oder Person.",
+        "Je nach Geräteeinstellungen kann dein Betriebssystem App-Daten in Backups aufnehmen, die du selbst steuerst, etwa iCloud oder ein Backup auf dem Computer. Beim Deinstallieren der App werden die darin gespeicherten Aufnahmen gelöscht."
+      ],
+      ["Berechtigungen",
+        ["Mikrofon: wird nur zum Aufnehmen genutzt, wenn du eine Aufnahme startest.",
+         "Benachrichtigungen (Android): zeigen die Aufnahmesteuerung, während du im Hintergrund aufnimmst.",
+         "Die App greift nicht auf deine Kontakte, Fotos, deinen Standort oder Dateien außerhalb ihres eigenen Speichers zu."]
+      ],
+      ["Auf deinem Gerät gespeicherte Einstellungen",
+        "Deine Einstellungen, etwa Dateityp, Design und Sprache, sowie ob du Pro gekauft hast, werden auf deinem Gerät gespeichert, damit die App so funktioniert, wie du sie eingerichtet hast. Sie werden nicht an uns gesendet."
+      ],
+      ["Werbung",
+        "Die kostenlose Version zeigt Banner, die von Google AdMob ausgeliefert werden. Um Werbung anzuzeigen, zu begrenzen und zu messen und Betrug zu verhindern, kann Google die Werbe-ID deines Geräts, deine IP-Adresse, den daraus abgeleiteten ungefähren Standort, Geräte- und App-Informationen sowie deine Interaktionen mit Anzeigen erfassen und verarbeiten.",
+        "Wo das Gesetz es verlangt, etwa im Europäischen Wirtschaftsraum, im Vereinigten Königreich und in der Schweiz, bitten wir über die Einwilligungsabfrage von Google um deine Einwilligung, bevor personalisierte Werbung gezeigt wird. Du kannst deine Wahl jederzeit in den Einstellungen unter „Datenschutzoptionen für Werbung“ ändern.",
+        "Auf iPhone und iPad wird Werbung nur personalisiert, wenn du das Tracking bei der Abfrage erlaubst. Du kannst deine Werbe-ID außerdem in den Geräteeinstellungen zurücksetzen oder einschränken.",
+        "Wie Google diese Daten nutzt, steht in seiner Richtlinie: https://policies.google.com/technologies/partner-sites. Wenn du Pro kaufst, zeigt die App keine Werbung mehr."
+      ],
+      ["Käufe",
+        "Der einmalige Kauf von Pro wird über Google Play oder den Apple App Store abgewickelt. Wir erhalten nie deine Zahlungsdaten. Der Store bestätigt der App nur, dass der Kauf gültig ist, damit die Werbung entfernt und der Kauf auf deinen anderen Geräten wiederhergestellt werden kann. Für die Zahlung gilt die Datenschutzerklärung des Stores."
+      ],
+      ["Wenn du uns kontaktierst",
+        "Wenn du uns Feedback oder eine E-Mail schickst, erhalten wir deine E-Mail-Adresse, deine Nachricht und alle Anhänge. Feedback-E-Mails enthalten App- und Geräteinfos (App-Version, Gerätemodell, Systemversion und Sprache), die du vor dem Senden lesen und löschen kannst.",
+        "Wir nutzen diese Daten nur, um zu antworten und Probleme zu beheben, und löschen sie, sobald sie dafür nicht mehr nötig sind."
+      ],
+      ["Was wir nicht tun",
+        ["Wir verkaufen oder vermieten deine personenbezogenen Daten nicht.",
+         "Wir nutzen keine eigenen Analyse- oder Tracking-Tools.",
+         "Wir verlangen kein Konto und keine Anmeldung."]
+      ],
+      ["Wie lange Daten gespeichert werden",
+        "Aufnahmen bleiben gespeichert, bis du sie löschst oder die App deinstallierst. Support-E-Mails werden nur so lange aufbewahrt, wie es zur Bearbeitung deiner Anfrage nötig ist. Werbedaten speichert Google gemäß seiner eigenen Richtlinie."
+      ],
+      ["Deine Rechte",
+        "Je nachdem, wo du lebst, unter anderem nach der DSGVO, der britischen DSGVO und kalifornischem Recht, hast du möglicherweise das Recht auf Auskunft, Berichtigung, Löschung und eine Kopie deiner personenbezogenen Daten, das Recht, der Nutzung zu widersprechen oder sie einzuschränken, und das Recht, eine Einwilligung jederzeit zu widerrufen.",
+        "Da wir weder deine Aufnahmen noch ein Konto speichern, betreffen die meisten Anfragen Support-E-Mails. Für eine Anfrage schreib uns an {email}. Du hast außerdem das Recht, dich bei deiner Datenschutzaufsichtsbehörde zu beschweren."
+      ],
+      ["Kinder",
+        "Die App richtet sich nicht an Kinder unter 13 Jahren oder unter dem in deinem Land geltenden Mindestalter. Wir erfassen wissentlich keine personenbezogenen Daten von Kindern. Wenn du glaubst, dass uns ein Kind personenbezogene Daten geschickt hat, melde dich bei uns, und wir löschen sie."
+      ],
+      ["Sicherheit",
+        "Aufnahmen liegen im privaten Speicher der App, den andere Apps nicht lesen können. Die Verbindung zu Werbe- und Store-Diensten ist verschlüsselt. Keine Speicher- oder Übertragungsmethode ist absolut sicher, schütze dein Gerät deshalb mit einem Code."
+      ],
+      ["Änderungen dieser Erklärung",
+        "Wenn wir diese Erklärung ändern, aktualisieren wir sie hier und ändern oben das Datum, ab dem sie gilt. Bei wesentlichen Änderungen informieren wir dich zusätzlich in der App oder in den Versionshinweisen im Store."
+      ],
+      ["Kontakt",
+        "{developer}: {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "Nutzungsbedingungen für {app}",
+    summary: [
+      "Diese Bedingungen sind eine Vereinbarung zwischen dir und {developer} („wir“, „uns“) über deine Nutzung von {app}. Mit der Installation oder Nutzung der App stimmst du ihnen zu. Wenn du nicht einverstanden bist, nutze die App bitte nicht."
+    ],
+    sections: [
+      ["Nutzung der App",
+        "Wir gewähren dir eine persönliche, nicht ausschließliche, nicht übertragbare und widerrufliche Lizenz, die App auf Geräten zu nutzen, die dir gehören oder die du kontrollierst, gemäß diesen Bedingungen und den Regeln des Stores, aus dem du sie geladen hast."
+      ],
+      ["Deine Aufnahmen",
+        "Die Aufnahmen, die du machst, gehören dir. Du bist für sie verantwortlich und dafür, wie du sie nutzt und teilst.",
+        "Die Gesetze zum Aufnehmen anderer Personen unterscheiden sich je nach Land und Region. Manche verlangen, dass alle Beteiligten einer Aufnahme zustimmen. Stelle sicher, dass du jede gesetzlich erforderliche Einwilligung hast."
+      ],
+      ["Zulässige Nutzung",
+        ["Nutze die App nicht für rechtswidrige Zwecke und nicht, um Personen unter Verletzung ihrer Rechte aufzunehmen.",
+         "Kopiere, verändere, verkaufe oder verbreite die App nicht und versuche nicht, ihren Quellcode zu extrahieren, außer das Gesetz oder eine Open-Source-Lizenz erlaubt es.",
+         "Greife nicht in die Werbe- oder Kaufsysteme der App ein."]
+      ],
+      ["Kauf von Pro",
+        "Pro ist ein einmaliger, nicht verbrauchbarer Kauf, der die Werbung entfernt. Er ist an dein Store-Konto gebunden und kann auf anderen Geräten mit demselben Konto wiederhergestellt werden. Zahlungen, Erstattungen und Stornierungen werden von Google Play oder dem Apple App Store nach deren Bedingungen abgewickelt."
+      ],
+      ["Werbung",
+        "Die kostenlose Version zeigt Werbung von Dritten. Wir sind nicht für den Inhalt der Werbung oder für die verlinkten Produkte und Websites verantwortlich."
+      ],
+      ["Open-Source-Software",
+        "Die App enthält Open-Source-Software, darunter FFmpeg unter der LGPL 3.0. Diese Komponenten unterliegen ihren eigenen Lizenzen, die du in der App unter Einstellungen, Über lesen kannst. Nichts in diesen Bedingungen schränkt deine Rechte aus diesen Lizenzen ein."
+      ],
+      ["Backups und Datenverlust",
+        "Aufnahmen werden nur auf deinem Gerät gespeichert. Du bist dafür verantwortlich, Kopien wichtiger Aufnahmen aufzubewahren. Wir haften nicht für Aufnahmen, die verloren gehen, weil sie gelöscht, die App deinstalliert oder das Gerät verloren, zurückgesetzt oder beschädigt wurde."
+      ],
+      ["Updates und Verfügbarkeit",
+        "Wir können die App oder einzelne Funktionen jederzeit aktualisieren, ändern oder einstellen. Manche Updates können nötig sein, um die App weiter zu nutzen."
+      ],
+      ["Gewährleistungsausschluss",
+        "Die App wird „wie besehen“ und „wie verfügbar“ bereitgestellt. Soweit gesetzlich zulässig, übernehmen wir keine ausdrückliche oder stillschweigende Gewähr, insbesondere nicht dafür, dass die App fehlerfrei, unterbrechungsfrei oder für einen bestimmten Zweck geeignet ist."
+      ],
+      ["Haftungsbeschränkung",
+        "Soweit gesetzlich zulässig, haften wir nicht für indirekte, beiläufige, besondere oder Folgeschäden oder für den Verlust von Daten, Gewinnen oder Einnahmen. Unsere Gesamthaftung für Ansprüche im Zusammenhang mit der App ist auf den Betrag begrenzt, den du in den 12 Monaten vor dem Anspruch dafür bezahlt hast.",
+        "Nichts in diesen Bedingungen schließt eine Haftung aus oder beschränkt sie, wenn dies gesetzlich nicht zulässig ist, oder schränkt deine Verbraucherrechte nach dem Recht deines Wohnsitzlandes ein."
+      ],
+      ["Beendigung",
+        "Du kannst die Nutzung jederzeit beenden, indem du die App deinstallierst. Wenn du gegen diese Bedingungen verstößt, endet deine Lizenz zur Nutzung der App."
+      ],
+      ["Apple App Store",
+        "Wenn du die App aus dem Apple App Store geladen hast, gelten diese Bedingungen zwischen dir und uns, nicht Apple. Apple ist nicht für die App, ihre Inhalte, Wartung, Support oder Ansprüche in Bezug auf sie verantwortlich. Apple und seine Tochtergesellschaften sind Drittbegünstigte dieser Bedingungen und können sie durchsetzen. Zusätzlich gilt Apples Endbenutzer-Lizenzvertrag für lizenzierte Apps; wo er dir mehr Rechte gibt als diese Bedingungen, hat er Vorrang."
+      ],
+      ["Änderungen dieser Bedingungen",
+        "Wir können diese Bedingungen aktualisieren. Wir veröffentlichen die neue Fassung hier und ändern oben das Datum, ab dem sie gilt. Wenn du die App nach einer Änderung weiter nutzt, akzeptierst du die aktualisierten Bedingungen."
+      ],
+      ["Anwendbares Recht",
+        "Für diese Bedingungen gilt das Recht des Ortes, an dem {developer} niedergelassen ist, ohne dass dir der Schutz zwingender Verbraucherschutzgesetze deines Wohnsitzlandes entzogen wird."
+      ],
+      ["Kontakt",
+        "{developer}: {email}"
+      ]
+    ]
+  }
+};
+I18N.pt = {
+  name: "Português", dir: "ltr",
+  ui: {
+    language: "Idioma", documents: "Documentos jurídicos", contents: "Sumário",
+    privacy: "Política de privacidade", terms: "Termos de serviço",
+    effective: "Em vigor desde {date}",
+    noEmail: "os dados de contato da página do app na loja",
+    footer: "Dúvidas sobre estes documentos? Fale com {developer} em {email}."
+  },
+  privacy: {
+    title: "Política de privacidade do {app}",
+    summary: [
+      "O {app} é publicado por {developer} (\"nós\"). Esta política explica quais informações o app trata, por que e quais escolhas você tem.",
+      "Em resumo: suas gravações ficam no seu aparelho. Não temos servidores que recebam seu áudio, e não é preciso criar conta. A versão gratuita mostra anúncios do Google, que usa alguns dados do aparelho conforme descrito abaixo."
+    ],
+    sections: [
+      ["Suas gravações",
+        "O áudio que você grava e os arquivos que edita ficam armazenados apenas no seu aparelho, no armazenamento privado do app. Nunca enviamos, acessamos nem recebemos esses arquivos.",
+        "Uma gravação só sai do seu aparelho quando você decide compartilhá-la, pelo menu de compartilhamento do aparelho, com o app ou a pessoa que escolher. A partir daí, vale o que esse app ou essa pessoa fizer.",
+        "Dependendo das configurações do aparelho, o sistema operacional pode incluir dados do app em backups que você controla, como o iCloud ou um backup no computador. Desinstalar o app exclui as gravações armazenadas nele."
+      ],
+      ["Permissões",
+        ["Microfone: usado apenas para gravar quando você inicia uma gravação.",
+         "Notificações (Android): usadas para mostrar os controles enquanto você grava em segundo plano.",
+         "O app não acessa seus contatos, fotos, localização nem arquivos fora do próprio armazenamento."]
+      ],
+      ["Configurações salvas no aparelho",
+        "Suas preferências, como tipo de arquivo, tema e idioma, e se você comprou o Pro, ficam salvas no seu aparelho para que o app funcione do jeito que você configurou. Elas não são enviadas para nós."
+      ],
+      ["Publicidade",
+        "A versão gratuita mostra banners veiculados pelo Google AdMob. Para mostrar, limitar e medir anúncios e evitar fraudes, o Google pode coletar e tratar o identificador de publicidade do aparelho, seu endereço IP, a localização aproximada obtida a partir dele, informações do aparelho e do app e como você interage com os anúncios.",
+        "Quando a lei exige, por exemplo no Espaço Econômico Europeu, no Reino Unido e na Suíça, pedimos seu consentimento pela mensagem de consentimento do Google antes de mostrar anúncios personalizados. Você pode mudar sua escolha a qualquer momento em Configurações, em Opções de privacidade de anúncios.",
+        "No iPhone e no iPad, os anúncios só são personalizados se você permitir o rastreamento quando for perguntado. Você também pode redefinir ou limitar seu identificador de publicidade nas configurações do aparelho.",
+        "O uso desses dados pelo Google está descrito na política dele: https://policies.google.com/technologies/partner-sites. Se você comprar o Pro, o app deixa de mostrar anúncios."
+      ],
+      ["Compras",
+        "A compra única do Pro é processada pelo Google Play ou pela App Store da Apple. Nunca recebemos seus dados de pagamento. A loja apenas confirma ao app que a compra é válida, para remover os anúncios e restaurá-la nos seus outros aparelhos. A política de privacidade da loja se aplica ao pagamento."
+      ],
+      ["Quando você fala conosco",
+        "Se você enviar feedback ou um e-mail, recebemos seu endereço de e-mail, sua mensagem e os anexos. Os e-mails de feedback incluem dados do app e do aparelho (versão do app, modelo do aparelho, versão do sistema e idioma), que você pode ler e apagar antes de enviar.",
+        "Usamos esses dados só para responder e corrigir problemas, e os excluímos quando deixam de ser necessários para isso."
+      ],
+      ["O que não fazemos",
+        ["Não vendemos nem alugamos suas informações pessoais.",
+         "Não usamos ferramentas próprias de análise ou rastreamento.",
+         "Não pedimos que você crie conta ou faça login."]
+      ],
+      ["Por quanto tempo os dados são mantidos",
+        "As gravações ficam até você excluí-las ou desinstalar o app. Os e-mails de suporte são mantidos apenas pelo tempo necessário para atender seu pedido. Os dados de publicidade são mantidos pelo Google conforme a política dele."
+      ],
+      ["Seus direitos",
+        "Dependendo de onde você mora, inclusive pela LGPD, pelo RGPD, pelo RGPD do Reino Unido e pela lei da Califórnia, você pode ter o direito de acessar, corrigir, excluir ou receber uma cópia das suas informações pessoais, de se opor ao uso ou restringi-lo e de retirar o consentimento a qualquer momento.",
+        "Como não guardamos suas gravações nem uma conta, a maioria dos pedidos envolve e-mails de suporte. Para fazer um pedido, escreva para {email}. Você também tem o direito de reclamar à autoridade de proteção de dados do seu país."
+      ],
+      ["Crianças",
+        "O app não é destinado a menores de 13 anos, ou da idade mínima exigida no seu país. Não coletamos intencionalmente informações pessoais de crianças. Se você acredita que uma criança nos enviou informações pessoais, fale conosco e as excluiremos."
+      ],
+      ["Segurança",
+        "As gravações ficam no armazenamento privado do app, que outros apps não conseguem ler. A comunicação com os serviços de anúncios e da loja usa conexões criptografadas. Nenhum método de armazenamento ou transmissão é totalmente seguro, então proteja seu aparelho com uma senha."
+      ],
+      ["Mudanças nesta política",
+        "Se mudarmos esta política, vamos atualizá-la aqui e alterar a data de vigência acima. Se a mudança for significativa, também avisaremos no app ou nas notas da versão na loja."
+      ],
+      ["Contato",
+        "{developer}: {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "Termos de serviço do {app}",
+    summary: [
+      "Estes termos são um acordo entre você e {developer} (\"nós\") sobre o uso do {app}. Ao instalar ou usar o app, você concorda com eles. Se não concordar, não use o app."
+    ],
+    sections: [
+      ["Uso do app",
+        "Concedemos a você uma licença pessoal, não exclusiva, intransferível e revogável para usar o app em aparelhos que você possui ou controla, de acordo com estes termos e as regras da loja de onde você o baixou."
+      ],
+      ["Suas gravações",
+        "As gravações que você faz são suas. Você é responsável por elas e pela forma como as usa e compartilha.",
+        "As leis sobre gravar pessoas variam entre países e regiões. Algumas exigem que todos os participantes de uma conversa concordem antes da gravação. Garanta que você tem o consentimento exigido por lei."
+      ],
+      ["Uso aceitável",
+        ["Não use o app para nada ilegal nem para gravar pessoas violando os direitos delas.",
+         "Não copie, modifique, venda nem redistribua o app, nem tente extrair o código-fonte, exceto quando a lei ou uma licença de código aberto permitir.",
+         "Não interfira nos sistemas de anúncios ou de compras do app."]
+      ],
+      ["Compra do Pro",
+        "O Pro é uma compra única e não consumível que remove os anúncios. Ela fica vinculada à sua conta da loja e pode ser restaurada em outros aparelhos com a mesma conta. Pagamentos, reembolsos e cancelamentos são tratados pelo Google Play ou pela App Store da Apple, conforme os termos deles."
+      ],
+      ["Anúncios",
+        "A versão gratuita mostra anúncios de terceiros. Não somos responsáveis pelo conteúdo dos anúncios nem pelos produtos e sites para os quais eles levam."
+      ],
+      ["Software de código aberto",
+        "O app inclui software de código aberto, entre eles o FFmpeg sob a LGPL 3.0. Esses componentes seguem as próprias licenças, que você pode ler no app em Configurações, Sobre. Nada nestes termos limita seus direitos sob essas licenças."
+      ],
+      ["Backups e perda de dados",
+        "As gravações ficam armazenadas apenas no seu aparelho. Você é responsável por manter cópias das gravações importantes para você. Não somos responsáveis por gravações perdidas porque foram excluídas, o app foi desinstalado ou o aparelho foi perdido, redefinido ou danificado."
+      ],
+      ["Atualizações e disponibilidade",
+        "Podemos atualizar, alterar ou deixar de oferecer o app ou qualquer recurso a qualquer momento. Algumas atualizações podem ser necessárias para continuar usando o app."
+      ],
+      ["Isenção de garantias",
+        "O app é fornecido \"no estado em que se encontra\" e \"conforme disponível\". Na medida permitida por lei, não damos garantias, expressas ou implícitas, inclusive de que o app funcionará sem erros ou interrupções ou servirá para um fim específico."
+      ],
+      ["Limitação de responsabilidade",
+        "Na medida permitida por lei, não somos responsáveis por danos indiretos, incidentais, especiais ou consequenciais, nem por perda de dados, lucros ou receitas. Nossa responsabilidade total por qualquer reclamação relacionada ao app se limita ao valor que você pagou por ele nos 12 meses anteriores à reclamação.",
+        "Nada nestes termos exclui ou limita responsabilidades que não possam ser excluídas ou limitadas por lei, nem seus direitos de consumidor segundo a lei do país onde você mora."
+      ],
+      ["Encerramento",
+        "Você pode parar de usar o app a qualquer momento desinstalando-o. Se você violar estes termos, sua licença de uso termina."
+      ],
+      ["App Store da Apple",
+        "Se você baixou o app na App Store da Apple, estes termos são entre você e nós, não com a Apple. A Apple não é responsável pelo app, seu conteúdo, manutenção, suporte ou qualquer reclamação sobre ele. A Apple e suas subsidiárias são terceiras beneficiárias destes termos e podem fazê-los valer. O Contrato de Licença de Usuário Final de Aplicativos Licenciados da Apple também se aplica e prevalece quando lhe der mais direitos do que estes termos."
+      ],
+      ["Mudanças nestes termos",
+        "Podemos atualizar estes termos. Vamos publicar a nova versão aqui e alterar a data de vigência acima. Se você continuar usando o app depois de uma mudança, aceita os termos atualizados."
+      ],
+      ["Lei aplicável",
+        "Estes termos são regidos pelas leis do local onde {developer} está estabelecido, sem privar você da proteção das leis obrigatórias de defesa do consumidor do país onde você mora."
+      ],
+      ["Contato",
+        "{developer}: {email}"
+      ]
+    ]
+  }
+};
+I18N.ar = {
+  name: "العربية", dir: "rtl",
+  ui: {
+    language: "اللغة", documents: "المستندات القانونية", contents: "المحتويات",
+    privacy: "سياسة الخصوصية", terms: "شروط الخدمة",
+    effective: "تاريخ السريان: {date}",
+    noEmail: "بيانات الاتصال الموجودة في صفحة التطبيق على المتجر",
+    footer: "هل لديك أسئلة عن هذه المستندات؟ تواصل مع {developer} عبر {email}."
+  },
+  privacy: {
+    title: "سياسة الخصوصية لتطبيق {app}",
+    summary: [
+      "ينشر {developer} (\"نحن\") تطبيق {app}. توضح هذه السياسة المعلومات التي يتعامل معها التطبيق، وسبب ذلك، والخيارات المتاحة لك.",
+      "باختصار: تبقى تسجيلاتك على جهازك. ليست لدينا خوادم تستقبل صوتك، ولا تحتاج إلى إنشاء حساب. يعرض الإصدار المجاني إعلانات من Google، التي تستخدم بعض بيانات الجهاز كما هو موضح أدناه."
+    ],
+    sections: [
+      ["تسجيلاتك",
+        "يُحفظ الصوت الذي تسجله والملفات التي تعدّلها على جهازك فقط، في مساحة التخزين الخاصة بالتطبيق. لا نرفعها ولا نطّلع عليها ولا نستلمها أبدًا.",
+        "لا يغادر التسجيل جهازك إلا عندما تختار مشاركته، عبر قائمة المشاركة في جهازك، مع تطبيق أو شخص تختاره. وما يحدث بعد ذلك يخضع لذلك التطبيق أو الشخص.",
+        "بحسب إعدادات جهازك، قد يضمّن نظام التشغيل بيانات التطبيق في نسخ احتياطية تتحكم بها أنت، مثل iCloud أو نسخة احتياطية على الكمبيوتر. يؤدي حذف التطبيق إلى حذف التسجيلات المحفوظة فيه."
+      ],
+      ["الأذونات",
+        ["الميكروفون: يُستخدم فقط للتسجيل عندما تبدأ تسجيلًا.",
+         "الإشعارات (Android): تُستخدم لعرض أزرار التحكم أثناء التسجيل في الخلفية.",
+         "لا يصل التطبيق إلى جهات الاتصال أو الصور أو الموقع أو الملفات الموجودة خارج مساحة تخزينه."]
+      ],
+      ["الإعدادات المحفوظة على جهازك",
+        "تُحفظ تفضيلاتك، مثل نوع الملف والسمة واللغة، وما إذا كنت قد اشتريت Pro، على جهازك ليعمل التطبيق كما ضبطته. لا تُرسل إلينا."
+      ],
+      ["الإعلانات",
+        "يعرض الإصدار المجاني إعلانات لافتة تقدّمها Google AdMob. لعرض الإعلانات وتحديد عددها وقياسها ومنع الاحتيال، قد تجمع Google وتعالج معرّف الإعلانات في جهازك، وعنوان IP، والموقع التقريبي المستنتج منه، ومعلومات الجهاز والتطبيق، وطريقة تفاعلك مع الإعلانات.",
+        "حيثما يتطلب القانون ذلك، مثل المنطقة الاقتصادية الأوروبية والمملكة المتحدة وسويسرا، نطلب موافقتك عبر رسالة الموافقة من Google قبل عرض إعلانات مخصّصة. يمكنك تغيير اختيارك في أي وقت من الإعدادات ضمن «خيارات خصوصية الإعلانات».",
+        "على iPhone وiPad، لا تُخصَّص الإعلانات إلا إذا سمحت بالتتبع عند سؤالك. يمكنك أيضًا إعادة ضبط معرّف الإعلانات أو تقييده من إعدادات الجهاز.",
+        "توضح Google كيفية استخدامها لهذه البيانات في سياستها: https://policies.google.com/technologies/partner-sites. إذا اشتريت Pro، يتوقف التطبيق عن عرض الإعلانات."
+      ],
+      ["عمليات الشراء",
+        "تتم معالجة عملية شراء Pro لمرة واحدة عبر Google Play أو App Store من Apple. لا نتلقى بيانات الدفع الخاصة بك أبدًا. يؤكد المتجر للتطبيق فقط أن عملية الشراء صالحة، لإزالة الإعلانات واستعادة الشراء على أجهزتك الأخرى. تسري سياسة خصوصية المتجر على عملية الدفع."
+      ],
+      ["عندما تتواصل معنا",
+        "إذا أرسلت إلينا ملاحظات أو بريدًا إلكترونيًا، نتلقى عنوان بريدك ورسالتك وأي مرفقات. تتضمن رسائل الملاحظات تفاصيل التطبيق والجهاز (إصدار التطبيق وطراز الجهاز وإصدار النظام واللغة)، ويمكنك قراءتها وحذفها قبل الإرسال.",
+        "نستخدم هذه البيانات فقط للرد عليك وإصلاح المشكلات، ونحذفها عندما لا تعود لازمة لذلك."
+      ],
+      ["ما لا نفعله",
+        ["لا نبيع معلوماتك الشخصية ولا نؤجّرها.",
+         "لا نستخدم أدوات تحليل أو تتبّع خاصة بنا.",
+         "لا نطلب منك إنشاء حساب أو تسجيل الدخول."]
+      ],
+      ["مدة الاحتفاظ بالبيانات",
+        "تبقى التسجيلات إلى أن تحذفها أو تحذف التطبيق. نحتفظ برسائل الدعم فقط للمدة اللازمة لمعالجة طلبك. تحتفظ Google ببيانات الإعلانات وفق سياستها الخاصة."
+      ],
+      ["حقوقك",
+        "بحسب مكان إقامتك، بما في ذلك بموجب اللائحة العامة لحماية البيانات (GDPR) ونظيرتها في المملكة المتحدة وقانون كاليفورنيا، قد يحق لك الوصول إلى معلوماتك الشخصية أو تصحيحها أو حذفها أو الحصول على نسخة منها، والاعتراض على استخدامها أو تقييده، وسحب موافقتك في أي وقت.",
+        "لأننا لا نحتفظ بتسجيلاتك ولا بحساب لك، تتعلق معظم الطلبات برسائل الدعم. لتقديم طلب، راسلنا على {email}. يحق لك أيضًا تقديم شكوى إلى هيئة حماية البيانات في بلدك."
+      ],
+      ["الأطفال",
+        "التطبيق غير موجّه للأطفال دون 13 عامًا، أو دون الحد الأدنى للسن في بلدك. لا نجمع عن علم معلومات شخصية من الأطفال. إذا كنت تعتقد أن طفلًا أرسل إلينا معلومات شخصية، تواصل معنا وسنحذفها."
+      ],
+      ["الأمان",
+        "تُحفظ التسجيلات في مساحة التخزين الخاصة بالتطبيق، التي لا تستطيع التطبيقات الأخرى قراءتها. يتم الاتصال بخدمات الإعلانات والمتجر عبر اتصالات مشفّرة. لا توجد طريقة تخزين أو نقل آمنة تمامًا، لذا احمِ جهازك برمز مرور."
+      ],
+      ["التغييرات على هذه السياسة",
+        "إذا غيّرنا هذه السياسة، سنحدّثها هنا ونغيّر تاريخ السريان أعلاه. وإذا كان التغيير جوهريًا، سنخبرك أيضًا داخل التطبيق أو في ملاحظات الإصدار على المتجر."
+      ],
+      ["التواصل",
+        "{developer}: {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "شروط الخدمة لتطبيق {app}",
+    summary: [
+      "هذه الشروط اتفاق بينك وبين {developer} (\"نحن\") بشأن استخدامك لتطبيق {app}. بتثبيت التطبيق أو استخدامه فإنك توافق عليها. إذا لم توافق، يُرجى عدم استخدام التطبيق."
+    ],
+    sections: [
+      ["استخدام التطبيق",
+        "نمنحك ترخيصًا شخصيًا وغير حصري وغير قابل للتحويل وقابلًا للإلغاء لاستخدام التطبيق على الأجهزة التي تملكها أو تتحكم بها، وفقًا لهذه الشروط وقواعد المتجر الذي نزّلته منه."
+      ],
+      ["تسجيلاتك",
+        "التسجيلات التي تصنعها ملك لك. وأنت مسؤول عنها وعن طريقة استخدامها ومشاركتها.",
+        "تختلف قوانين تسجيل الآخرين من بلد إلى آخر ومن منطقة إلى أخرى. يشترط بعضها موافقة جميع أطراف المحادثة قبل تسجيلها. تأكد من حصولك على أي موافقة يتطلبها القانون."
+      ],
+      ["الاستخدام المقبول",
+        ["لا تستخدم التطبيق لأي غرض غير قانوني، ولا لتسجيل الأشخاص بما ينتهك حقوقهم.",
+         "لا تنسخ التطبيق أو تعدّله أو تبيعه أو تعيد توزيعه، ولا تحاول استخراج شيفرته المصدرية، إلا بقدر ما يسمح به القانون أو ترخيص مفتوح المصدر.",
+         "لا تتدخل في أنظمة الإعلانات أو الشراء في التطبيق."]
+      ],
+      ["شراء Pro",
+        "‏Pro عملية شراء لمرة واحدة غير قابلة للاستهلاك تزيل الإعلانات. وهي مرتبطة بحسابك في المتجر ويمكن استعادتها على أجهزة أخرى تستخدم الحساب نفسه. تتولى Google Play أو App Store من Apple المدفوعات والمبالغ المستردة والإلغاءات وفق شروطها."
+      ],
+      ["الإعلانات",
+        "يعرض الإصدار المجاني إعلانات من جهات خارجية. لسنا مسؤولين عن محتوى الإعلانات ولا عن المنتجات والمواقع التي ترتبط بها."
+      ],
+      ["البرامج مفتوحة المصدر",
+        "يتضمن التطبيق برامج مفتوحة المصدر، منها FFmpeg المرخّصة بموجب LGPL 3.0. تخضع هذه المكونات لتراخيصها الخاصة، ويمكنك قراءتها في التطبيق من الإعدادات ثم «حول التطبيق». لا يحدّ أي شيء في هذه الشروط من حقوقك بموجب تلك التراخيص."
+      ],
+      ["النسخ الاحتياطية وفقدان البيانات",
+        "تُحفظ التسجيلات على جهازك فقط. أنت مسؤول عن الاحتفاظ بنسخ من التسجيلات المهمة لك. لسنا مسؤولين عن التسجيلات التي تُفقد بسبب حذفها أو حذف التطبيق أو فقدان الجهاز أو إعادة ضبطه أو تلفه."
+      ],
+      ["التحديثات والإتاحة",
+        "يجوز لنا تحديث التطبيق أو أي ميزة فيه أو تغييرها أو التوقف عن تقديمها في أي وقت. قد تكون بعض التحديثات ضرورية لمواصلة استخدام التطبيق."
+      ],
+      ["إخلاء المسؤولية",
+        "يُقدَّم التطبيق \"كما هو\" و\"حسب توفّره\". وفي الحدود التي يسمح بها القانون، لا نقدّم أي ضمانات صريحة أو ضمنية، بما في ذلك أن يعمل التطبيق بلا أخطاء أو انقطاع أو أن يناسب غرضًا معيّنًا."
+      ],
+      ["حدود المسؤولية",
+        "في الحدود التي يسمح بها القانون، لسنا مسؤولين عن أي أضرار غير مباشرة أو عرضية أو خاصة أو تبعية، ولا عن فقدان البيانات أو الأرباح أو الإيرادات. تقتصر مسؤوليتنا الإجمالية عن أي مطالبة تتعلق بالتطبيق على المبلغ الذي دفعته مقابله خلال الأشهر الاثني عشر السابقة للمطالبة.",
+        "لا يستبعد أي شيء في هذه الشروط أو يحدّ من مسؤولية لا يجوز استبعادها أو تحديدها قانونًا، ولا من حقوقك كمستهلك بموجب قانون بلد إقامتك."
+      ],
+      ["إنهاء هذه الشروط",
+        "يمكنك التوقف عن استخدام التطبيق في أي وقت بحذفه. إذا خالفت هذه الشروط، ينتهي ترخيصك لاستخدام التطبيق."
+      ],
+      ["App Store من Apple",
+        "إذا نزّلت التطبيق من App Store من Apple، فإن هذه الشروط بينك وبيننا، وليست مع Apple. لا تتحمل Apple مسؤولية التطبيق أو محتواه أو صيانته أو دعمه أو أي مطالبة بشأنه. تُعد Apple والشركات التابعة لها جهات مستفيدة من هذه الشروط ويحق لها إنفاذها. تسري أيضًا اتفاقية ترخيص المستخدم النهائي للتطبيقات المرخّصة من Apple، وتكون لها الأولوية حيثما منحتك حقوقًا أكثر من هذه الشروط."
+      ],
+      ["التغييرات على هذه الشروط",
+        "يجوز لنا تحديث هذه الشروط. سننشر النسخة الجديدة هنا ونغيّر تاريخ السريان أعلاه. إذا واصلت استخدام التطبيق بعد التغيير، فإنك تقبل الشروط المحدّثة."
+      ],
+      ["القانون الواجب التطبيق",
+        "تخضع هذه الشروط لقوانين المكان الذي يقع فيه مقر {developer}، دون حرمانك من حماية قوانين حماية المستهلك الإلزامية في بلد إقامتك."
+      ],
+      ["التواصل",
+        "{developer}: {email}"
+      ]
+    ]
+  }
+};
+I18N.hi = {
+  name: "हिन्दी", dir: "ltr",
+  ui: {
+    language: "भाषा", documents: "कानूनी दस्तावेज़", contents: "विषय-सूची",
+    privacy: "निजता नीति", terms: "सेवा की शर्तें",
+    effective: "{date} से लागू",
+    noEmail: "स्टोर में ऐप के पेज पर दी गई संपर्क जानकारी",
+    footer: "इन दस्तावेज़ों के बारे में कोई सवाल? {developer} से {email} पर संपर्क करें।"
+  },
+  privacy: {
+    title: "{app} की निजता नीति",
+    summary: [
+      "{app} को {developer} (\"हम\") प्रकाशित करता है। यह नीति बताती है कि ऐप कौन-सी जानकारी संभालता है, क्यों, और आपके पास कौन-से विकल्प हैं।",
+      "संक्षेप में: आपकी रिकॉर्डिंग आपके डिवाइस पर ही रहती हैं। हमारे पास ऐसे सर्वर नहीं हैं जो आपका ऑडियो पाते हों, और कोई खाता बनाने की ज़रूरत नहीं है। मुफ़्त वर्शन में Google के विज्ञापन दिखते हैं, जो नीचे बताए अनुसार डिवाइस का कुछ डेटा इस्तेमाल करता है।"
+    ],
+    sections: [
+      ["आपकी रिकॉर्डिंग",
+        "आप जो ऑडियो रिकॉर्ड करते हैं और जिन फ़ाइलों में बदलाव करते हैं, वे सिर्फ़ आपके डिवाइस पर, ऐप के निजी स्टोरेज में रहती हैं। हम उन्हें कभी अपलोड नहीं करते, न देखते हैं, न पाते हैं।",
+        "रिकॉर्डिंग आपके डिवाइस से तभी बाहर जाती है जब आप उसे डिवाइस के शेयर मेन्यू से अपने चुने हुए ऐप या व्यक्ति के साथ शेयर करते हैं। उसके बाद उस पर वही ऐप या व्यक्ति लागू होता है।",
+        "आपके डिवाइस की सेटिंग के अनुसार, ऑपरेटिंग सिस्टम ऐप के डेटा को आपके नियंत्रण वाले बैकअप, जैसे iCloud या कंप्यूटर बैकअप, में शामिल कर सकता है। ऐप अनइंस्टॉल करने पर उसमें रखी रिकॉर्डिंग मिट जाती हैं।"
+      ],
+      ["अनुमतियाँ",
+        ["माइक्रोफ़ोन: सिर्फ़ तब रिकॉर्ड करने के लिए जब आप रिकॉर्डिंग शुरू करते हैं।",
+         "सूचनाएँ (Android): बैकग्राउंड में रिकॉर्डिंग के दौरान कंट्रोल दिखाने के लिए।",
+         "ऐप आपके संपर्क, फ़ोटो, लोकेशन या अपने स्टोरेज के बाहर की फ़ाइलें इस्तेमाल नहीं करता।"]
+      ],
+      ["आपके डिवाइस पर सेव सेटिंग",
+        "आपकी पसंद, जैसे फ़ाइल टाइप, थीम और भाषा, और यह कि आपने Pro खरीदा है या नहीं, आपके डिवाइस पर सेव रहती है ताकि ऐप आपकी सेटिंग के अनुसार चले। यह हमें नहीं भेजी जाती।"
+      ],
+      ["विज्ञापन",
+        "मुफ़्त वर्शन में Google AdMob के बैनर विज्ञापन दिखते हैं। विज्ञापन दिखाने, सीमित करने, मापने और धोखाधड़ी रोकने के लिए Google आपके डिवाइस का विज्ञापन आईडी, IP पता, उससे निकाली गई अनुमानित लोकेशन, डिवाइस और ऐप की जानकारी, और विज्ञापनों के साथ आपकी गतिविधि इकट्ठा और प्रोसेस कर सकता है।",
+        "जहाँ कानून ज़रूरी बनाता है, जैसे यूरोपीय आर्थिक क्षेत्र, यूनाइटेड किंगडम और स्विट्ज़रलैंड में, हम पर्सनलाइज़्ड विज्ञापन दिखाने से पहले Google के सहमति संदेश से आपकी सहमति माँगते हैं। आप सेटिंग में विज्ञापन निजता विकल्प से कभी भी अपनी पसंद बदल सकते हैं।",
+        "iPhone और iPad पर विज्ञापन तभी पर्सनलाइज़ होते हैं जब पूछे जाने पर आप ट्रैकिंग की अनुमति देते हैं। आप डिवाइस की सेटिंग में अपना विज्ञापन आईडी रीसेट या सीमित भी कर सकते हैं।",
+        "Google इस डेटा का कैसे इस्तेमाल करता है, यह उसकी नीति में बताया गया है: https://policies.google.com/technologies/partner-sites. Pro खरीदने पर ऐप विज्ञापन दिखाना बंद कर देता है।"
+      ],
+      ["खरीदारी",
+        "Pro की एक बार की खरीदारी Google Play या Apple App Store प्रोसेस करता है। हमें आपकी भुगतान जानकारी कभी नहीं मिलती। स्टोर ऐप को सिर्फ़ यह पुष्टि करता है कि खरीदारी मान्य है, ताकि विज्ञापन हट सकें और आपके दूसरे डिवाइस पर खरीदारी वापस लाई जा सके। भुगतान पर स्टोर की अपनी निजता नीति लागू होती है।"
+      ],
+      ["जब आप हमसे संपर्क करते हैं",
+        "अगर आप फ़ीडबैक या ईमेल भेजते हैं, तो हमें आपका ईमेल पता, आपका संदेश और अटैचमेंट मिलते हैं। फ़ीडबैक ईमेल में ऐप और डिवाइस की जानकारी (ऐप वर्शन, डिवाइस मॉडल, सिस्टम वर्शन और भाषा) होती है, जिसे आप भेजने से पहले पढ़ और हटा सकते हैं।",
+        "हम इसका इस्तेमाल सिर्फ़ जवाब देने और समस्याएँ ठीक करने के लिए करते हैं, और ज़रूरत खत्म होते ही इसे मिटा देते हैं।"
+      ],
+      ["हम क्या नहीं करते",
+        ["हम आपकी निजी जानकारी न बेचते हैं, न किराए पर देते हैं।",
+         "हम अपने कोई एनालिटिक्स या ट्रैकिंग टूल इस्तेमाल नहीं करते।",
+         "हम आपसे खाता बनाने या साइन इन करने को नहीं कहते।"]
+      ],
+      ["डेटा कितने समय तक रखा जाता है",
+        "रिकॉर्डिंग तब तक रहती हैं जब तक आप उन्हें मिटा नहीं देते या ऐप अनइंस्टॉल नहीं करते। सहायता ईमेल सिर्फ़ आपके अनुरोध को निपटाने के लिए ज़रूरी समय तक रखे जाते हैं। विज्ञापन डेटा Google अपनी नीति के अनुसार रखता है।"
+      ],
+      ["आपके अधिकार",
+        "आप कहाँ रहते हैं, इसके आधार पर, जिसमें भारत का डिजिटल व्यक्तिगत डेटा संरक्षण अधिनियम, GDPR, UK GDPR और कैलिफ़ोर्निया का कानून शामिल हैं, आपको अपनी निजी जानकारी देखने, सुधारने, मिटाने या उसकी कॉपी पाने, उसके इस्तेमाल पर आपत्ति करने या उसे सीमित करने, और कभी भी सहमति वापस लेने का अधिकार हो सकता है।",
+        "चूँकि हम न आपकी रिकॉर्डिंग रखते हैं न कोई खाता, ज़्यादातर अनुरोध सहायता ईमेल से जुड़े होते हैं। अनुरोध करने के लिए हमें {email} पर लिखें। आपको अपने देश के डेटा संरक्षण प्राधिकरण से शिकायत करने का भी अधिकार है।"
+      ],
+      ["बच्चे",
+        "यह ऐप 13 साल से कम उम्र के बच्चों, या आपके देश में तय न्यूनतम उम्र से कम के लोगों, के लिए नहीं है। हम जानबूझकर बच्चों की निजी जानकारी इकट्ठा नहीं करते। अगर आपको लगता है कि किसी बच्चे ने हमें निजी जानकारी भेजी है, तो हमसे संपर्क करें, हम उसे मिटा देंगे।"
+      ],
+      ["सुरक्षा",
+        "रिकॉर्डिंग ऐप के निजी स्टोरेज में रहती हैं, जिसे दूसरे ऐप नहीं पढ़ सकते। विज्ञापन और स्टोर सेवाओं से संपर्क एन्क्रिप्टेड कनेक्शन से होता है। स्टोरेज या ट्रांसमिशन का कोई भी तरीका पूरी तरह सुरक्षित नहीं होता, इसलिए अपने डिवाइस को पासकोड से सुरक्षित रखें।"
+      ],
+      ["इस नीति में बदलाव",
+        "अगर हम यह नीति बदलते हैं, तो उसे यहाँ अपडेट करेंगे और ऊपर दी गई लागू होने की तारीख बदल देंगे। अगर बदलाव बड़ा है, तो हम ऐप में या स्टोर के रिलीज़ नोट्स में भी बताएँगे।"
+      ],
+      ["संपर्क",
+        "{developer}: {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "{app} की सेवा की शर्तें",
+    summary: [
+      "ये शर्तें {app} के इस्तेमाल के बारे में आपके और {developer} (\"हम\") के बीच एक समझौता हैं। ऐप इंस्टॉल या इस्तेमाल करके आप इनसे सहमत होते हैं। अगर आप सहमत नहीं हैं, तो कृपया ऐप इस्तेमाल न करें।"
+    ],
+    sections: [
+      ["ऐप का इस्तेमाल",
+        "हम आपको इन शर्तों और जिस स्टोर से आपने ऐप डाउनलोड किया उसके नियमों के तहत, अपने या अपने नियंत्रण वाले डिवाइस पर ऐप इस्तेमाल करने का निजी, गैर-विशिष्ट, गैर-हस्तांतरणीय और वापस लिया जा सकने वाला लाइसेंस देते हैं।"
+      ],
+      ["आपकी रिकॉर्डिंग",
+        "आपकी बनाई रिकॉर्डिंग आपकी हैं। उनके लिए, और आप उनका कैसे इस्तेमाल और शेयर करते हैं इसके लिए, आप ज़िम्मेदार हैं।",
+        "दूसरों को रिकॉर्ड करने के कानून अलग-अलग देशों और राज्यों में अलग होते हैं। कुछ में बातचीत रिकॉर्ड करने से पहले सभी लोगों की सहमति ज़रूरी होती है। पक्का करें कि आपके पास कानून के मुताबिक ज़रूरी सहमति है।"
+      ],
+      ["स्वीकार्य इस्तेमाल",
+        ["ऐप का इस्तेमाल किसी गैरकानूनी काम के लिए या किसी के अधिकारों का उल्लंघन करके उसे रिकॉर्ड करने के लिए न करें।",
+         "ऐप की कॉपी न करें, उसमें बदलाव न करें, उसे न बेचें या दोबारा न बाँटें, और उसका सोर्स कोड निकालने की कोशिश न करें, सिवाय जहाँ कानून या कोई ओपन-सोर्स लाइसेंस इसकी अनुमति देता हो।",
+         "ऐप के विज्ञापन या खरीदारी सिस्टम में दखल न दें।"]
+      ],
+      ["Pro खरीदारी",
+        "Pro एक बार की, नॉन-कंज़्यूमेबल खरीदारी है जो विज्ञापन हटाती है। यह आपके स्टोर खाते से जुड़ी होती है और उसी खाते वाले दूसरे डिवाइस पर वापस लाई जा सकती है। भुगतान, रिफ़ंड और रद्द करना Google Play या Apple App Store अपनी शर्तों के अनुसार संभालते हैं।"
+      ],
+      ["विज्ञापन",
+        "मुफ़्त वर्शन में तीसरे पक्ष के विज्ञापन दिखते हैं। विज्ञापनों की सामग्री, या उनसे जुड़े प्रोडक्ट और वेबसाइटों के लिए हम ज़िम्मेदार नहीं हैं।"
+      ],
+      ["ओपन-सोर्स सॉफ़्टवेयर",
+        "ऐप में ओपन-सोर्स सॉफ़्टवेयर शामिल है, जिसमें LGPL 3.0 के तहत FFmpeg भी है। ये हिस्से अपने लाइसेंस से चलते हैं, जिन्हें आप ऐप में सेटिंग, ऐप के बारे में में पढ़ सकते हैं। इन शर्तों में कुछ भी उन लाइसेंस के तहत आपके अधिकारों को सीमित नहीं करता।"
+      ],
+      ["बैकअप और डेटा खोना",
+        "रिकॉर्डिंग सिर्फ़ आपके डिवाइस पर रहती हैं। अपनी ज़रूरी रिकॉर्डिंग की कॉपी रखना आपकी ज़िम्मेदारी है। अगर रिकॉर्डिंग मिटा दी गईं, ऐप अनइंस्टॉल हुआ, या डिवाइस खो गया, रीसेट हुआ या खराब हुआ, तो खोई रिकॉर्डिंग के लिए हम ज़िम्मेदार नहीं हैं।"
+      ],
+      ["अपडेट और उपलब्धता",
+        "हम कभी भी ऐप या उसकी किसी सुविधा को अपडेट कर सकते हैं, बदल सकते हैं या देना बंद कर सकते हैं। ऐप इस्तेमाल करते रहने के लिए कुछ अपडेट ज़रूरी हो सकते हैं।"
+      ],
+      ["अस्वीकरण",
+        "ऐप \"जैसा है\" और \"जैसा उपलब्ध है\" के आधार पर दिया जाता है। कानून जितनी अनुमति देता है, उस हद तक हम कोई स्पष्ट या निहित वारंटी नहीं देते, जिसमें यह भी शामिल है कि ऐप बिना गड़बड़ी या रुकावट के चलेगा या किसी खास काम के लिए उपयुक्त होगा।"
+      ],
+      ["दायित्व की सीमा",
+        "कानून जितनी अनुमति देता है, उस हद तक हम किसी अप्रत्यक्ष, आकस्मिक, विशेष या परिणामी नुकसान, या डेटा, मुनाफ़े या आमदनी के नुकसान के लिए ज़िम्मेदार नहीं हैं। ऐप से जुड़े किसी भी दावे के लिए हमारा कुल दायित्व उस रकम तक सीमित है जो आपने दावे से पहले के 12 महीनों में ऐप के लिए चुकाई।",
+        "इन शर्तों में कुछ भी ऐसे दायित्व को बाहर या सीमित नहीं करता जिसे कानूनन बाहर या सीमित नहीं किया जा सकता, और न ही आपके देश के कानून के तहत उपभोक्ता के रूप में आपके अधिकारों को।"
+      ],
+      ["इन शर्तों का खत्म होना",
+        "आप ऐप अनइंस्टॉल करके कभी भी उसका इस्तेमाल बंद कर सकते हैं। अगर आप इन शर्तों को तोड़ते हैं, तो ऐप इस्तेमाल करने का आपका लाइसेंस खत्म हो जाता है।"
+      ],
+      ["Apple App Store",
+        "अगर आपने ऐप Apple App Store से डाउनलोड किया है, तो ये शर्तें आपके और हमारे बीच हैं, Apple के साथ नहीं। ऐप, उसकी सामग्री, रखरखाव, सहायता या उससे जुड़े किसी दावे के लिए Apple ज़िम्मेदार नहीं है। Apple और उसकी सहायक कंपनियाँ इन शर्तों की तीसरे पक्ष की लाभार्थी हैं और इन्हें लागू करवा सकती हैं। Apple का लाइसेंस प्राप्त ऐप्लिकेशन एंड यूज़र लाइसेंस एग्रीमेंट भी लागू होता है, और जहाँ वह आपको इन शर्तों से ज़्यादा अधिकार देता है, वहाँ वही मान्य होगा।"
+      ],
+      ["इन शर्तों में बदलाव",
+        "हम इन शर्तों को अपडेट कर सकते हैं। हम नया वर्शन यहाँ प्रकाशित करेंगे और ऊपर दी गई लागू होने की तारीख बदल देंगे। बदलाव के बाद भी ऐप इस्तेमाल करते रहने पर आप अपडेट की गई शर्तें स्वीकार करते हैं।"
+      ],
+      ["लागू कानून",
+        "ये शर्तें उस जगह के कानूनों से नियंत्रित होती हैं जहाँ {developer} स्थापित है, और इससे आपके देश के अनिवार्य उपभोक्ता संरक्षण कानूनों की सुरक्षा आपसे नहीं छिनती।"
+      ],
+      ["संपर्क",
+        "{developer}: {email}"
+      ]
+    ]
+  }
+};
+I18N.zh = {
+  name: "中文", dir: "ltr",
+  ui: {
+    language: "语言", documents: "法律文件", contents: "目录",
+    privacy: "隐私政策", terms: "服务条款",
+    effective: "生效日期：{date}",
+    noEmail: "应用商店页面上的联系方式",
+    footer: "对这些文件有疑问？请通过 {email} 联系 {developer}。"
+  },
+  privacy: {
+    title: "{app} 隐私政策",
+    summary: [
+      "{app} 由 {developer}（“我们”）发布。本政策说明应用会处理哪些信息、处理的原因以及你拥有的选择。",
+      "简而言之：你的录音保存在你的设备上。我们没有接收你音频的服务器，也无需创建账号。免费版会显示 Google 提供的广告，Google 会按下文所述使用部分设备数据。"
+    ],
+    sections: [
+      ["你的录音",
+        "你录制的音频和编辑的文件仅保存在你的设备上，位于应用的私有存储空间中。我们从不上传、访问或接收这些内容。",
+        "只有当你通过设备的分享菜单，选择将录音分享给某个应用或某个人时，录音才会离开你的设备。此后的处理由该应用或该人负责。",
+        "根据设备设置，操作系统可能会将应用数据包含在由你控制的备份中，例如 iCloud 或电脑备份。卸载应用会删除其中保存的录音。"
+      ],
+      ["权限",
+        ["麦克风：仅在你开始录音时用于录音。",
+         "通知（Android）：在后台录音时显示控制按钮。",
+         "应用不会访问你的通讯录、照片、位置信息，也不会访问其自身存储空间以外的文件。"]
+      ],
+      ["保存在设备上的设置",
+        "你的偏好设置（如文件类型、主题和语言）以及是否已购买 Pro，都保存在你的设备上，以便应用按你的设置运行。这些信息不会发送给我们。"
+      ],
+      ["广告",
+        "免费版会显示由 Google AdMob 提供的横幅广告。为展示、限制和衡量广告并防止欺诈，Google 可能会收集和处理你设备的广告标识符、IP 地址、据此推断的大致位置、设备和应用信息，以及你与广告的互动情况。",
+        "在法律有要求的地区，例如欧洲经济区、英国和瑞士，我们会在展示个性化广告前通过 Google 的同意提示征求你的同意。你可以随时在设置的“广告隐私选项”中更改选择。",
+        "在 iPhone 和 iPad 上，只有在系统询问时你允许跟踪，广告才会个性化。你也可以在设备设置中重置或限制广告标识符。",
+        "Google 对这些数据的使用方式见其政策：https://policies.google.com/technologies/partner-sites。购买 Pro 后，应用将不再显示广告。"
+      ],
+      ["购买",
+        "Pro 的一次性购买由 Google Play 或 Apple App Store 处理。我们从不接收你的支付信息。商店只会向应用确认购买有效，以便去除广告并在你的其他设备上恢复购买。支付适用商店自身的隐私政策。"
+      ],
+      ["当你联系我们时",
+        "如果你向我们发送反馈或电子邮件，我们会收到你的电子邮件地址、消息内容及附件。反馈邮件包含应用和设备信息（应用版本、设备型号、系统版本和语言），你可以在发送前查看和删除。",
+        "我们仅将这些信息用于回复你和解决问题，并在不再需要时将其删除。"
+      ],
+      ["我们不会做的事",
+        ["我们不会出售或出租你的个人信息。",
+         "我们不使用自己的分析或跟踪工具。",
+         "我们不会要求你创建账号或登录。"]
+      ],
+      ["数据保留期限",
+        "录音会一直保留，直到你删除它们或卸载应用。支持邮件仅在处理你的请求所需的时间内保留。广告数据由 Google 按其政策保留。"
+      ],
+      ["你的权利",
+        "根据你所在的地区，包括依据《个人信息保护法》、GDPR、英国 GDPR 和加州法律，你可能有权访问、更正、删除你的个人信息或获取其副本，有权反对或限制其使用，并可随时撤回同意。",
+        "由于我们不保存你的录音，也没有账号，大多数请求都与支持邮件有关。如需提出请求，请发送邮件至 {email}。你也有权向当地数据保护机构投诉。"
+      ],
+      ["儿童",
+        "本应用不面向 13 岁以下的儿童，或低于你所在国家/地区规定最低年龄的用户。我们不会故意收集儿童的个人信息。如果你认为有儿童向我们提供了个人信息，请联系我们，我们会将其删除。"
+      ],
+      ["安全",
+        "录音保存在应用的私有存储空间中，其他应用无法读取。与广告和商店服务的通信使用加密连接。任何存储或传输方式都不是绝对安全的，因此请使用密码保护你的设备。"
+      ],
+      ["本政策的变更",
+        "如果我们更改本政策，会在此处更新并修改上方的生效日期。如有重大变更，我们还会在应用内或商店的版本说明中告知你。"
+      ],
+      ["联系我们",
+        "{developer}：{email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "{app} 服务条款",
+    summary: [
+      "本条款是你与 {developer}（“我们”）之间关于使用 {app} 的协议。安装或使用本应用即表示你同意本条款。如果你不同意，请不要使用本应用。"
+    ],
+    sections: [
+      ["使用应用",
+        "我们授予你一项个人的、非独占的、不可转让且可撤销的许可，允许你依据本条款及你下载应用所用商店的规则，在你拥有或控制的设备上使用本应用。"
+      ],
+      ["你的录音",
+        "你制作的录音归你所有。你对录音以及你使用和分享录音的方式负责。",
+        "不同国家和地区关于录制他人的法律各不相同。有些地区要求在录制对话前征得所有参与者的同意。请确保你已取得法律要求的任何同意。"
+      ],
+      ["可接受的使用",
+        ["不得将本应用用于任何违法目的，或在侵犯他人权利的情况下录制他人。",
+         "除法律或开源许可允许的情况外，不得复制、修改、出售或再分发本应用，也不得尝试提取其源代码。",
+         "不得干扰应用的广告或购买系统。"]
+      ],
+      ["购买 Pro",
+        "Pro 是一次性的非消耗型购买，用于去除广告。它与你的商店账号绑定，可在使用同一账号的其他设备上恢复。付款、退款和取消由 Google Play 或 Apple App Store 按其条款处理。"
+      ],
+      ["广告",
+        "免费版会显示第三方广告。我们不对广告内容及广告链接的产品和网站负责。"
+      ],
+      ["开源软件",
+        "本应用包含开源软件，其中包括依据 LGPL 3.0 许可的 FFmpeg。这些组件适用其各自的许可，你可以在应用的“设置”>“关于”中查看。本条款的任何内容均不限制你依据这些许可享有的权利。"
+      ],
+      ["备份和数据丢失",
+        "录音仅保存在你的设备上。你有责任为重要的录音保留副本。对于因删除录音、卸载应用，或设备丢失、重置或损坏而丢失的录音，我们不承担责任。"
+      ],
+      ["更新和可用性",
+        "我们可能随时更新、更改或停止提供本应用或其任何功能。部分更新可能是继续使用本应用所必需的。"
+      ],
+      ["免责声明",
+        "本应用按“现状”和“现有”基础提供。在法律允许的范围内，我们不作任何明示或默示的保证，包括不保证本应用无错误、不中断或适合特定用途。"
+      ],
+      ["责任限制",
+        "在法律允许的范围内，我们不对任何间接、附带、特殊或后果性损害，或数据、利润、收入的损失承担责任。我们对与本应用相关的任何索赔的全部责任，以你在索赔前 12 个月内为本应用支付的金额为限。",
+        "本条款的任何内容均不排除或限制依法不得排除或限制的责任，也不影响你依据居住国法律享有的消费者权利。"
+      ],
+      ["条款终止",
+        "你可以随时卸载本应用以停止使用。如果你违反本条款，你使用本应用的许可即告终止。"
+      ],
+      ["Apple App Store",
+        "如果你从 Apple App Store 下载本应用，本条款是你与我们之间的协议，而非与 Apple 之间的协议。Apple 不对本应用、其内容、维护、支持或任何相关索赔负责。Apple 及其子公司是本条款的第三方受益人，并可执行本条款。Apple 的《许可应用程序最终用户许可协议》同样适用；若其赋予你的权利多于本条款，则以其为准。"
+      ],
+      ["条款变更",
+        "我们可能更新本条款，并会在此处发布新版本、修改上方的生效日期。如果你在变更后继续使用本应用，即表示你接受更新后的条款。"
+      ],
+      ["适用法律",
+        "本条款受 {developer} 所在地法律管辖，但不剥夺你依据居住国强制性消费者保护法律所享有的保护。"
+      ],
+      ["联系我们",
+        "{developer}：{email}"
+      ]
+    ]
+  }
+};
+I18N.ru = {
+  name: "Русский", dir: "ltr",
+  ui: {
+    language: "Язык", documents: "Юридические документы", contents: "Содержание",
+    privacy: "Политика конфиденциальности", terms: "Условия использования",
+    effective: "Действует с {date}",
+    noEmail: "см. контакты на странице приложения в магазине",
+    footer: "Вопросы по этим документам? Свяжитесь с {developer}: {email}."
+  },
+  privacy: {
+    title: "Политика конфиденциальности {app}",
+    summary: [
+      "Приложение {app} публикует {developer} («мы»). Эта политика объясняет, какие данные обрабатывает приложение, зачем и какой у вас есть выбор.",
+      "Коротко: ваши записи остаются на вашем устройстве. У нас нет серверов, которые получают ваш звук, и не нужно создавать учётную запись. Бесплатная версия показывает рекламу Google, которая использует некоторые данные устройства, как описано ниже."
+    ],
+    sections: [
+      ["Ваши записи",
+        "Звук, который вы записываете, и файлы, которые вы редактируете, хранятся только на вашем устройстве, в личном хранилище приложения. Мы никогда их не загружаем, не просматриваем и не получаем.",
+        "Запись покидает устройство, только когда вы сами отправляете её через меню «Поделиться» выбранному приложению или человеку. Дальнейшее зависит от этого приложения или человека.",
+        "В зависимости от настроек устройства система может включать данные приложения в резервные копии, которыми управляете вы, например в iCloud или копию на компьютере. При удалении приложения хранящиеся в нём записи удаляются."
+      ],
+      ["Разрешения",
+        ["Микрофон: используется только для записи, когда вы её начинаете.",
+         "Уведомления (Android): показывают кнопки управления, пока идёт запись в фоне.",
+         "Приложение не обращается к вашим контактам, фото, местоположению и файлам вне своего хранилища."]
+      ],
+      ["Настройки на вашем устройстве",
+        "Ваши настройки, например тип файла, тема и язык, а также сведения о покупке Pro, сохраняются на устройстве, чтобы приложение работало так, как вы его настроили. Нам они не передаются."
+      ],
+      ["Реклама",
+        "Бесплатная версия показывает баннеры Google AdMob. Чтобы показывать, ограничивать и измерять рекламу и предотвращать мошенничество, Google может собирать и обрабатывать рекламный идентификатор устройства, IP-адрес, примерное местоположение, определённое по нему, сведения об устройстве и приложении, а также ваши действия с рекламой.",
+        "Там, где этого требует закон, например в Европейской экономической зоне, Великобритании и Швейцарии, мы запрашиваем ваше согласие через окно согласия Google, прежде чем показывать персонализированную рекламу. Изменить выбор можно в любое время в настройках, в разделе «Настройки конфиденциальности рекламы».",
+        "На iPhone и iPad реклама персонализируется, только если вы разрешите отслеживание в ответ на запрос. Рекламный идентификатор также можно сбросить или ограничить в настройках устройства.",
+        "Как Google использует эти данные, описано в его политике: https://policies.google.com/technologies/partner-sites. Если вы купите Pro, приложение перестанет показывать рекламу."
+      ],
+      ["Покупки",
+        "Разовая покупка Pro обрабатывается Google Play или Apple App Store. Мы никогда не получаем ваши платёжные данные. Магазин лишь подтверждает приложению, что покупка действительна, чтобы убрать рекламу и восстановить покупку на других ваших устройствах. К оплате применяется политика конфиденциальности магазина."
+      ],
+      ["Когда вы пишете нам",
+        "Если вы отправляете отзыв или письмо, мы получаем ваш адрес электронной почты, сообщение и вложения. Письма с отзывом содержат сведения о приложении и устройстве (версия приложения, модель устройства, версия системы и язык), которые можно прочитать и удалить перед отправкой.",
+        "Мы используем их только для ответа и устранения проблем и удаляем, когда они больше для этого не нужны."
+      ],
+      ["Чего мы не делаем",
+        ["Мы не продаём и не сдаём в аренду ваши персональные данные.",
+         "Мы не используем собственные инструменты аналитики или отслеживания.",
+         "Мы не просим создавать учётную запись или входить в неё."]
+      ],
+      ["Сколько хранятся данные",
+        "Записи хранятся, пока вы их не удалите или не удалите приложение. Письма в поддержку хранятся только столько, сколько нужно для ответа на ваш запрос. Рекламные данные хранит Google по своей политике."
+      ],
+      ["Ваши права",
+        "В зависимости от места проживания, в том числе по GDPR, британскому GDPR и законам Калифорнии, у вас может быть право на доступ к своим персональным данным, их исправление, удаление или получение копии, право возразить против их использования или ограничить его, а также право в любой момент отозвать согласие.",
+        "Поскольку мы не храним ваши записи и учётные записи, большинство запросов касается писем в поддержку. Чтобы отправить запрос, напишите нам на {email}. Вы также вправе подать жалобу в орган по защите данных своей страны."
+      ],
+      ["Дети",
+        "Приложение не предназначено для детей младше 13 лет или младше минимального возраста, установленного в вашей стране. Мы сознательно не собираем персональные данные детей. Если вы считаете, что ребёнок прислал нам персональные данные, свяжитесь с нами, и мы их удалим."
+      ],
+      ["Безопасность",
+        "Записи хранятся в личном хранилище приложения, которое не могут читать другие приложения. Связь с сервисами рекламы и магазина защищена шифрованием. Ни один способ хранения или передачи не бывает абсолютно надёжным, поэтому защищайте устройство кодом."
+      ],
+      ["Изменения этой политики",
+        "Если мы изменим эту политику, мы обновим её здесь и изменим дату вступления в силу выше. О существенных изменениях мы также сообщим в приложении или в описании обновления в магазине."
+      ],
+      ["Контакты",
+        "{developer}: {email}"
+      ]
+    ]
+  },
+  terms: {
+    title: "Условия использования {app}",
+    summary: [
+      "Эти условия — соглашение между вами и {developer} («мы») об использовании {app}. Устанавливая или используя приложение, вы принимаете их. Если вы не согласны, не используйте приложение."
+    ],
+    sections: [
+      ["Использование приложения",
+        "Мы предоставляем вам личную, неисключительную, непередаваемую и отзывную лицензию на использование приложения на устройствах, которые принадлежат вам или находятся под вашим контролем, в соответствии с этими условиями и правилами магазина, из которого вы его скачали."
+      ],
+      ["Ваши записи",
+        "Сделанные вами записи принадлежат вам. Вы отвечаете за них и за то, как их используете и кому передаёте.",
+        "Законы о записи других людей различаются в разных странах и регионах. Некоторые требуют согласия всех участников разговора. Убедитесь, что у вас есть согласие, которого требует закон."
+      ],
+      ["Допустимое использование",
+        ["Не используйте приложение в незаконных целях и для записи людей с нарушением их прав.",
+         "Не копируйте, не изменяйте, не продавайте и не распространяйте приложение и не пытайтесь извлечь его исходный код, кроме случаев, разрешённых законом или лицензией с открытым кодом.",
+         "Не вмешивайтесь в работу рекламы и покупок в приложении."]
+      ],
+      ["Покупка Pro",
+        "Pro — разовая непотребляемая покупка, которая убирает рекламу. Она привязана к вашей учётной записи магазина и может быть восстановлена на других устройствах с той же учётной записью. Платежи, возвраты и отмены обрабатывают Google Play или Apple App Store по своим правилам."
+      ],
+      ["Реклама",
+        "Бесплатная версия показывает рекламу третьих лиц. Мы не отвечаем за содержание рекламы и за товары и сайты, на которые она ведёт."
+      ],
+      ["Программы с открытым кодом",
+        "Приложение содержит программы с открытым кодом, в том числе FFmpeg по лицензии LGPL 3.0. На эти компоненты распространяются их собственные лицензии, которые можно прочитать в приложении: «Настройки», «О приложении». Ничто в этих условиях не ограничивает ваши права по этим лицензиям."
+      ],
+      ["Резервные копии и потеря данных",
+        "Записи хранятся только на вашем устройстве. Вы сами отвечаете за сохранение копий важных для вас записей. Мы не отвечаем за записи, утраченные из-за удаления, удаления приложения, а также потери, сброса или повреждения устройства."
+      ],
+      ["Обновления и доступность",
+        "Мы можем в любое время обновить, изменить или прекратить предоставление приложения или отдельной функции. Для дальнейшего использования приложения могут потребоваться обновления."
+      ],
+      ["Отказ от гарантий",
+        "Приложение предоставляется «как есть» и «по мере доступности». В пределах, допустимых законом, мы не даём никаких явных или подразумеваемых гарантий, в том числе того, что приложение будет работать без ошибок и перебоев или подойдёт для определённой цели."
+      ],
+      ["Ограничение ответственности",
+        "В пределах, допустимых законом, мы не несём ответственности за косвенные, случайные, особые или последующие убытки, а также за потерю данных, прибыли или дохода. Наша общая ответственность по любым претензиям, связанным с приложением, ограничена суммой, которую вы заплатили за него за 12 месяцев до претензии.",
+        "Ничто в этих условиях не исключает и не ограничивает ответственность, которую нельзя исключить или ограничить по закону, а также ваши права потребителя по закону страны вашего проживания."
+      ],
+      ["Прекращение действия",
+        "Вы можете в любой момент перестать пользоваться приложением, удалив его. Если вы нарушите эти условия, ваша лицензия на использование приложения прекращается."
+      ],
+      ["Apple App Store",
+        "Если вы скачали приложение из Apple App Store, эти условия заключены между вами и нами, а не с Apple. Apple не отвечает за приложение, его содержимое, обслуживание, поддержку или претензии к нему. Apple и её дочерние компании являются сторонними выгодоприобретателями этих условий и могут требовать их соблюдения. Также действует Лицензионное соглашение Apple с конечным пользователем для лицензированных приложений; если оно даёт вам больше прав, чем эти условия, приоритет у него."
+      ],
+      ["Изменения этих условий",
+        "Мы можем обновлять эти условия. Новую редакцию мы опубликуем здесь и изменим дату вступления в силу выше. Продолжая пользоваться приложением после изменения, вы принимаете обновлённые условия."
+      ],
+      ["Применимое право",
+        "Эти условия регулируются законодательством места регистрации {developer}, без лишения вас защиты обязательных норм о защите прав потребителей страны вашего проживания."
+      ],
+      ["Контакты",
+        "{developer}: {email}"
+      ]
+    ]
+  }
+};
+(function () {
+  var ORDER = ["en", "es", "fr", "de", "pt", "ar", "hi", "zh", "ru"];
+  var DOCS = ["privacy", "terms"];
+  var cfg = {};
+  try { cfg = JSON.parse(document.getElementById("legal-config").textContent || "{}") || {}; } catch (e) { cfg = {}; }
+  var params = new URLSearchParams(location.search);
+  var state = {
+    lang: pickLang(cfg.lang || params.get("lang") || ""),
+    doc: DOCS.indexOf(location.hash.slice(1)) >= 0 ? location.hash.slice(1) : (DOCS.indexOf(cfg.doc) >= 0 ? cfg.doc : "privacy"),
+    theme: cfg.theme === "dark" || cfg.theme === "light" ? cfg.theme : ""
+  };
+  var vars = {
+    app: String(cfg.appName || "Tapelet"),
+    developer: String(cfg.developer || cfg.appName || "Tapelet"),
+    email: String(cfg.email || "")
+  };
+
+  function pickLang(wanted) {
+    var candidates = [wanted].concat(navigator.languages || [navigator.language || ""]);
+    for (var i = 0; i < candidates.length; i++) {
+      var code = String(candidates[i] || "").toLowerCase().split(/[-_]/)[0];
+      if (I18N[code]) return code;
+    }
+    return "en";
+  }
+
+  // Fills {app}, {developer} and {email} as text nodes; {email} becomes a
+  // mailto link, or the "contact us" fallback when no address is configured.
+  function fill(el, template, t) {
+    var parts = String(template).split(/(\{app\}|\{developer\}|\{email\}|\{date\})/);
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      if (p === "{app}") el.appendChild(document.createTextNode(vars.app));
+      else if (p === "{developer}") el.appendChild(document.createTextNode(vars.developer));
+      else if (p === "{date}") el.appendChild(document.createTextNode(formatDate()));
+      else if (p === "{email}") {
+        if (vars.email) {
+          var a = document.createElement("a");
+          a.href = "mailto:" + encodeURI(vars.email);
+          a.textContent = vars.email;
+          a.dir = "ltr";
+          el.appendChild(a);
+        } else {
+          el.appendChild(document.createTextNode(t.ui.noEmail));
+        }
+      } else if (p) appendText(el, p);
+    }
+    return el;
+  }
+
+  // Plain text with https:// addresses turned into links.
+  function appendText(el, text) {
+    var re = /https:\/\/[^\s<>"]*[^\s<>".,;:!?)\u3002\uff0c]/g;
+    var last = 0, m;
+    while ((m = re.exec(text))) {
+      if (m.index > last) el.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var a = document.createElement("a");
+      a.href = m[0];
+      a.textContent = m[0];
+      a.rel = "noopener noreferrer";
+      a.target = "_blank";
+      a.dir = "ltr";
+      el.appendChild(a);
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) el.appendChild(document.createTextNode(text.slice(last)));
+  }
+
+  function formatDate() {
+    var d = new Date(EFFECTIVE_DATE + "T12:00:00Z");
+    try {
+      return new Intl.DateTimeFormat(state.lang, { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" }).format(d);
+    } catch (e) {
+      return EFFECTIVE_DATE;
+    }
+  }
+
+  function node(tag, cls) {
+    var el = document.createElement(tag);
+    if (cls) el.className = cls;
+    return el;
+  }
+
+  function renderDoc(name, t) {
+    var doc = t[name];
+    var root = document.getElementById("doc-" + name);
+    root.textContent = "";
+    var h1 = fill(node("h1", "doc-title"), doc.title, t);
+    root.appendChild(h1);
+    root.appendChild(fill(node("p", "effective"), t.ui.effective, t));
+    var summary = node("div", "summary");
+    for (var s = 0; s < doc.summary.length; s++) summary.appendChild(fill(node("p"), doc.summary[s], t));
+    root.appendChild(summary);
+
+    var toc = node("nav", "toc");
+    toc.setAttribute("aria-label", t.ui.contents);
+    var ol = node("ol");
+    toc.appendChild(ol);
+    root.appendChild(toc);
+
+    for (var i = 0; i < doc.sections.length; i++) {
+      var sec = doc.sections[i];
+      var id = name + "-" + (i + 1);
+      var h2 = fill(node("h2"), (i + 1) + ". " + sec[0], t);
+      h2.id = id;
+      root.appendChild(h2);
+      var li = node("li");
+      var link = fill(node("a"), sec[0], t);
+      link.href = "#" + id;
+      link.addEventListener("click", jumpTo(id));
+      li.appendChild(link);
+      ol.appendChild(li);
+      for (var j = 1; j < sec.length; j++) {
+        var block = sec[j];
+        if (Array.isArray(block)) {
+          var ul = node("ul");
+          for (var k = 0; k < block.length; k++) ul.appendChild(fill(node("li"), block[k], t));
+          root.appendChild(ul);
+        } else {
+          root.appendChild(fill(node("p"), block, t));
+        }
+      }
+    }
+  }
+
+  // In-page links scroll without changing the URL, so the app's web view
+  // never sees a navigation.
+  function jumpTo(id) {
+    return function (event) {
+      event.preventDefault();
+      var target = document.getElementById(id);
+      if (!target) return;
+      target.scrollIntoView({ block: "start" });
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+    };
+  }
+
+  function render() {
+    var t = I18N[state.lang];
+    var html = document.documentElement;
+    html.lang = state.lang;
+    html.dir = t.dir;
+    if (state.theme) html.setAttribute("data-theme", state.theme); else html.removeAttribute("data-theme");
+    document.body.classList.toggle("embedded", !!cfg.embedded);
+    document.title = (state.doc === "terms" ? t.terms.title : t.privacy.title).replace("{app}", vars.app);
+    document.getElementById("brand").textContent = vars.app;
+    document.getElementById("lang-label").textContent = t.ui.language;
+    var tp = document.getElementById("tab-privacy");
+    var tt = document.getElementById("tab-terms");
+    tp.textContent = t.ui.privacy;
+    tt.textContent = t.ui.terms;
+    document.getElementById("tabs").setAttribute("aria-label", t.ui.documents);
+    renderDoc("privacy", t);
+    renderDoc("terms", t);
+    var footer = document.getElementById("footer");
+    footer.textContent = "";
+    footer.appendChild(fill(node("p"), t.ui.footer, t));
+    var select = document.getElementById("lang-select");
+    if (!select.options.length) {
+      for (var i = 0; i < ORDER.length; i++) {
+        if (!I18N[ORDER[i]]) continue;
+        var o = document.createElement("option");
+        o.value = ORDER[i];
+        o.textContent = I18N[ORDER[i]].name;
+        o.lang = ORDER[i];
+        select.appendChild(o);
+      }
+      select.addEventListener("change", function () {
+        state.lang = pickLang(select.value);
+        render();
+        if (!cfg.embedded && history.replaceState) {
+          var url = new URL(location.href);
+          url.searchParams.set("lang", state.lang);
+          history.replaceState(null, "", url);
+        }
+      });
+    }
+    select.value = state.lang;
+    show(state.doc, false);
+  }
+
+  function show(doc, focus) {
+    state.doc = doc;
+    for (var i = 0; i < DOCS.length; i++) {
+      var on = DOCS[i] === doc;
+      var tab = document.getElementById("tab-" + DOCS[i]);
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.tabIndex = on ? 0 : -1;
+      document.getElementById("doc-" + DOCS[i]).hidden = !on;
+    }
+    var t = I18N[state.lang];
+    document.title = (doc === "terms" ? t.terms.title : t.privacy.title).replace("{app}", vars.app);
+    if (focus) document.getElementById("tab-" + doc).focus();
+  }
+
+  var tabs = document.getElementById("tabs");
+  tabs.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-doc]");
+    if (!b) return;
+    show(b.getAttribute("data-doc"), false);
+    if (!cfg.embedded && history.replaceState) history.replaceState(null, "", "#" + state.doc);
+    window.scrollTo(0, 0);
+  });
+  tabs.addEventListener("keydown", function (e) {
+    var keys = { ArrowRight: 1, ArrowLeft: -1, Home: 0, End: 0 };
+    if (!(e.key in keys)) return;
+    e.preventDefault();
+    var i = DOCS.indexOf(state.doc);
+    var rtl = document.documentElement.dir === "rtl";
+    var step = keys[e.key] * (rtl ? -1 : 1);
+    var next = e.key === "Home" ? 0 : e.key === "End" ? DOCS.length - 1 : (i + step + DOCS.length) % DOCS.length;
+    show(DOCS[next], true);
+  });
+  window.addEventListener("hashchange", function () {
+    var h = location.hash.slice(1);
+    if (DOCS.indexOf(h) >= 0) show(h, false);
+  });
+
+  // Called by the app when its language or theme changes while open.
+  window.Legal = {
+    configure: function (lang, theme) {
+      state.lang = pickLang(lang);
+      state.theme = theme === "dark" || theme === "light" ? theme : "";
+      render();
+    }
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
